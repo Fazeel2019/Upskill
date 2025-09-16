@@ -69,7 +69,7 @@ export default function DashboardPage() {
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
-        <Card className="rounded-2xl bg-gradient-to-br from-red-500 via-red-600 to-red-700 text-primary-foreground shadow-lg">
+        <Card className="rounded-2xl bg-destructive text-primary-foreground shadow-lg">
             <CardContent className="p-6">
                 <h1 className="text-3xl font-bold tracking-tight">Welcome back!</h1>
                 <p className="opacity-80">Here's a snapshot of your community activity.</p>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
             value="0" 
             description="No new posts yet" 
             icon={FileText} 
-            color="text-red-400"
+            color="text-destructive"
             gradient="from-red-500"
         />
         <StatCard 
@@ -91,7 +91,7 @@ export default function DashboardPage() {
             value="0" 
             description="No upcoming events" 
             icon={Calendar} 
-            color="text-red-400"
+            color="text-destructive"
             gradient="from-red-500"
         />
         <StatCard 
@@ -99,7 +99,7 @@ export default function DashboardPage() {
             value="0" 
             description="No unread messages" 
             icon={MessageSquare}
-            color="text-red-400"
+            color="text-destructive"
             gradient="from-red-500"
         />
       </motion.div>
@@ -112,9 +112,9 @@ export default function DashboardPage() {
                     <CardTitle className="font-headline">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <QuickActionCard href="/community" icon={Plus} title="Create a Post" color="from-red-500 to-red-600" />
-                    <QuickActionCard href="/events" icon={Calendar} title="Find an Event" color="from-red-500 to-red-600" />
-                    <QuickActionCard href="/profile" icon={Edit} title="Update Profile" color="from-red-500 to-red-600" />
+                    <QuickActionCard href="/community" icon={Plus} title="Create a Post" color="from-blue-500 to-blue-600" />
+                    <QuickActionCard href="/events" icon={Calendar} title="Find an Event" color="from-blue-500 to-blue-600" />
+                    <QuickActionCard href="/profile" icon={Edit} title="Update Profile" color="from-blue-500 to-blue-600" />
                 </CardContent>
              </Card>
             </motion.div>

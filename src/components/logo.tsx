@@ -11,12 +11,12 @@ export const Logo = ({ className }: { className?: string }) => (
     <defs>
       <style>
         {`
-          .upskill-red { fill: hsl(var(--primary)); }
-          .upskill-white { fill: hsl(var(--primary-foreground)); }
+          .upskill-red { fill: hsl(var(--destructive)); }
+          .upskill-white { fill: hsl(var(--background)); }
           .upskill-black { fill: hsl(var(--foreground)); }
-          @media (prefers-color-scheme: light) {
-            .upskill-white { fill: hsl(var(--foreground)); }
-            .upskill-black { fill: hsl(var(--primary-foreground)); }
+          @media (prefers-color-scheme: dark) {
+            .upskill-white { fill: hsl(var(--background)); }
+            .upskill-black { fill: hsl(var(--foreground)); }
           }
         `}
       </style>
@@ -32,15 +32,14 @@ export const Logo = ({ className }: { className?: string }) => (
       {/* Text */}
       <text y="70" fontFamily="Arial, sans-serif" fontWeight="bold" letterSpacing="-2">
         <tspan className="upskill-red" fontSize="60">UP</tspan>
-        <tspan className="upskill-white" fontSize="58" stroke="hsl(var(--background))" strokeWidth="1.2">SKILL</tspan>
+        <tspan className="upskill-black" fontSize="58">SKILL</tspan>
       </text>
 
       {/* Swoosh */}
       <line x1="45" y1="58" x2="200" y2="40" stroke="hsl(var(--background))" strokeWidth="8" />
-      <path d="M 45 58 L 200 40" className="upskill-red" stroke="hsl(var(--primary))" strokeWidth="4" />
       
       {/* Tagline */}
-      <text x="5" y="95" className="upskill-white" fontSize="16" fontFamily="Arial, sans-serif" fontWeight="normal" letterSpacing="0">Health Careers Customize For You</text>
+      <text x="5" y="95" className="upskill-black" fontSize="16" fontFamily="Arial, sans-serif" fontWeight="normal" letterSpacing="0">Health Careers Customize For You</text>
     </g>
   </svg>
 );
