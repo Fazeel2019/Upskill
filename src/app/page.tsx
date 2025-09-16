@@ -1,3 +1,6 @@
+
+"use client"
+import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,6 +10,7 @@ import { ArrowRight, Briefcase, HeartPulse, Mic, Users } from "lucide-react";
 import Image from "next/image";
 import PublicHeader from "@/components/public-header";
 import Footer from "@/components/footer";
+import { cn } from '@/lib/utils';
 
 const communityPosts = [
   {
@@ -63,18 +67,49 @@ const podcastEpisodes = [
   },
 ];
 
+const heroImages = [
+    { src: "https://picsum.photos/seed/hero1/1920/1080", hint: "scientists collaborating" },
+    { src: "https://picsum.photos/seed/hero2/1920/1080", hint: "medical research" },
+    { src: "https://picsum.photos/seed/hero3/1920/1080", hint: "public health worker" },
+];
+
 export default function Home() {
+    const [currentImage, setCurrentImage] = useState(0);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentImage((prevImage) => (prevImage + 1) % heroImages.length);
+        }, 7000);
+        return () => clearInterval(timer);
+    }, []);
+
   return (
     <div className="flex flex-col min-h-screen">
       <PublicHeader />
       <main className="flex-grow">
-        <section className="relative bg-card pt-20 pb-20 md:pt-32 md:pb-24">
+        <section className="relative bg-card pt-20 pb-20 md:pt-32 md:pb-24 overflow-hidden">
+          {heroImages.map((image, index) => (
+            <Image
+                key={index}
+                src={image.src}
+                alt="Hero background"
+                layout="fill"
+                objectFit="cover"
+                data-ai-hint={image.hint}
+                className={cn(
+                    "transition-opacity duration-1000 ease-in-out absolute inset-0",
+                    currentImage === index ? "opacity-40" : "opacity-0",
+                    currentImage === index ? "animate-ken-burns" : "",
+                )}
+            />
+          ))}
           <div className="absolute inset-0 bg-primary/10 [mask-image:radial-gradient(100%_50%_at_50%_0%,rgba(255,255,255,0.4)_0%,rgba(255,255,255,0)_100%)]"></div>
+           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent"></div>
           <div className="container relative mx-auto px-4 text-center">
             <Badge variant="secondary" className="mb-4">
               Connect. Learn. Grow.
             </Badge>
-            <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tighter mb-4">
+            <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tighter mb-4 text-foreground">
               The Global Hub for Professional Growth
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
