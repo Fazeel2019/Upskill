@@ -82,7 +82,7 @@ export default function DashboardPage() {
             value="0" 
             description="No new posts yet" 
             icon={FileText} 
-            color="text-blue-400"
+            color="text-gradient-blue"
             gradient="from-blue-500"
         />
         <StatCard 
@@ -90,7 +90,7 @@ export default function DashboardPage() {
             value="0" 
             description="No upcoming events" 
             icon={Calendar} 
-            color="text-green-400"
+            color="text-gradient-green"
             gradient="from-green-500"
         />
         <StatCard 
@@ -98,7 +98,7 @@ export default function DashboardPage() {
             value="0" 
             description="No unread messages" 
             icon={MessageSquare}
-            color="text-purple-400"
+            color="text-gradient-purple"
             gradient="from-purple-500"
         />
       </motion.div>
@@ -150,3 +150,5 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
+
+    
