@@ -69,9 +69,9 @@ const podcastEpisodes = [
 ];
 
 const heroImages = [
-    { src: "https://picsum.photos/seed/hero1/1920/1080", hint: "scientists collaborating" },
-    { src: "https://picsum.photos/seed/hero2/1920/1080", hint: "medical research" },
-    { src: "https://picsum.photos/seed/hero3/1920/1080", hint: "public health worker" },
+    { src: "https://picsum.photos/seed/hero1/1920/1080", hint: "scientist in lab" },
+    { src: "https://picsum.photos/seed/hero2/1920/1080", hint: "doctor with patient" },
+    { src: "https://picsum.photos/seed/hero3/1920/1080", hint: "community health event" },
 ];
 
 export default function Home() {
