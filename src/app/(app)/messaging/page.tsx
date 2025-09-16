@@ -22,6 +22,7 @@ export default function MessagingPage() {
   const [newMessage, setNewMessage] = useState("");
   const [chatId, setChatId] = useState<string | null>(null);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -69,10 +70,17 @@ export default function MessagingPage() {
   };
 
   const handleSendMessage = async () => {
-    if (!user || !chatId || !newMessage.trim()) return;
+    if (!user || !chatId || !newMessage.trim() || isSending) return;
 
-    await sendMessage(chatId, user.uid, newMessage);
-    setNewMessage("");
+    setIsSending(true);
+    try {
+        await sendMessage(chatId, user.uid, newMessage);
+        setNewMessage("");
+    } catch (error) {
+        console.error("Failed to send message:", error);
+    } finally {
+        setIsSending(false);
+    }
   };
 
 
@@ -201,9 +209,14 @@ export default function MessagingPage() {
                                     className="pr-12"
                                     value={newMessage}
                                     onChange={(e) => setNewMessage(e.target.value)}
+                                    disabled={isSending}
                                 />
-                                <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8">
-                                    <Send className="h-4 w-4" />
+                                <Button type="submit" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8" disabled={isSending || !newMessage.trim()}>
+                                    {isSending ? (
+                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                    ) : (
+                                        <Send className="h-4 w-4" />
+                                    )}
                                 </Button>
                             </form>
                         </div>
