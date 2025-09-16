@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { deletePost, type Post as PostType, toggleLike } from "@/services/posts";
-import { MessageCircle, Heart, MoreHorizontal, Users, Loader2, Search, Trash2 } from "lucide-react";
+import { MessageCircle, Heart, MoreHorizontal, Users, Loader2, Search, Trash2, Send } from "lucide-react";
 import CreatePost from "./create-post";
 import { motion } from "framer-motion";
 import { useEffect, useState, useMemo } from "react";
@@ -33,11 +33,92 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast";
+import { listenToComments, addComment, type Comment } from "@/services/comments";
+import { Input } from "@/components/ui/input";
+
+function CommentSection({ post }: { post: PostType }) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!post.id) return;
+    const unsubscribe = listenToComments(post.id, setComments);
+    return () => unsubscribe();
+  }, [post.id]);
+
+  const handleSubmitComment = async () => {
+    if (!user || !post.id || !newComment.trim()) return;
+
+    setIsSubmitting(true);
+    try {
+      await addComment(post.id, {
+        author: {
+          uid: user.uid,
+          name: user.displayName || "Anonymous",
+          avatarUrl: user.photoURL || `https://picsum.photos/seed/${user.uid}/40/40`,
+        },
+        content: newComment,
+      });
+      setNewComment("");
+    } catch (error) {
+      toast({ title: "Failed to post comment", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="pt-4 mt-4 border-t">
+      <div className="space-y-4">
+        {comments.map((comment) => (
+          <div key={comment.id} className="flex items-start gap-3">
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={comment.author.avatarUrl} alt={comment.author.name} />
+              <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
+            </Avatar>
+            <div className="flex-1 bg-muted/50 rounded-lg p-3">
+              <div className="flex items-center justify-between">
+                <p className="font-semibold text-sm">{comment.author.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {comment.timestamp ? formatDistanceToNow(comment.timestamp.toDate(), { addSuffix: true }) : 'Just now'}
+                </p>
+              </div>
+              <p className="text-sm mt-1">{comment.content}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+      {user && (
+        <div className="mt-4 flex gap-2">
+          <Avatar className="h-9 w-9">
+            <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ""} />
+            <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <form onSubmit={(e) => { e.preventDefault(); handleSubmitComment(); }} className="flex-1 flex gap-2">
+            <Input
+              placeholder="Write a comment..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              disabled={isSubmitting}
+            />
+            <Button type="submit" size="icon" disabled={isSubmitting || !newComment.trim()}>
+              {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+            </Button>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
 
 
 function Post({ post }: { post: PostType }) {
   const { toast } = useToast();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const { user, profile } = useAuth();
   
   const isLiked = useMemo(() => {
@@ -104,14 +185,14 @@ function Post({ post }: { post: PostType }) {
               </p>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {profile?.role === 'admin' && (
+          {(user?.uid === post.author.uid || profile?.role === 'admin') && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
                 <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
                   <AlertDialogTrigger asChild>
                      <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
@@ -134,9 +215,9 @@ function Post({ post }: { post: PostType }) {
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
       </CardHeader>
       <CardContent>
@@ -147,8 +228,8 @@ function Post({ post }: { post: PostType }) {
           <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike}>
             <Heart className={`h-4 w-4 ${isLiked ? 'text-red-500 fill-current' : ''}`} /> {post.likeCount || 0}
           </Button>
-          <Button variant="ghost" size="sm" className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4" /> {post.comments || 0}
+          <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => setShowComments(!showComments)}>
+            <MessageCircle className="h-4 w-4" /> {post.commentCount || 0}
           </Button>
         </div>
         <div
@@ -157,6 +238,7 @@ function Post({ post }: { post: PostType }) {
           {post.category}
         </div>
       </CardFooter>
+      {showComments && <CardContent><CommentSection post={post} /></CardContent>}
     </Card>
   );
 }

@@ -1,6 +1,7 @@
 
+
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp, doc, deleteDoc, runTransaction, arrayUnion, arrayRemove } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp, doc, deleteDoc, runTransaction, arrayUnion, arrayRemove, increment } from "firebase/firestore";
 
 export type Post = {
   id?: string;
@@ -14,10 +15,10 @@ export type Post = {
   timestamp: Timestamp;
   likeCount?: number;
   likedBy?: string[];
-  comments?: number;
+  commentCount?: number;
 };
 
-type NewPost = Omit<Post, 'id' | 'timestamp' | 'likeCount' | 'likedBy' | 'comments'>;
+type NewPost = Omit<Post, 'id' | 'timestamp' | 'likeCount' | 'likedBy' | 'commentCount'>;
 
 export const addPost = async (postData: NewPost) => {
   try {
@@ -27,7 +28,7 @@ export const addPost = async (postData: NewPost) => {
       timestamp: serverTimestamp(),
       likeCount: 0,
       likedBy: [],
-      comments: 0,
+      commentCount: 0,
     });
   } catch (error) {
     console.error("Error adding post: ", error);
@@ -76,6 +77,25 @@ export const toggleLike = async (postId: string, userId: string) => {
     }
 }
 
+export const incrementCommentCount = async (postId: string) => {
+    const postRef = doc(db, "posts", postId);
+    try {
+        await runTransaction(db, async (transaction) => {
+            const postDoc = await transaction.get(postRef);
+            if (!postDoc.exists()) {
+                throw "Post does not exist!";
+            }
+            transaction.update(postRef, {
+                commentCount: increment(1)
+            });
+        });
+    } catch (error) {
+        console.error("Error incrementing comment count: ", error);
+        throw new Error("Could not update comment count");
+    }
+}
+
+
 export const listenToPosts = (callback: (posts: Post[]) => void) => {
   const postsCollection = collection(db, "posts");
   const q = query(postsCollection, orderBy("timestamp", "desc"));
@@ -92,3 +112,4 @@ export const listenToPosts = (callback: (posts: Post[]) => void) => {
 
   return unsubscribe;
 };
+
