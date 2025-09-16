@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { addResource, listenToResources } from "@/services/resources";
+import { addResource, listenToResources, updateResource } from "@/services/resources";
 import type { Resource } from "@/lib/data";
 import {
   Select,
@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Loader2, Edit } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const resourceFormSchema = z.object({
@@ -30,6 +31,57 @@ const resourceFormSchema = z.object({
 });
 
 type ResourceFormValues = z.infer<typeof resourceFormSchema>;
+
+function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resource, onResourceUpdated: () => void }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    const form = useForm<ResourceFormValues>({
+        resolver: zodResolver(resourceFormSchema),
+        defaultValues: resource
+    });
+
+    const onSubmit = async (data: ResourceFormValues) => {
+        try {
+            await updateResource(resource.id, data as any);
+            toast({ title: "Resource Updated", description: "The resource has been updated successfully." });
+            onResourceUpdated();
+            setOpen(false);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to update resource.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Edit Resource</DialogTitle>
+                    <DialogDescription>Make changes to the resource details below.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <div><Label>Title</Label><Input {...form.register("title")} /></div>
+                    <div><Label>Description</Label><Textarea {...form.register("description")} /></div>
+                    <div><Label>Category</Label><Controller name="category" control={form.control} render={({ field }) => (
+                        <Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
+                            <SelectItem value="Career">Career</SelectItem>
+                            <SelectItem value="STEM">STEM</SelectItem>
+                            <SelectItem value="Healthcare">Healthcare</SelectItem>
+                            <SelectItem value="Public Health">Public Health</SelectItem>
+                        </SelectContent></Select>
+                        )} />
+                    </div>
+                    <div><Label>YouTube URL</Label><Input {...form.register("youtubeUrl")} /></div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                        <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 export default function ManageResources() {
   const { toast } = useToast();
@@ -46,12 +98,17 @@ export default function ManageResources() {
     },
   });
 
-  useEffect(() => {
+  const fetchResources = () => {
     setLoading(true);
     const unsubscribe = listenToResources((newResources) => {
         setResources(newResources);
         setLoading(false);
     });
+    return unsubscribe;
+  }
+  
+  useEffect(() => {
+    const unsubscribe = fetchResources();
     return () => unsubscribe();
   }, []);
 
@@ -127,7 +184,7 @@ export default function ManageResources() {
                                   <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
                                 )}
                             </div>
-                            <Button variant="ghost" size="sm">Edit</Button>
+                            <EditResourceDialog resource={resource} onResourceUpdated={fetchResources} />
                         </li>
                     ))}
                 </ul>

@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { addEvent, listenToEvents } from "@/services/events";
+import { addEvent, listenToEvents, updateEvent } from "@/services/events";
 import type { Event as EventType } from "@/lib/data";
 import {
   Select,
@@ -19,7 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Loader2, Edit } from "lucide-react";
 import { format } from "date-fns";
 
 const eventFormSchema = z.object({
@@ -34,6 +35,70 @@ const eventFormSchema = z.object({
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
+
+function EditEventDialog({ event, onEventUpdated }: { event: EventType, onEventUpdated: () => void }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+    
+    const form = useForm<EventFormValues>({
+        resolver: zodResolver(eventFormSchema),
+        defaultValues: {
+            ...event,
+            date: format(new Date(event.date as string), 'yyyy-MM-dd')
+        }
+    });
+
+    const onSubmit = async (data: EventFormValues) => {
+        try {
+            await updateEvent(event.id, data as any);
+            toast({ title: "Event Updated", description: "The event has been updated successfully." });
+            onEventUpdated();
+            setOpen(false);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to update event.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Edit Event</DialogTitle>
+                    <DialogDescription>Make changes to the event details below.</DialogDescription>
+                </DialogHeader>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <div><Label>Title</Label><Input {...form.register("title")} /></div>
+                    <div><Label>Description</Label><Textarea {...form.register("description")} /></div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div><Label>Date</Label><Input type="date" {...form.register("date")} /></div>
+                        <div><Label>Time</Label><Input type="time" {...form.register("time")} /></div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div><Label>Type</Label><Controller name="type" control={form.control} render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>
+                                <SelectItem value="Webinar">Webinar</SelectItem><SelectItem value="Workshop">Workshop</SelectItem>
+                                <SelectItem value="Summit">Summit</SelectItem><SelectItem value="Meetup">Meetup</SelectItem>
+                            </SelectContent></Select>)} />
+                        </div>
+                        <div><Label>Category</Label><Controller name="category" control={form.control} render={({ field }) => (
+                            <Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>
+                                <SelectItem value="STEM">STEM</SelectItem><SelectItem value="Healthcare">Healthcare</SelectItem>
+                                <SelectItem value="Public Health">Public Health</SelectItem>
+                            </SelectContent></Select>)} />
+                        </div>
+                    </div>
+                    <div><Label>Image URL</Label><Input {...form.register("imageUrl")} /></div>
+                    <div><Label>Image AI Hint</Label><Input {...form.register("imageHint")} /></div>
+                    <DialogFooter>
+                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                        <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 export default function ManageEvents() {
   const { toast } = useToast();
@@ -54,12 +119,17 @@ export default function ManageEvents() {
     },
   });
 
-  useEffect(() => {
+  const fetchEvents = () => {
     setLoading(true);
     const unsubscribe = listenToEvents((newEvents) => {
         setEvents(newEvents);
         setLoading(false);
     });
+    return unsubscribe;
+  }
+
+  useEffect(() => {
+    const unsubscribe = fetchEvents();
     return () => unsubscribe();
   }, []);
 
@@ -165,7 +235,7 @@ export default function ManageEvents() {
                                 <p className="font-semibold">{event.title}</p>
                                 <p className="text-sm text-muted-foreground">{format(new Date(event.date as string), 'PPP')} at {event.time}</p>
                             </div>
-                            <Button variant="ghost" size="sm">Edit</Button>
+                            <EditEventDialog event={event} onEventUpdated={fetchEvents} />
                         </li>
                     ))}
                 </ul>

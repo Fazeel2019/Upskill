@@ -1,6 +1,6 @@
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc } from "firebase/firestore";
 import type { Event } from "@/lib/data";
 
 type NewEvent = Omit<Event, 'id'>;
@@ -17,6 +17,16 @@ export const addEvent = async (eventData: NewEvent) => {
         throw new Error("Could not add event");
     }
 }
+
+export const updateEvent = async (eventId: string, eventData: Partial<Event>) => {
+    try {
+        const eventDoc = doc(db, "events", eventId);
+        await updateDoc(eventDoc, eventData);
+    } catch (error) {
+        console.error("Error updating event: ", error);
+        throw new Error("Could not update event");
+    }
+};
 
 export const getEvents = async (): Promise<Event[]> => {
     const eventsCollection = collection(db, "events");
@@ -36,7 +46,7 @@ export const listenToEvents = (callback: (events: Event[]) => void) => {
 
         if (data.date && typeof data.date.toDate === 'function') {
             // It's a Firestore Timestamp
-            eventDate = (data.date as Timestamp).toDate().toISOString();
+            eventDate = (data.date as Timestamp).toDate().toISOString().split('T')[0];
         } else {
             // It's already a string or some other format
             eventDate = data.date;
@@ -53,4 +63,3 @@ export const listenToEvents = (callback: (events: Event[]) => void) => {
 
   return unsubscribe;
 };
-
