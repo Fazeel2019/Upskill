@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2 } from "lucide-react";
+import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -38,7 +38,7 @@ import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { updateUserProfile } from "@/services/profile";
+import { addExperience, updateUserProfile, type Experience } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
@@ -223,6 +223,131 @@ function EditBioDialog() {
   );
 }
 
+const experienceFormSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    company: z.string().min(1, "Company is required"),
+    location: z.string().optional(),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional(),
+    description: z.string().max(500, "Description must be less than 500 characters.").optional(),
+})
+
+type ExperienceFormValues = z.infer<typeof experienceFormSchema>;
+
+function AddExperienceDialog() {
+    const { user, reloadProfile } = useAuth();
+    const { toast } = useToast();
+    const [open, setOpen] = React.useState(false);
+
+    const form = useForm<ExperienceFormValues>({
+        resolver: zodResolver(experienceFormSchema),
+        defaultValues: {
+            title: "",
+            company: "",
+            location: "",
+            startDate: "",
+            endDate: "",
+            description: "",
+        },
+    });
+
+    const onSubmit = async (data: ExperienceFormValues) => {
+        if (!user) return;
+        
+        try {
+            const newExperience: Experience = {
+                id: new Date().toISOString(), // simple unique id
+                ...data,
+            };
+            await addExperience(user.uid, newExperience);
+            reloadProfile();
+            toast({
+                title: "Experience Added",
+                description: "Your new work experience has been saved.",
+            });
+            setOpen(false);
+            form.reset();
+        } catch (error: any) {
+            toast({
+                title: "Update Failed",
+                description: error.message,
+                variant: "destructive",
+            });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add Position</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Add Work Experience</DialogTitle>
+                    <DialogDescription>
+                        Fill in the details of your past or current role.
+                    </DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                         <FormField control={form.control} name="title" render={({ field }) => (
+                            <FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} placeholder="e.g. Senior Product Manager" /></FormControl><FormMessage /></FormItem>
+                         )} />
+                         <FormField control={form.control} name="company" render={({ field }) => (
+                            <FormItem><FormLabel>Company</FormLabel><FormControl><Input {...field} placeholder="e.g. Google" /></FormControl><FormMessage /></FormItem>
+                         )} />
+                         <FormField control={form.control} name="location" render={({ field }) => (
+                            <FormItem><FormLabel>Location</FormLabel><FormControl><Input {...field} placeholder="e.g. San Francisco, CA" /></FormControl><FormMessage /></FormItem>
+                         )} />
+                         <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="startDate" render={({ field }) => (
+                                <FormItem><FormLabel>Start Date</FormLabel><FormControl><Input {...field} type="month" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                            <FormField control={form.control} name="endDate" render={({ field }) => (
+                                <FormItem><FormLabel>End Date (or blank)</FormLabel><FormControl><Input {...field} type="month" /></FormControl><FormMessage /></FormItem>
+                            )} />
+                         </div>
+                         <FormField control={form.control} name="description" render={({ field }) => (
+                            <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} placeholder="Describe your responsibilities and achievements..." /></FormControl><FormMessage /></FormItem>
+                         )} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                            <Button type="submit" disabled={form.formState.isSubmitting}>
+                                {form.formState.isSubmitting ? "Saving..." : "Save Experience"}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+function ExperienceItem({ experience }: { experience: Experience }) {
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "Present";
+        const [year, month] = dateString.split('-');
+        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
+    return (
+        <div className="flex gap-4 relative pb-8 last:pb-0">
+             <div className="absolute left-[18px] top-5 h-full w-px bg-border"></div>
+            <div className="flex-shrink-0">
+                 <div className="bg-muted rounded-full p-2 ring-8 ring-card z-10 relative">
+                    <Briefcase className="w-5 h-5 text-muted-foreground" />
+                </div>
+            </div>
+            <div className="flex-grow">
+                <h4 className="font-semibold">{experience.title}</h4>
+                <p className="text-muted-foreground text-sm">{experience.company} {experience.location && `· ${experience.location}`}</p>
+                <p className="text-muted-foreground text-xs mt-1">{formatDate(experience.startDate)} - {formatDate(experience.endDate || '')}</p>
+                {experience.description && <p className="text-sm mt-2 whitespace-pre-wrap">{experience.description}</p>}
+            </div>
+        </div>
+    )
+}
+
 
 export default function ProfilePage() {
   const { user, profile } = useAuth();
@@ -318,14 +443,25 @@ export default function ProfilePage() {
                 </TabsContent>
                 <TabsContent value="experience">
                     <Card>
-                         <CardHeader>
+                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="font-headline">Work Experience</CardTitle>
+                             {profile.experience && profile.experience.length > 0 && <AddExperienceDialog />}
                         </CardHeader>
-                         <CardContent className="text-center text-muted-foreground py-12">
-                             <Briefcase className="w-12 h-12 mx-auto mb-4" />
-                             <h3 className="font-semibold">Add Your Experience</h3>
-                             <p className="mt-2">Showcase your professional history.</p>
-                             <Button variant="outline" className="mt-4" disabled>Add Position</Button>
+                         <CardContent>
+                             {profile.experience && profile.experience.length > 0 ? (
+                                <div className="space-y-4">
+                                    {profile.experience.sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map(exp => (
+                                        <ExperienceItem key={exp.id} experience={exp} />
+                                    ))}
+                                </div>
+                             ) : (
+                                 <div className="text-center text-muted-foreground py-12">
+                                     <Briefcase className="w-12 h-12 mx-auto mb-4" />
+                                     <h3 className="font-semibold">Add Your Experience</h3>
+                                     <p className="mt-2">Showcase your professional history.</p>
+                                     <AddExperienceDialog />
+                                </div>
+                             )}
                         </CardContent>
                     </Card>
                 </TabsContent>
