@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -22,6 +23,7 @@ import {
   MessageSquare,
   User,
   Mountain,
+  PanelLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -108,10 +110,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm sm:px-8">
-          <SidebarTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Home />
-            </Button>
+          <SidebarTrigger>
+            <PanelLeft />
           </SidebarTrigger>
           <div className="flex items-center gap-4">
             <UserNav />
