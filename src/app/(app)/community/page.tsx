@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -5,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockPosts, Post as PostType } from "@/lib/data";
 import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
 import CreatePost from "./create-post";
+import { motion } from "framer-motion";
 
 function Post({ post }: { post: PostType }) {
   const categoryColors = {
@@ -65,14 +69,40 @@ function Post({ post }: { post: PostType }) {
 }
 
 export default function CommunityPage() {
-  return (
-    <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold tracking-tight font-headline mb-2">Community Feed</h1>
-        <p className="text-muted-foreground mb-8">Share insights, ask questions, and engage with a global network of professionals.</p>
-        
-        <CreatePost />
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    },
+  };
 
-        <div className="my-8">
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5 }
+    },
+  };
+
+  return (
+    <motion.div 
+      className="max-w-3xl mx-auto"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+        <motion.div variants={itemVariants}>
+          <h1 className="text-3xl font-bold tracking-tight font-headline mb-2">Community Feed</h1>
+          <p className="text-muted-foreground mb-8">Share insights, ask questions, and engage with a global network of professionals.</p>
+        </motion.div>
+        
+        <motion.div variants={itemVariants}>
+          <CreatePost />
+        </motion.div>
+
+        <motion.div className="my-8" variants={itemVariants}>
             <Tabs defaultValue="all">
             <TabsList>
                 <TabsTrigger value="all">All Posts</TabsTrigger>
@@ -81,13 +111,18 @@ export default function CommunityPage() {
                 <TabsTrigger value="public-health">Public Health</TabsTrigger>
             </TabsList>
             </Tabs>
-        </div>
+        </motion.div>
 
-        <div className="space-y-6">
+        <motion.div 
+          className="space-y-6"
+          variants={containerVariants}
+        >
             {mockPosts.map((post) => (
-            <Post key={post.id} post={post} />
+              <motion.div key={post.id} variants={itemVariants}>
+                <Post post={post} />
+              </motion.div>
             ))}
-        </div>
-    </div>
+        </motion.div>
+    </motion.div>
   );
 }

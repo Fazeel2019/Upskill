@@ -1,3 +1,6 @@
+
+"use client";
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Calendar } from "lucide-react";
 import Image from "next/image";
@@ -5,6 +8,7 @@ import Link from "next/link";
 import Footer from "@/components/footer";
 import PublicHeader from "@/components/public-header";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 const blogPosts = [
   {
@@ -64,11 +68,32 @@ const blogPosts = [
 ];
 
 export default function BlogPage() {
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.1 } },
+  };
+  
+  const cardVariants = {
+      hidden: { opacity: 0, y: 30 },
+      visible: {
+          opacity: 1,
+          y: 0,
+          transition: {
+              duration: 0.5,
+              ease: "easeOut",
+          },
+      },
+  };
   return (
     <div className="flex flex-col min-h-screen">
       <PublicHeader />
       <main className="flex-grow">
-        <section className="bg-card pt-24 pb-16 md:pt-32 md:pb-24 text-center">
+        <motion.section 
+          className="bg-card pt-24 pb-16 md:pt-32 md:pb-24 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
           <div className="container mx-auto px-4">
             <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tighter">
               Upskill Blog
@@ -77,46 +102,54 @@ export default function BlogPage() {
               Thought leadership, career tips, and insights from the forefront of science and health.
             </p>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="py-16 md:py-24">
+        <motion.section 
+          className="py-16 md:py-24"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.2 }}
+          variants={sectionVariants}
+        >
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {blogPosts.map((post, index) => (
-                <Card key={index} className="flex flex-col overflow-hidden group">
-                  <div className="relative">
-                    <Image
-                      src={post.image}
-                      alt={post.title}
-                      width={400}
-                      height={250}
-                      className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
-                      data-ai-hint={post.imageHint}
-                    />
-                  </div>
-                  <CardHeader>
-                    <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
-                    <CardTitle className="font-headline text-xl leading-tight">
-                      <Link href="#" className="hover:text-primary transition-colors">{post.title}</Link>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <p className="text-muted-foreground text-sm">{post.excerpt}</p>
-                  </CardContent>
-                  <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                       <Calendar className="w-4 h-4" />
-                       <span>{post.date}</span>
+                <motion.div key={index} variants={cardVariants}>
+                  <Card className="flex flex-col h-full overflow-hidden group">
+                    <div className="relative">
+                      <Image
+                        src={post.image}
+                        alt={post.title}
+                        width={400}
+                        height={250}
+                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                        data-ai-hint={post.imageHint}
+                      />
                     </div>
-                     <Link href="#" className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                      Read More <ArrowRight className="ml-1 w-4 h-4" />
-                    </Link>
-                  </CardFooter>
-                </Card>
+                    <CardHeader>
+                      <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
+                      <CardTitle className="font-headline text-xl leading-tight">
+                        <Link href="#" className="hover:text-primary transition-colors">{post.title}</Link>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <p className="text-muted-foreground text-sm">{post.excerpt}</p>
+                    </CardContent>
+                    <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2">
+                         <Calendar className="w-4 h-4" />
+                         <span>{post.date}</span>
+                      </div>
+                       <Link href="#" className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                        Read More <ArrowRight className="ml-1 w-4 h-4" />
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                </motion.div>
               ))}
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
       <Footer />
     </div>

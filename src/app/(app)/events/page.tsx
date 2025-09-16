@@ -1,12 +1,16 @@
+
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockEvents, mockPastEvents, Event as EventType } from "@/lib/data";
-import { ArrowRight, Clock, Video } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { motion } from "framer-motion";
 
 function EventCard({ event }: { event: EventType }) {
     const categoryColors = {
@@ -21,8 +25,9 @@ function EventCard({ event }: { event: EventType }) {
                 <Image 
                     src={event.imageUrl} 
                     alt={event.title} 
-                    layout="fill" 
-                    objectFit="cover" 
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{objectFit: "cover"}}
                     className="transition-transform duration-300 group-hover:scale-105"
                     data-ai-hint={event.imageHint}
                 />
@@ -56,14 +61,36 @@ function EventCard({ event }: { event: EventType }) {
 export default function EventsPage() {
   const eventDates = mockEvents.map(e => new Date(e.date));
 
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.5, staggerChildren: 0.1 }
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.95 },
+    visible: { opacity: 1, scale: 1 },
+  };
+
   return (
-    <div className="space-y-8">
-        <div>
+    <motion.div 
+      className="space-y-8"
+      initial="hidden"
+      animate="visible"
+      variants={sectionVariants}
+    >
+        <motion.div variants={sectionVariants}>
             <h1 className="text-3xl font-bold tracking-tight font-headline">Events & Workshops</h1>
             <p className="text-muted-foreground">Connect, learn, and grow with live and virtual events from across the community.</p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <motion.div 
+          className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+          variants={sectionVariants}
+        >
             <div className="lg:col-span-2">
                  <Tabs defaultValue="upcoming">
                     <TabsList className="mb-4">
@@ -71,18 +98,32 @@ export default function EventsPage() {
                         <TabsTrigger value="past">Past Events</TabsTrigger>
                     </TabsList>
                     <TabsContent value="upcoming">
-                        <div className="grid sm:grid-cols-2 gap-6">
-                            {mockEvents.map(event => <EventCard key={event.id} event={event} />)}
-                        </div>
+                        <motion.div 
+                            className="grid sm:grid-cols-2 gap-6"
+                            variants={sectionVariants}
+                        >
+                            {mockEvents.map((event, i) => (
+                                <motion.div key={event.id} variants={cardVariants}>
+                                    <EventCard event={event} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     </TabsContent>
                     <TabsContent value="past">
-                         <div className="grid sm:grid-cols-2 gap-6">
-                            {mockPastEvents.map(event => <EventCard key={event.id} event={event} />)}
-                        </div>
+                         <motion.div 
+                           className="grid sm:grid-cols-2 gap-6"
+                           variants={sectionVariants}
+                         >
+                            {mockPastEvents.map(event => (
+                                <motion.div key={event.id} variants={cardVariants}>
+                                    <EventCard event={event} />
+                                </motion.div>
+                            ))}
+                        </motion.div>
                     </TabsContent>
                 </Tabs>
             </div>
-            <div className="row-start-1 lg:row-auto">
+            <motion.div className="row-start-1 lg:row-auto" variants={cardVariants}>
                 <Card>
                     <CardHeader>
                         <CardTitle className="font-headline">Event Calendar</CardTitle>
@@ -98,8 +139,8 @@ export default function EventsPage() {
                         />
                     </CardContent>
                 </Card>
-            </div>
-        </div>
-    </div>
+            </motion.div>
+        </motion.div>
+    </motion.div>
   )
 }
