@@ -1,5 +1,5 @@
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp, doc, deleteDoc } from "firebase/firestore";
 
 export type Post = {
   id?: string;
@@ -30,6 +30,16 @@ export const addPost = async (postData: NewPost) => {
     console.error("Error adding post: ", error);
     throw new Error("Could not add post");
   }
+};
+
+export const deletePost = async (postId: string) => {
+    try {
+        const postDoc = doc(db, "posts", postId);
+        await deleteDoc(postDoc);
+    } catch (error) {
+        console.error("Error deleting post: ", error);
+        throw new Error("Could not delete post");
+    }
 };
 
 export const listenToPosts = (callback: (posts: Post[]) => void) => {

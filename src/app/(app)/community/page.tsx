@@ -6,8 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { Post as PostType } from "@/services/posts";
-import { MessageCircle, Heart, Share2, MoreHorizontal, Users, Loader2, Search } from "lucide-react";
+import { deletePost, type Post as PostType } from "@/services/posts";
+import { MessageCircle, Heart, Share2, MoreHorizontal, Users, Loader2, Search, Trash2 } from "lucide-react";
 import CreatePost from "./create-post";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -15,8 +15,30 @@ import { listenToPosts } from "@/services/posts";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { useToast } from "@/hooks/use-toast";
+
 
 function Post({ post }: { post: PostType }) {
+  const { toast } = useToast();
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
   const categoryColors = {
     STEM: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800",
     Healthcare: "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/50 dark:text-green-300 dark:border-green-800",
@@ -27,9 +49,20 @@ function Post({ post }: { post: PostType }) {
     ? `${formatDistanceToNow(post.timestamp.toDate())} ago` 
     : "Just now";
     
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   
   const profileLink = user?.uid === post.author.uid ? "/profile" : `/profile/${post.author.uid}`;
+
+  const handleDeletePost = async () => {
+    if (!post.id) return;
+    try {
+      await deletePost(post.id);
+      toast({ title: "Post deleted successfully" });
+    } catch (error) {
+      toast({ title: "Failed to delete post", variant: "destructive" });
+    }
+    setShowDeleteAlert(false);
+  }
 
   return (
     <Card>
@@ -56,9 +89,39 @@ function Post({ post }: { post: PostType }) {
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon">
-            <MoreHorizontal className="h-5 w-5" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <MoreHorizontal className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {profile?.role === 'admin' && (
+                <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+                  <AlertDialogTrigger asChild>
+                     <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-destructive">
+                       <Trash2 className="mr-2 h-4 w-4" />
+                        Delete Post
+                     </DropdownMenuItem>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the post.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleDeletePost} className="bg-destructive hover:bg-destructive/90">
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent>
