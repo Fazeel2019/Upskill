@@ -5,12 +5,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin } from "lucide-react";
+import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, Building, GraduationCap, Link2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function ProfilePage() {
+  const { user } = useAuth();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -28,6 +30,8 @@ export default function ProfilePage() {
       transition: { duration: 0.5 }
     },
   };
+
+  if (!user) return null;
 
   return (
     <motion.div 
@@ -58,21 +62,20 @@ export default function ProfilePage() {
             <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-24 sm:-mt-20">
               <div className="relative h-32 w-32 sm:h-36 sm:w-36 rounded-full border-4 border-card ring-2 ring-border shrink-0">
                  <Avatar className="h-full w-full">
-                      <AvatarImage src="https://picsum.photos/seed/user-avatar/150/150" alt="Dr. Ada Lovelace" data-ai-hint="woman portrait"/>
-                      <AvatarFallback>AL</AvatarFallback>
+                      <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.uid}/150/150`} alt={user.displayName || 'User'} data-ai-hint="person portrait"/>
+                      <AvatarFallback>{user.displayName?.split(" ").map(n => n[0]).join("") || user.email?.[0].toUpperCase()}</AvatarFallback>
                   </Avatar>
               </div>
               <div className="flex-grow">
-                <h1 className="text-2xl sm:text-3xl font-bold font-headline">Dr. Ada Lovelace</h1>
-                <p className="text-muted-foreground">Computational Biologist | Pioneer in Algorithmic Science</p>
+                <h1 className="text-2xl sm:text-3xl font-bold font-headline">{user.displayName || "Your Name"}</h1>
+                <p className="text-muted-foreground">Your professional title will appear here.</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2">
-                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>Cambridge, UK</div>
-                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>Babbage Labs</div>
+                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>Your Location</div>
+                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>Your Company</div>
                 </div>
               </div>
               <div className="shrink-0 flex gap-2">
                   <Button><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
-                  <Button variant="outline">View Public Profile</Button>
               </div>
             </div>
           </div>
@@ -84,8 +87,8 @@ export default function ProfilePage() {
            <Tabs defaultValue="about">
                 <TabsList className="mb-4">
                     <TabsTrigger value="about">About</TabsTrigger>
-                    <TabsTrigger value="projects">Projects</TabsTrigger>
-                    <TabsTrigger value="publications">Publications</TabsTrigger>
+                    <TabsTrigger value="experience">Experience</TabsTrigger>
+                    <TabsTrigger value="education">Education</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about">
                     <Card>
@@ -93,28 +96,34 @@ export default function ProfilePage() {
                             <CardTitle className="font-headline">Bio</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4 text-muted-foreground">
-                            <p>Dr. Ada Lovelace is a world-renowned computational biologist with over 15 years of experience in genomic sequencing and algorithmic analysis. Her work focuses on developing novel computational models to understand complex diseases.</p>
-                            <p>She is a passionate advocate for interdisciplinary collaboration and believes that the future of medicine lies at the intersection of technology and biology. In her spare time, she enjoys classical music and mentoring young scientists.</p>
+                            <p>Share a bit about your professional background, interests, and expertise. This is a great place to introduce yourself to the community.</p>
+                             <Button variant="link" className="p-0 h-auto">Edit Bio</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="projects">
+                <TabsContent value="experience">
                     <Card>
                          <CardHeader>
-                            <CardTitle className="font-headline">Featured Projects</CardTitle>
+                            <CardTitle className="font-headline">Work Experience</CardTitle>
                         </CardHeader>
-                         <CardContent>
-                             <p className="text-muted-foreground">Projects will be displayed here.</p>
+                         <CardContent className="text-center text-muted-foreground py-12">
+                             <Briefcase className="w-12 h-12 mx-auto mb-4" />
+                             <h3 className="font-semibold">Add Your Experience</h3>
+                             <p className="mt-2">Showcase your professional history.</p>
+                             <Button variant="outline" className="mt-4">Add Position</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="publications">
+                <TabsContent value="education">
                     <Card>
                          <CardHeader>
-                            <CardTitle className="font-headline">Recent Publications</CardTitle>
+                            <CardTitle className="font-headline">Education</CardTitle>
                         </CardHeader>
-                         <CardContent>
-                             <p className="text-muted-foreground">Publications will be displayed here.</p>
+                         <CardContent className="text-center text-muted-foreground py-12">
+                             <GraduationCap className="w-12 h-12 mx-auto mb-4" />
+                             <h3 className="font-semibold">Add Your Education</h3>
+                             <p className="mt-2">List your degrees and qualifications.</p>
+                             <Button variant="outline" className="mt-4">Add School</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -127,9 +136,9 @@ export default function ProfilePage() {
                       <CardTitle className="font-headline">Contact & Links</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
-                      <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground"/>ada.lovelace@example.com</div>
-                      <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">linkedin.com/in/adalovelace</Link></div>
-                      <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">View CV</Link></div>
+                      <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground"/>{user.email}</div>
+                      <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">Add LinkedIn profile</Link></div>
+                      <div className="flex items-center gap-2"><Link2 className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">Add personal website</Link></div>
                   </CardContent>
               </Card>
             </motion.div>
@@ -138,10 +147,11 @@ export default function ProfilePage() {
                 <CardHeader>
                     <CardTitle className="font-headline">Achievements</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 text-sm">
-                    <div className="flex items-center gap-2"><Award className="w-4 h-4 text-muted-foreground"/> Franklin Medal in Life Science, 2023</div>
-                    <div className="flex items-center gap-2"><Award className="w-4 h-4 text-muted-foreground"/> Top 50 in STEM, Innovate Magazine</div>
-                    <div className="flex items-center gap-2"><Award className="w-4 h-4 text-muted-foreground"/> Community Top Voice Badge</div>
+                <CardContent className="text-center text-muted-foreground py-12">
+                     <Award className="w-12 h-12 mx-auto mb-4" />
+                     <h3 className="font-semibold">Add Achievements</h3>
+                     <p className="mt-2">Highlight your awards and recognitions.</p>
+                     <Button variant="outline" className="mt-4">Add Achievement</Button>
                 </CardContent>
             </Card>
            </motion.div>

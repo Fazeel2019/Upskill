@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockEvents, mockPastEvents, Event as EventType } from "@/lib/data";
-import { ArrowRight, Clock } from "lucide-react";
+import type { Event as EventType } from "@/lib/data";
+import { ArrowRight, Clock, Calendar as CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
@@ -59,6 +59,8 @@ function EventCard({ event }: { event: EventType }) {
 
 
 export default function EventsPage() {
+  const mockEvents: EventType[] = [];
+  const mockPastEvents: EventType[] = [];
   const eventDates = mockEvents.map(e => new Date(e.date));
 
   const sectionVariants = {
@@ -74,6 +76,20 @@ export default function EventsPage() {
     hidden: { opacity: 0, scale: 0.95 },
     visible: { opacity: 1, scale: 1 },
   };
+  
+  const EmptyState = ({title, description}: {title: string, description: string}) => (
+    <div className="text-center py-16">
+        <Card className="max-w-md mx-auto">
+            <CardContent className="p-8 text-center">
+                <CalendarIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold text-lg">{title}</h3>
+                <p className="text-muted-foreground mt-2">
+                    {description}
+                </p>
+            </CardContent>
+        </Card>
+    </div>
+  )
 
   return (
     <motion.div 
@@ -98,28 +114,40 @@ export default function EventsPage() {
                         <TabsTrigger value="past">Past Events</TabsTrigger>
                     </TabsList>
                     <TabsContent value="upcoming">
-                        <motion.div 
-                            className="grid sm:grid-cols-2 gap-6"
-                            variants={sectionVariants}
-                        >
-                            {mockEvents.map((event, i) => (
-                                <motion.div key={event.id} variants={cardVariants}>
-                                    <EventCard event={event} />
-                                </motion.div>
-                            ))}
-                        </motion.div>
+                        {mockEvents.length > 0 ? (
+                             <motion.div 
+                                className="grid sm:grid-cols-2 gap-6"
+                                variants={sectionVariants}
+                            >
+                                {mockEvents.map((event, i) => (
+                                    <motion.div key={event.id} variants={cardVariants}>
+                                        <EventCard event={event} />
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                        ) : (
+                            <motion.div variants={cardVariants}>
+                                <EmptyState title="No Upcoming Events" description="Check back soon for new webinars, workshops, and summits." />
+                            </motion.div>
+                        )}
                     </TabsContent>
                     <TabsContent value="past">
-                         <motion.div 
-                           className="grid sm:grid-cols-2 gap-6"
-                           variants={sectionVariants}
-                         >
-                            {mockPastEvents.map(event => (
-                                <motion.div key={event.id} variants={cardVariants}>
-                                    <EventCard event={event} />
-                                </motion.div>
-                            ))}
-                        </motion.div>
+                        {mockPastEvents.length > 0 ? (
+                            <motion.div 
+                                className="grid sm:grid-cols-2 gap-6"
+                                variants={sectionVariants}
+                            >
+                                {mockPastEvents.map(event => (
+                                    <motion.div key={event.id} variants={cardVariants}>
+                                        <EventCard event={event} />
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                         ) : (
+                            <motion.div variants={cardVariants}>
+                                <EmptyState title="No Past Events" description="Previous event recordings and materials will be shown here." />
+                            </motion.div>
+                         )}
                     </TabsContent>
                 </Tabs>
             </div>

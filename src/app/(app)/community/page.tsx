@@ -5,8 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mockPosts, Post as PostType } from "@/lib/data";
-import { MessageCircle, Heart, Share2, MoreHorizontal } from "lucide-react";
+import type { Post as PostType } from "@/lib/data";
+import { MessageCircle, Heart, Share2, MoreHorizontal, Users } from "lucide-react";
 import CreatePost from "./create-post";
 import { motion } from "framer-motion";
 
@@ -69,6 +69,8 @@ function Post({ post }: { post: PostType }) {
 }
 
 export default function CommunityPage() {
+    const mockPosts: PostType[] = [];
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -117,11 +119,25 @@ export default function CommunityPage() {
           className="space-y-6"
           variants={containerVariants}
         >
-            {mockPosts.map((post) => (
-              <motion.div key={post.id} variants={itemVariants}>
-                <Post post={post} />
-              </motion.div>
-            ))}
+            {mockPosts.length > 0 ? (
+                mockPosts.map((post) => (
+                <motion.div key={post.id} variants={itemVariants}>
+                    <Post post={post} />
+                </motion.div>
+                ))
+            ) : (
+                <motion.div variants={itemVariants} className="text-center py-16">
+                    <Card className="max-w-md mx-auto">
+                        <CardContent className="p-8 text-center">
+                            <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                            <h3 className="font-semibold text-lg">No Posts Yet</h3>
+                            <p className="text-muted-foreground mt-2">
+                                The community feed is quiet. Be the first to share something!
+                            </p>
+                        </CardContent>
+                    </Card>
+                </motion.div>
+            )}
         </motion.div>
     </motion.div>
   );
