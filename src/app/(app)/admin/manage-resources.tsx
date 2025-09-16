@@ -123,7 +123,9 @@ export default function ManageResources() {
                         <li key={resource.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
                             <div>
                                 <p className="font-semibold">{resource.title}</p>
-                                <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
+                                {resource.createdAt && (
+                                  <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
+                                )}
                             </div>
                             <Button variant="ghost" size="sm">Edit</Button>
                         </li>
