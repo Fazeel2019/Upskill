@@ -5,11 +5,131 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, Building, GraduationCap, Link2 } from "lucide-react";
+import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { updateProfile } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
+import React from "react";
+
+
+const profileFormSchema = z.object({
+  displayName: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50, { message: "Name must be less than 50 characters." }),
+});
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+
+function EditProfileDialog({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const [open, setOpen] = React.useState(false);
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      displayName: user?.displayName || "",
+    },
+  });
+
+  const onSubmit = async (data: ProfileFormValues) => {
+    if (!user) return;
+
+    try {
+      await updateProfile(user, {
+        displayName: data.displayName,
+      });
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been successfully updated.",
+      });
+      setOpen(false);
+      // The useAuth hook will automatically reflect the change, no need to manually update state here
+    } catch (error: any) {
+      toast({
+        title: "Update Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    if (user && open) {
+      form.reset({ displayName: user.displayName || "" });
+    }
+  }, [user, open, form]);
+
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit profile</DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="grid gap-4 py-4">
+              <FormField
+                control={form.control}
+                name="displayName"
+                render={({ field }) => (
+                  <FormItem className="grid grid-cols-4 items-center gap-4">
+                    <FormLabel className="text-right">Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} className="col-span-3" />
+                    </FormControl>
+                    <FormMessage className="col-span-4" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter>
+               <DialogClose asChild>
+                <Button type="button" variant="secondary">
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Saving..." : "Save changes"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -75,7 +195,9 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="shrink-0 flex gap-2">
-                  <Button><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
+                  <EditProfileDialog>
+                    <Button><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
+                  </EditProfileDialog>
               </div>
             </div>
           </div>
@@ -160,3 +282,5 @@ export default function ProfilePage() {
     </motion.div>
   );
 }
+
+    
