@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -12,6 +13,8 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { listenToPosts } from "@/services/posts";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
 
 function Post({ post }: { post: PostType }) {
   const categoryColors = {
@@ -23,23 +26,31 @@ function Post({ post }: { post: PostType }) {
   const timestamp = post.timestamp?.toDate() 
     ? `${formatDistanceToNow(post.timestamp.toDate())} ago` 
     : "Just now";
+    
+  const { user } = useAuth();
+  
+  const profileLink = user?.uid === post.author.uid ? "/profile" : `/profile/${post.author.uid}`;
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Avatar>
-              <AvatarImage src={post.author.avatarUrl} alt={post.author.name} data-ai-hint="people portrait" />
-              <AvatarFallback>
-                {post.author.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
+            <Link href={profileLink}>
+              <Avatar>
+                <AvatarImage src={post.author.avatarUrl} alt={post.author.name} data-ai-hint="people portrait" />
+                <AvatarFallback>
+                  {post.author.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
             <div>
-              <p className="font-semibold">{post.author.name}</p>
+               <Link href={profileLink}>
+                  <p className="font-semibold hover:underline">{post.author.name}</p>
+              </Link>
               <p className="text-sm text-muted-foreground">
                 {`@${post.author.name.toLowerCase().replace(/ /g,'')}`} &middot; {timestamp}
               </p>

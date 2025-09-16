@@ -1,6 +1,6 @@
 // src/services/profile.ts
 import { db } from "@/lib/firebase";
-import { arrayUnion, doc, getDoc, setDoc } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
 
 export interface Experience {
   id: string;
@@ -44,6 +44,7 @@ export interface UserProfile {
   experience?: Experience[];
   education?: Education[];
   achievements?: Achievement[];
+  connections?: Record<string, 'pending_sent' | 'pending_received' | 'connected'>;
 }
 
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
@@ -82,4 +83,61 @@ export const addAchievement = async (uid: string, achievement: Achievement) => {
     await setDoc(userRef, {
         achievements: arrayUnion(achievement)
     }, { merge: true });
+}
+
+export const sendFriendRequest = async (fromUid: string, toUid: string) => {
+  const batch = writeBatch(db);
+  const fromUserRef = doc(db, "users", fromUid);
+  const toUserRef = doc(db, "users", toUid);
+
+  batch.update(fromUserRef, { [`connections.${toUid}`]: "pending_sent" });
+  batch.update(toUserRef, { [`connections.${fromUid}`]: "pending_received" });
+
+  await batch.commit();
+}
+
+export const acceptFriendRequest = async (fromUid: string, toUid: string) => {
+  const batch = writeBatch(db);
+  const fromUserRef = doc(db, "users", fromUid);
+  const toUserRef = doc(db, "users", toUid);
+
+  batch.update(fromUserRef, { [`connections.${toUid}`]: "connected" });
+  batch.update(toUserRef, { [`connections.${fromUid}`]: "connected" });
+
+  await batch.commit();
+}
+
+export const declineFriendRequest = async (fromUid: string, toUid: string) => {
+    const batch = writeBatch(db);
+    const fromUserRef = doc(db, "users", fromUid);
+    const toUserRef = doc(db, "users", toUid);
+
+    batch.update(fromUserRef, { [`connections.${toUid}`]: null });
+    batch.update(toUserRef, { [`connections.${fromUid}`]: null });
+    
+    await batch.commit();
+}
+
+export const listenToFriends = (uid: string, callback: (users: UserProfile[]) => void) => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where(`connections.${uid}`, "==", "connected"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        const friends = snapshot.docs.map(doc => doc.data() as UserProfile);
+        callback(friends);
+    });
+
+    return unsubscribe;
+}
+
+export const listenToFriendRequests = (uid: string, callback: (users: UserProfile[]) => void) => {
+    const usersRef = collection(db, "users");
+    const q = query(usersRef, where(`connections.${uid}`, "==", "pending_sent"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        const requesters = snapshot.docs.map(doc => doc.data() as UserProfile);
+        callback(requesters);
+    });
+
+    return unsubscribe;
 }

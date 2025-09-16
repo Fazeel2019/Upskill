@@ -1,11 +1,12 @@
 
+
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus } from "lucide-react";
+import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, UserPlus, Check, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -38,7 +39,7 @@ import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience } from "@/services/profile";
+import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience, sendFriendRequest } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
@@ -601,6 +602,8 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
     )
 }
 
+// This is the current user's own profile page.
+// We will later create a dynamic page for viewing other users' profiles.
 export default function ProfilePage() {
   const { user, profile } = useAuth();
   const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
@@ -798,7 +801,3 @@ export default function ProfilePage() {
     </motion.div>
   );
 }
-
-    
-
-    
