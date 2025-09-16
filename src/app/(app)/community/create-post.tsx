@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -6,9 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { categorizePost } from "@/ai/flows/categorize-community-posts";
-import { Badge } from "@/components/ui/badge";
-import { Wand2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -22,36 +20,10 @@ import { addPost } from "@/services/posts";
 
 export default function CreatePost({ onPostCreated }: { onPostCreated?: () => void }) {
   const [postContent, setPostContent] = useState("");
-  const [isCategorizing, setIsCategorizing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>("STEM");
   const { toast } = useToast();
   const { user } = useAuth();
-
-  const handleCategorize = async () => {
-    if (postContent.trim().length < 10) {
-      toast({
-        title: "Content too short",
-        description: "Please write a bit more before categorizing.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setIsCategorizing(true);
-    setCategory(null);
-    try {
-      const result = await categorizePost({ postContent });
-      setCategory(result.category);
-    } catch (error) {
-      toast({
-        title: "Categorization Failed",
-        description: "Could not automatically categorize this post. Please select one manually.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsCategorizing(false);
-    }
-  };
 
   const handlePost = async () => {
     if (!user) {
@@ -63,7 +35,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
         return;
     }
     if (!category) {
-        toast({ title: "Please select a category", description: "You can use the AI suggestion or choose one manually.", variant: "destructive" });
+        toast({ title: "Please select a category", variant: "destructive" });
         return;
     }
     
@@ -86,7 +58,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
         });
 
         setPostContent("");
-        setCategory(null);
+        setCategory("STEM");
         if (onPostCreated) onPostCreated();
 
     } catch (error) {
@@ -124,22 +96,11 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
       </CardContent>
       <CardFooter className="flex justify-between items-center p-4 border-t">
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCategorize}
-            disabled={isCategorizing || isPosting}
-          >
-            <Wand2 className="h-4 w-4 mr-2" />
-            {isCategorizing ? "Thinking..." : "AI Suggest Category"}
-          </Button>
-
-          <Select value={category || ""} onValueChange={setCategory} disabled={isPosting}>
+          <Select value={category || ""} onValueChange={(value) => setCategory(value)} disabled={isPosting}>
             <SelectTrigger className="w-[180px] h-9">
               <SelectValue placeholder="Select category..." />
             </SelectTrigger>
             <SelectContent>
-              {category && <SelectItem value={category}>{category} (Suggested)</SelectItem>}
               <SelectItem value="STEM">STEM</SelectItem>
               <SelectItem value="Healthcare">Healthcare</SelectItem>
               <SelectItem value="Public Health">Public Health</SelectItem>

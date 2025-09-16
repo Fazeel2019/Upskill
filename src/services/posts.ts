@@ -1,5 +1,6 @@
+
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp, doc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp, doc, deleteDoc, runTransaction, arrayUnion, arrayRemove } from "firebase/firestore";
 
 export type Post = {
   id?: string;
@@ -11,11 +12,12 @@ export type Post = {
   content: string;
   category: "STEM" | "Healthcare" | "Public Health";
   timestamp: Timestamp;
-  likes?: number;
+  likeCount?: number;
+  likedBy?: string[];
   comments?: number;
 };
 
-type NewPost = Omit<Post, 'id' | 'timestamp'>;
+type NewPost = Omit<Post, 'id' | 'timestamp' | 'likeCount' | 'likedBy' | 'comments'>;
 
 export const addPost = async (postData: NewPost) => {
   try {
@@ -23,7 +25,8 @@ export const addPost = async (postData: NewPost) => {
     await addDoc(postsCollection, {
       ...postData,
       timestamp: serverTimestamp(),
-      likes: 0,
+      likeCount: 0,
+      likedBy: [],
       comments: 0,
     });
   } catch (error) {
@@ -41,6 +44,37 @@ export const deletePost = async (postId: string) => {
         throw new Error("Could not delete post");
     }
 };
+
+export const toggleLike = async (postId: string, userId: string) => {
+    const postRef = doc(db, "posts", postId);
+    try {
+        await runTransaction(db, async (transaction) => {
+            const postDoc = await transaction.get(postRef);
+            if (!postDoc.exists()) {
+                throw "Post does not exist!";
+            }
+
+            const post = postDoc.data() as Post;
+            const isLiked = post.likedBy?.includes(userId);
+            const newLikeCount = (post.likeCount || 0) + (isLiked ? -1 : 1);
+
+            if (isLiked) {
+                transaction.update(postRef, {
+                    likeCount: newLikeCount,
+                    likedBy: arrayRemove(userId)
+                });
+            } else {
+                 transaction.update(postRef, {
+                    likeCount: newLikeCount,
+                    likedBy: arrayUnion(userId)
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Error toggling like: ", error);
+        throw new Error("Could not update like");
+    }
+}
 
 export const listenToPosts = (callback: (posts: Post[]) => void) => {
   const postsCollection = collection(db, "posts");

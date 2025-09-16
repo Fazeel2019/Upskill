@@ -6,11 +6,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { deletePost, type Post as PostType } from "@/services/posts";
-import { MessageCircle, Heart, Share2, MoreHorizontal, Users, Loader2, Search, Trash2 } from "lucide-react";
+import { deletePost, type Post as PostType, toggleLike } from "@/services/posts";
+import { MessageCircle, Heart, MoreHorizontal, Users, Loader2, Search, Trash2 } from "lucide-react";
 import CreatePost from "./create-post";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { listenToPosts } from "@/services/posts";
 import { formatDistanceToNow } from "date-fns";
 import Link from "next/link";
@@ -30,7 +30,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast";
 
@@ -38,6 +37,13 @@ import { useToast } from "@/hooks/use-toast";
 function Post({ post }: { post: PostType }) {
   const { toast } = useToast();
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+  const { user, profile } = useAuth();
+  
+  const isLiked = useMemo(() => {
+    if (!user || !post.likedBy) return false;
+    return post.likedBy.includes(user.uid);
+  }, [user, post.likedBy]);
+
 
   const categoryColors = {
     STEM: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/50 dark:text-blue-300 dark:border-blue-800",
@@ -49,7 +55,6 @@ function Post({ post }: { post: PostType }) {
     ? `${formatDistanceToNow(post.timestamp.toDate())} ago` 
     : "Just now";
     
-  const { user, profile } = useAuth();
   
   const profileLink = user?.uid === post.author.uid ? "/profile" : `/profile/${post.author.uid}`;
 
@@ -62,6 +67,15 @@ function Post({ post }: { post: PostType }) {
       toast({ title: "Failed to delete post", variant: "destructive" });
     }
     setShowDeleteAlert(false);
+  }
+  
+  const handleLike = async () => {
+      if (!user || !post.id) return;
+      try {
+          await toggleLike(post.id, user.uid);
+      } catch (error) {
+          toast({ title: "Failed to like post", variant: "destructive" });
+      }
   }
 
   return (
@@ -129,14 +143,11 @@ function Post({ post }: { post: PostType }) {
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <div className="flex gap-4 text-muted-foreground">
-          <Button variant="ghost" size="sm" className="flex items-center gap-2">
-            <Heart className="h-4 w-4" /> {post.likes || 0}
+          <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={handleLike}>
+            <Heart className={`h-4 w-4 ${isLiked ? 'text-red-500 fill-current' : ''}`} /> {post.likeCount || 0}
           </Button>
           <Button variant="ghost" size="sm" className="flex items-center gap-2">
             <MessageCircle className="h-4 w-4" /> {post.comments || 0}
-          </Button>
-          <Button variant="ghost" size="sm" className="flex items-center gap-2">
-            <Share2 className="h-4 w-4" /> Share
           </Button>
         </div>
         <div
