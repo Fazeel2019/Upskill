@@ -1,0 +1,180 @@
+
+"use client";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import { addEvent, listenToEvents } from "@/services/events";
+import type { Event as EventType } from "@/lib/data";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
+import { format } from "date-fns";
+
+const eventFormSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  date: z.string().min(1, "Date is required"),
+  time: z.string().min(1, "Time is required"),
+  type: z.enum(["Webinar", "Workshop", "Summit", "Meetup"]),
+  category: z.enum(["STEM", "Healthcare", "Public Health"]),
+  imageUrl: z.string().url("Must be a valid URL"),
+  imageHint: z.string().min(2, "Image hint is required"),
+});
+
+type EventFormValues = z.infer<typeof eventFormSchema>;
+
+export default function ManageEvents() {
+  const { toast } = useToast();
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const form = useForm<EventFormValues>({
+    resolver: zodResolver(eventFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      date: "",
+      time: "",
+      type: "Webinar",
+      category: "STEM",
+      imageUrl: "https://picsum.photos/seed/event-placeholder/400/250",
+      imageHint: "abstract event",
+    },
+  });
+
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = listenToEvents((newEvents) => {
+        setEvents(newEvents);
+        setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const onSubmit = async (data: EventFormValues) => {
+    try {
+      await addEvent(data as any);
+      toast({ title: "Event Created", description: "The new event has been added successfully." });
+      form.reset();
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to create event.", variant: "destructive" });
+    }
+  };
+
+  return (
+    <div className="grid md:grid-cols-3 gap-8">
+      <div className="md:col-span-1">
+        <Card>
+          <CardHeader>
+            <CardTitle>Add New Event</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div>
+                <Label htmlFor="title">Title</Label>
+                <Input id="title" {...form.register("title")} />
+                {form.formState.errors.title && <p className="text-red-500 text-xs mt-1">{form.formState.errors.title.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="description">Description</Label>
+                <Textarea id="description" {...form.register("description")} />
+                {form.formState.errors.description && <p className="text-red-500 text-xs mt-1">{form.formState.errors.description.message}</p>}
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <Label htmlFor="date">Date</Label>
+                    <Input id="date" type="date" {...form.register("date")} />
+                    {form.formState.errors.date && <p className="text-red-500 text-xs mt-1">{form.formState.errors.date.message}</p>}
+                </div>
+                 <div>
+                    <Label htmlFor="time">Time</Label>
+                    <Input id="time" type="time" {...form.register("time")} />
+                    {form.formState.errors.time && <p className="text-red-500 text-xs mt-1">{form.formState.errors.time.message}</p>}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label>Type</Label>
+                  <Controller name="type" control={form.control} render={({ field }) => (
+                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="Webinar">Webinar</SelectItem>
+                            <SelectItem value="Workshop">Workshop</SelectItem>
+                            <SelectItem value="Summit">Summit</SelectItem>
+                            <SelectItem value="Meetup">Meetup</SelectItem>
+                        </SelectContent>
+                    </Select>
+                  )} />
+                </div>
+                <div>
+                   <Label>Category</Label>
+                   <Controller name="category" control={form.control} render={({ field }) => (
+                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="STEM">STEM</SelectItem>
+                            <SelectItem value="Healthcare">Healthcare</SelectItem>
+                            <SelectItem value="Public Health">Public Health</SelectItem>
+                        </SelectContent>
+                    </Select>
+                  )} />
+                </div>
+              </div>
+               <div>
+                <Label htmlFor="imageUrl">Image URL</Label>
+                <Input id="imageUrl" {...form.register("imageUrl")} />
+                {form.formState.errors.imageUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageUrl.message}</p>}
+              </div>
+              <div>
+                <Label htmlFor="imageHint">Image AI Hint</Label>
+                <Input id="imageHint" {...form.register("imageHint")} />
+                {form.formState.errors.imageHint && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageHint.message}</p>}
+              </div>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Adding Event..." : "Add Event"}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="md:col-span-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Existing Events</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {loading ? <Loader2 className="animate-spin" /> :
+             events.length > 0 ? (
+                <ul className="space-y-4">
+                    {events.map(event => (
+                        <li key={event.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
+                            <div>
+                                <p className="font-semibold">{event.title}</p>
+                                <p className="text-sm text-muted-foreground">{format(new Date(event.date as string), 'PPP')} at {event.time}</p>
+                            </div>
+                            <Button variant="ghost" size="sm">Edit</Button>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-muted-foreground text-center">No events found.</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

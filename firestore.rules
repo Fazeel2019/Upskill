@@ -1,27 +1,40 @@
+
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Users can only read and write their own profile
+    // Users can only read and write to their own profile.
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    
+    // Any authenticated user can read all profiles
+    match /users/{userId} {
+        allow get;
+    }
 
-    // Allow all authenticated users to read posts
-    // Only allow the author of a post to create it.
+    // Posts can be read by any authenticated user, but only created/modified
+    // by the user who owns the post.
     match /posts/{postId} {
       allow read: if request.auth != null;
-      allow create: if request.auth != null && request.auth.uid == request.resource.data.author.uid;
-      // allow update, delete: if request.auth != null && request.auth.uid == resource.data.author.uid;
+      allow create: if request.auth != null && request.resource.data.author.uid == request.auth.uid;
+      allow update, delete: if request.auth != null && resource.data.author.uid == request.auth.uid;
     }
-    
-    // Chats can be read/written only by participants
+
+    // Chat messages can only be read/written by participants in the chat.
     match /chats/{chatId} {
-      allow read, write: if request.auth != null && request.auth.uid in chatId.split('_');
+      allow read, write: if request.auth != null && request.auth.uid in resource.data.participants;
       
       match /messages/{messageId} {
-         allow read, create: if request.auth != null && request.auth.uid in chatId.split('_');
+      	allow read, create: if request.auth != null && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participants;
       }
+    }
+    
+    // Events can be read by anyone, but only created/modified by an admin.
+    match /events/{eventId} {
+      allow read: if request.auth != null;
+      allow create, update, delete: if request.auth != null && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
   }
 }

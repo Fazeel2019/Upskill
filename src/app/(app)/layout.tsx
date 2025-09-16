@@ -24,6 +24,7 @@ import {
   User,
   Mountain,
   PanelLeft,
+  Shield,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -41,10 +42,14 @@ const navItems = [
   { href: "/messaging", label: "Messaging", icon: MessageSquare },
 ];
 
+const adminNavItems = [
+  { href: "/admin", label: "Admin", icon: Shield },
+]
+
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
 
   if (loading) {
     return (
@@ -86,6 +91,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <SidebarMenuButton
                   asChild
                   isActive={pathname === item.href}
+                  tooltip={item.label}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span>{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+            {profile?.role === 'admin' && adminNavItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith(item.href)}
                   tooltip={item.label}
                 >
                   <Link href={item.href}>

@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -6,11 +7,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Event as EventType } from "@/lib/data";
-import { ArrowRight, Clock, Calendar as CalendarIcon } from "lucide-react";
+import { ArrowRight, Clock, Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { listenToEvents } from "@/services/events";
 
 function EventCard({ event }: { event: EventType }) {
     const categoryColors = {
@@ -18,6 +21,8 @@ function EventCard({ event }: { event: EventType }) {
         Healthcare: "border-green-500",
         "Public Health": "border-red-500",
     };
+    
+    const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
 
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[event.category]}`}>
@@ -35,7 +40,7 @@ function EventCard({ event }: { event: EventType }) {
             <CardHeader>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Badge variant="outline">{event.type}</Badge>
-                    <Badge variant="secondary">{new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</Badge>
+                    <Badge variant="secondary">{eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</Badge>
                 </div>
                 <CardTitle className="font-headline text-lg mt-2 leading-tight">
                     <Link href="#" className="hover:text-primary transition-colors">{event.title}</Link>
@@ -59,9 +64,22 @@ function EventCard({ event }: { event: EventType }) {
 
 
 export default function EventsPage() {
-  const mockEvents: EventType[] = [];
-  const mockPastEvents: EventType[] = [];
-  const eventDates = mockEvents.map(e => new Date(e.date));
+  const [events, setEvents] = useState<EventType[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = listenToEvents((newEvents) => {
+        setEvents(newEvents);
+        setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const upcomingEvents = events.filter(e => new Date(e.date as string) >= new Date());
+  const pastEvents = events.filter(e => new Date(e.date as string) < new Date());
+  const eventDates = upcomingEvents.map(e => new Date(e.date as string));
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -114,12 +132,12 @@ export default function EventsPage() {
                         <TabsTrigger value="past">Past Events</TabsTrigger>
                     </TabsList>
                     <TabsContent value="upcoming">
-                        {mockEvents.length > 0 ? (
+                        {loading ? <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin" /></div> : upcomingEvents.length > 0 ? (
                              <motion.div 
                                 className="grid sm:grid-cols-2 gap-6"
                                 variants={sectionVariants}
                             >
-                                {mockEvents.map((event, i) => (
+                                {upcomingEvents.map((event, i) => (
                                     <motion.div key={event.id} variants={cardVariants}>
                                         <EventCard event={event} />
                                     </motion.div>
@@ -132,12 +150,12 @@ export default function EventsPage() {
                         )}
                     </TabsContent>
                     <TabsContent value="past">
-                        {mockPastEvents.length > 0 ? (
+                        {loading ? <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin" /></div> : pastEvents.length > 0 ? (
                             <motion.div 
                                 className="grid sm:grid-cols-2 gap-6"
                                 variants={sectionVariants}
                             >
-                                {mockPastEvents.map(event => (
+                                {pastEvents.map(event => (
                                     <motion.div key={event.id} variants={cardVariants}>
                                         <EventCard event={event} />
                                     </motion.div>

@@ -41,6 +41,7 @@ export interface UserProfile {
   company?: string;
   linkedin?: string;
   website?: string;
+  role?: 'admin';
   experience?: Experience[];
   education?: Education[];
   achievements?: Achievement[];
