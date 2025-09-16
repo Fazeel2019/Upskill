@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import {
@@ -22,7 +23,6 @@ import {
   BookOpen,
   MessageSquare,
   User,
-  Mountain,
   PanelLeft,
   Shield,
 } from "lucide-react";
@@ -32,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotificationBell } from "@/components/notification-bell";
+import { Logo } from "@/components/logo";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -78,10 +79,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center gap-2 p-2">
-            <Mountain className="h-6 w-6 text-primary" />
-            <span className="font-headline text-lg group-data-[collapsible=icon]:hidden">
-              Upskill
-            </span>
+            <Logo className="w-auto h-10 text-primary" />
           </div>
         </SidebarHeader>
         <SidebarContent>

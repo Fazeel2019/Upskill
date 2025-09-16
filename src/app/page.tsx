@@ -1,4 +1,5 @@
 
+
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
@@ -265,7 +266,7 @@ export default function Home() {
                         <p className="text-sm">{post.content}</p>
                     </CardContent>
                     <div className="p-6 pt-0">
-                        <Badge variant={post.category === 'STEM' ? 'default' : post.category === 'Public Health' ? 'destructive' : 'secondary'} className={post.category === 'STEM' ? 'bg-blue-500 hover:bg-blue-600' : post.category === 'Public Health' ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}>{post.category}</Badge>
+                        <Badge>{post.category}</Badge>
                     </div>
                     </Card>
                 </motion.div>
@@ -274,7 +275,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <motion.section 
+        <motion.section needs a
           className="py-16 md:py-24"
           initial="hidden"
           whileInView="visible"

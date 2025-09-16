@@ -1,4 +1,4 @@
-import { Mountain } from "lucide-react";
+import { Logo } from "@/components/logo";
 import Link from "next/link";
 
 const SocialIcon = ({
@@ -25,8 +25,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2 font-bold">
-              <Mountain className="h-6 w-6 text-primary" />
-              <span className="font-headline text-lg">Upskill</span>
+              <Logo className="h-10 w-auto" />
             </Link>
             <p className="text-muted-foreground text-sm max-w-xs">
               The global hub for healthcare, STEM, and public health professionals to connect, learn, and grow.

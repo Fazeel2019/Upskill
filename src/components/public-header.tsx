@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu, Mountain } from "lucide-react";
+import { Menu } from "lucide-react";
+import { Logo } from "@/components/logo";
 
 export default function PublicHeader() {
   const navLinks = [
@@ -15,8 +16,7 @@ export default function PublicHeader() {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm">
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold">
-          <Mountain className="h-6 w-6 text-primary" />
-          <span className="font-headline text-lg">Upskill</span>
+          <Logo className="h-10 w-auto" />
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link) => (
@@ -47,8 +47,7 @@ export default function PublicHeader() {
           <SheetContent side="left">
             <div className="grid gap-6 p-6">
               <Link href="/" className="flex items-center gap-2 font-bold">
-                <Mountain className="h-6 w-6 text-primary" />
-                <span className="font-headline text-lg">Upskill</span>
+                <Logo className="h-10 w-auto" />
               </Link>
               <nav className="grid gap-4 text-lg">
                 {navLinks.map((link) => (

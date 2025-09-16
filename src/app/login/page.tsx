@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mountain } from "lucide-react";
+import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
@@ -69,8 +69,7 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center gap-2 font-bold">
-            <Mountain className="h-8 w-8 text-primary" />
-            <span className="font-headline text-2xl">Upskill</span>
+            <Logo className="h-12 w-auto" />
           </Link>
         </div>
         <Card>
