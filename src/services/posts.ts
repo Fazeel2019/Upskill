@@ -1,4 +1,3 @@
-'use server';
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, type Timestamp } from "firebase/firestore";
 
