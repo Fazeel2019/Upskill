@@ -4,47 +4,10 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, FlaskConical, Stethoscope } from "lucide-react";
+import { Download, FileText, FlaskConical, Stethoscope, BookOpen } from "lucide-react";
 import { motion } from "framer-motion";
 
-const resources = [
-  {
-    title: "Career Planning Template",
-    category: "Career",
-    description: "A comprehensive template to map out your 5-year career goals and milestones.",
-    icon: FileText,
-  },
-  {
-    title: "Grant Writing Guide for STEM",
-    category: "STEM",
-    description: "An essential guide to crafting winning grant proposals for research funding.",
-    icon: FlaskConical,
-  },
-  {
-    title: "Clinical Trial Best Practices",
-    category: "Healthcare",
-    description: "A checklist and guide for ensuring ethical and efficient clinical trial management.",
-    icon: Stethoscope,
-  },
-  {
-    title: "Guide to Community Health Needs Assessments",
-    category: "Public Health",
-    description: "Step-by-step instructions for conducting an effective CHNA in your community.",
-    icon: FileText,
-  },
-  {
-    title: "Resume & CV Keyword Optimization",
-    category: "Career",
-    description: "Learn how to tailor your resume to pass through automated screening systems.",
-    icon: FileText,
-  },
-  {
-    title: "Presenting Scientific Data",
-    category: "STEM",
-    description: "Tips and tricks for creating clear and impactful presentations of complex data.",
-    icon: FlaskConical,
-  },
-];
+const resources: any[] = [];
 
 export default function ResourcesPage() {
     const categoryColors = {
@@ -76,6 +39,20 @@ export default function ResourcesPage() {
         transition: { duration: 0.5 }
       },
     };
+    
+  const EmptyState = () => (
+    <motion.div variants={itemVariants} className="text-center py-16 md:col-span-3">
+        <Card className="max-w-md mx-auto">
+            <CardContent className="p-8 text-center">
+                <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold text-lg">Resource Library Coming Soon</h3>
+                <p className="text-muted-foreground mt-2">
+                    We're busy curating the best guides, templates, and materials. Check back shortly!
+                </p>
+            </CardContent>
+        </Card>
+    </motion.div>
+  )
 
   return (
     <motion.div 
@@ -101,7 +78,7 @@ export default function ResourcesPage() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={containerVariants}
       >
-        {resources.map((resource, index) => {
+        {resources.length > 0 ? resources.map((resource, index) => {
             const Icon = resource.icon
             return (
           <motion.div key={index} variants={itemVariants}>
@@ -125,7 +102,9 @@ export default function ResourcesPage() {
               </div>
             </Card>
           </motion.div>
-        )})}
+        )}) : (
+            <EmptyState />
+        )}
       </motion.div>
     </motion.div>
   );
