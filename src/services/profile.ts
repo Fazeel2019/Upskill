@@ -12,6 +12,24 @@ export interface Experience {
   description?: string;
 }
 
+export interface Education {
+  id: string;
+  school: string;
+  degree: string;
+  fieldOfStudy?: string;
+  startDate: string;
+  endDate?: string;
+  description?: string;
+}
+
+export interface Achievement {
+    id: string;
+    title: string;
+    issuer?: string;
+    date: string;
+    description?: string;
+}
+
 export interface UserProfile {
   uid: string;
   displayName: string;
@@ -24,6 +42,8 @@ export interface UserProfile {
   linkedin?: string;
   website?: string;
   experience?: Experience[];
+  education?: Education[];
+  achievements?: Achievement[];
 }
 
 export const getUserProfile = async (uid: string): Promise<UserProfile | null> => {
@@ -49,3 +69,17 @@ export const addExperience = async (uid: string, experience: Experience) => {
         experience: arrayUnion(experience)
     }, { merge: true });
 };
+
+export const addEducation = async (uid: string, education: Education) => {
+    const userRef = doc(db, "users", uid);
+    await setDoc(userRef, {
+        education: arrayUnion(education)
+    }, { merge: true });
+};
+
+export const addAchievement = async (uid: string, achievement: Achievement) => {
+    const userRef = doc(db, "users", uid);
+    await setDoc(userRef, {
+        achievements: arrayUnion(achievement)
+    }, { merge: true });
+}

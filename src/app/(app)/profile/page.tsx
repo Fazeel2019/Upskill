@@ -38,7 +38,7 @@ import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { addExperience, updateUserProfile, type Experience } from "@/services/profile";
+import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
@@ -348,6 +348,171 @@ function ExperienceItem({ experience }: { experience: Experience }) {
     )
 }
 
+const educationFormSchema = z.object({
+    school: z.string().min(1, "School is required"),
+    degree: z.string().min(1, "Degree is required"),
+    fieldOfStudy: z.string().optional(),
+    startDate: z.string().min(1, "Start date is required"),
+    endDate: z.string().optional(),
+    description: z.string().max(500, "Description must be less than 500 characters.").optional(),
+});
+
+type EducationFormValues = z.infer<typeof educationFormSchema>;
+
+function AddEducationDialog() {
+    const { user, reloadProfile } = useAuth();
+    const { toast } = useToast();
+    const [open, setOpen] = React.useState(false);
+
+    const form = useForm<EducationFormValues>({
+        resolver: zodResolver(educationFormSchema),
+        defaultValues: { school: "", degree: "", fieldOfStudy: "", startDate: "", endDate: "", description: "" },
+    });
+
+    const onSubmit = async (data: EducationFormValues) => {
+        if (!user) return;
+        try {
+            await addEducation(user.uid, { id: new Date().toISOString(), ...data });
+            reloadProfile();
+            toast({ title: "Education Added", description: "Your education has been saved." });
+            setOpen(false);
+            form.reset();
+        } catch (error: any) {
+            toast({ title: "Update Failed", description: error.message, variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add School</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader><DialogTitle>Add Education</DialogTitle><DialogDescription>Fill in your educational background.</DialogDescription></DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="school" render={({ field }) => (<FormItem><FormLabel>School</FormLabel><FormControl><Input {...field} placeholder="e.g. Stanford University" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="degree" render={({ field }) => (<FormItem><FormLabel>Degree</FormLabel><FormControl><Input {...field} placeholder="e.g. Bachelor's" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="fieldOfStudy" render={({ field }) => (<FormItem><FormLabel>Field of Study</FormLabel><FormControl><Input {...field} placeholder="e.g. Computer Science" /></FormControl><FormMessage /></FormItem>)} />
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField control={form.control} name="startDate" render={({ field }) => (<FormItem><FormLabel>Start Date</FormLabel><FormControl><Input {...field} type="month" /></FormControl><FormMessage /></FormItem>)} />
+                            <FormField control={form.control} name="endDate" render={({ field }) => (<FormItem><FormLabel>End Date</FormLabel><FormControl><Input {...field} type="month" /></FormControl><FormMessage /></FormItem>)} />
+                        </div>
+                        <FormField control={form.control} name="description" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} placeholder="Activities, awards, etc." /></FormControl><FormMessage /></FormItem>)} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                            <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Education"}</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function EducationItem({ education }: { education: Education }) {
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "Present";
+        const [year, month] = dateString.split('-');
+        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+
+    return (
+        <div className="flex gap-4 relative pb-8 last:pb-0">
+            <div className="absolute left-[18px] top-5 h-full w-px bg-border"></div>
+            <div className="flex-shrink-0">
+                <div className="bg-muted rounded-full p-2 ring-8 ring-card z-10 relative"><GraduationCap className="w-5 h-5 text-muted-foreground" /></div>
+            </div>
+            <div className="flex-grow">
+                <h4 className="font-semibold">{education.school}</h4>
+                <p className="text-muted-foreground text-sm">{education.degree}{education.fieldOfStudy && `, ${education.fieldOfStudy}`}</p>
+                <p className="text-muted-foreground text-xs mt-1">{formatDate(education.startDate)} - {formatDate(education.endDate || '')}</p>
+                {education.description && <p className="text-sm mt-2 whitespace-pre-wrap">{education.description}</p>}
+            </div>
+        </div>
+    )
+}
+
+const achievementFormSchema = z.object({
+    title: z.string().min(1, "Title is required"),
+    issuer: z.string().optional(),
+    date: z.string().min(1, "Date is required"),
+    description: z.string().max(500, "Description must be less than 500 characters.").optional(),
+});
+
+type AchievementFormValues = z.infer<typeof achievementFormSchema>;
+
+function AddAchievementDialog() {
+    const { user, reloadProfile } = useAuth();
+    const { toast } = useToast();
+    const [open, setOpen] = React.useState(false);
+
+    const form = useForm<AchievementFormValues>({
+        resolver: zodResolver(achievementFormSchema),
+        defaultValues: { title: "", issuer: "", date: "", description: "" },
+    });
+
+    const onSubmit = async (data: AchievementFormValues) => {
+        if (!user) return;
+        try {
+            await addAchievement(user.uid, { id: new Date().toISOString(), ...data });
+            reloadProfile();
+            toast({ title: "Achievement Added", description: "Your achievement has been saved." });
+            setOpen(false);
+            form.reset();
+        } catch (error: any) {
+            toast({ title: "Update Failed", description: error.message, variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add Achievement</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader><DialogTitle>Add Achievement</DialogTitle><DialogDescription>Showcase your awards, certifications, and publications.</DialogDescription></DialogHeader>
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                        <FormField control={form.control} name="title" render={({ field }) => (<FormItem><FormLabel>Title</FormLabel><FormControl><Input {...field} placeholder="e.g. Certified Cloud Practitioner" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="issuer" render={({ field }) => (<FormItem><FormLabel>Issuing Organization</FormLabel><FormControl><Input {...field} placeholder="e.g. Amazon Web Services" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="date" render={({ field }) => (<FormItem><FormLabel>Date Issued</FormLabel><FormControl><Input {...field} type="month" /></FormControl><FormMessage /></FormItem>)} />
+                        <FormField control={form.control} name="description" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} placeholder="Add any relevant details..." /></FormControl><FormMessage /></FormItem>)} />
+                        <DialogFooter>
+                            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                            <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Achievement"}</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function AchievementItem({ achievement }: { achievement: Achievement }) {
+    const formatDate = (dateString: string) => {
+        if (!dateString) return "";
+        const [year, month] = dateString.split('-');
+        return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+    }
+    
+    return (
+        <div className="flex gap-4 relative pb-8 last:pb-0">
+             <div className="absolute left-[18px] top-5 h-full w-px bg-border"></div>
+            <div className="flex-shrink-0">
+                 <div className="bg-muted rounded-full p-2 ring-8 ring-card z-10 relative">
+                    <Award className="w-5 h-5 text-muted-foreground" />
+                </div>
+            </div>
+            <div className="flex-grow">
+                <h4 className="font-semibold">{achievement.title}</h4>
+                {achievement.issuer && <p className="text-muted-foreground text-sm">{achievement.issuer}</p>}
+                <p className="text-muted-foreground text-xs mt-1">{formatDate(achievement.date)}</p>
+                {achievement.description && <p className="text-sm mt-2 whitespace-pre-wrap">{achievement.description}</p>}
+            </div>
+        </div>
+    )
+}
 
 export default function ProfilePage() {
   const { user, profile } = useAuth();
@@ -467,14 +632,25 @@ export default function ProfilePage() {
                 </TabsContent>
                 <TabsContent value="education">
                     <Card>
-                         <CardHeader>
+                         <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="font-headline">Education</CardTitle>
+                            {profile.education && profile.education.length > 0 && <AddEducationDialog />}
                         </CardHeader>
-                         <CardContent className="text-center text-muted-foreground py-12">
-                             <GraduationCap className="w-12 h-12 mx-auto mb-4" />
-                             <h3 className="font-semibold">Add Your Education</h3>
-                             <p className="mt-2">List your degrees and qualifications.</p>
-                             <Button variant="outline" className="mt-4" disabled>Add School</Button>
+                         <CardContent>
+                            {profile.education && profile.education.length > 0 ? (
+                                <div className="space-y-4">
+                                     {profile.education.sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map(edu => (
+                                        <EducationItem key={edu.id} education={edu} />
+                                    ))}
+                                </div>
+                            ) : (
+                                 <div className="text-center text-muted-foreground py-12">
+                                     <GraduationCap className="w-12 h-12 mx-auto mb-4" />
+                                     <h3 className="font-semibold">Add Your Education</h3>
+                                     <p className="mt-2">List your degrees and qualifications.</p>
+                                     <AddEducationDialog />
+                                </div>
+                            )}
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -495,14 +671,25 @@ export default function ProfilePage() {
             </motion.div>
             <motion.div variants={itemVariants}>
              <Card>
-                <CardHeader>
+                <CardHeader  className="flex flex-row items-center justify-between">
                     <CardTitle className="font-headline">Achievements</CardTitle>
+                    {profile.achievements && profile.achievements.length > 0 && <AddAchievementDialog />}
                 </CardHeader>
-                <CardContent className="text-center text-muted-foreground py-12">
-                     <Award className="w-12 h-12 mx-auto mb-4" />
-                     <h3 className="font-semibold">Add Achievements</h3>
-                     <p className="mt-2">Highlight your awards and recognitions.</p>
-                     <Button variant="outline" className="mt-4" disabled>Add Achievement</Button>
+                <CardContent>
+                     {profile.achievements && profile.achievements.length > 0 ? (
+                        <div className="space-y-4">
+                            {profile.achievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
+                                <AchievementItem key={ach.id} achievement={ach} />
+                            ))}
+                        </div>
+                     ) : (
+                        <div className="text-center text-muted-foreground py-12">
+                             <Award className="w-12 h-12 mx-auto mb-4" />
+                             <h3 className="font-semibold">Add Achievements</h3>
+                             <p className="mt-2">Highlight your awards and recognitions.</p>
+                             <AddAchievementDialog />
+                        </div>
+                     )}
                 </CardContent>
             </Card>
            </motion.div>
