@@ -26,6 +26,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -39,6 +41,29 @@ const navItems = [
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+       <div className="flex h-screen w-full">
+        <div className="hidden md:flex flex-col gap-4 p-4 border-r">
+            <Skeleton className="h-10 w-48" />
+            <div className="space-y-2 mt-4">
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+                <Skeleton className="h-8 w-full" />
+            </div>
+        </div>
+        <div className="flex-1 p-8">
+            <Skeleton className="h-16 w-full mb-8" />
+            <Skeleton className="h-96 w-full" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null; // Or a redirect component
 
   return (
     <SidebarProvider defaultOpen={!isMobile}>
@@ -73,9 +98,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 p-2 group-data-[collapsible=icon]:justify-center">
             <UserNav />
             <div className="group-data-[collapsible=icon]:hidden">
-              <p className="text-sm font-medium">Dr. Ada Lovelace</p>
+              <p className="text-sm font-medium">{user.displayName || 'User'}</p>
               <p className="text-xs text-muted-foreground">
-                ada.lovelace@example.com
+                {user.email}
               </p>
             </div>
           </div>

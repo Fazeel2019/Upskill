@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,8 +14,40 @@ import { Label } from "@/components/ui/label";
 import { Mountain } from "lucide-react";
 import Link from "next/link";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SignupPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const handleSignUp = async () => {
+        setIsLoading(true);
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await updateProfile(userCredential.user, {
+                displayName: `${firstName} ${lastName}`
+            });
+            router.push('/dashboard');
+        } catch (error: any) {
+            toast({
+                title: "Sign-up Failed",
+                description: error.message,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const SocialButton = ({
     provider,
     children,
@@ -21,7 +55,7 @@ export default function SignupPage() {
     provider: string;
     children: React.ReactNode;
   }) => (
-    <Button variant="outline" className="w-full">
+    <Button variant="outline" className="w-full" disabled>
       {children}
       <span className="ml-2">Sign up with {provider}</span>
     </Button>
@@ -70,20 +104,20 @@ export default function SignupPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="first-name">First Name</Label>
-                  <Input id="first-name" placeholder="Ada" required />
+                  <Input id="first-name" placeholder="Ada" required value={firstName} onChange={e => setFirstName(e.target.value)} />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="last-name">Last Name</Label>
-                  <Input id="last-name" placeholder="Lovelace" required />
+                  <Input id="last-name" placeholder="Lovelace" required value={lastName} onChange={e => setLastName(e.target.value)}/>
                 </div>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} />
               </div>
                <div className="flex items-center space-x-2">
                 <Checkbox id="terms" />
@@ -91,8 +125,8 @@ export default function SignupPage() {
                     I agree to the <Link href="#" className="underline text-primary">Terms of Service</Link> and <Link href="#" className="underline text-primary">Privacy Policy</Link>.
                 </Label>
                </div>
-              <Button type="submit" className="w-full">
-                Create Account
+              <Button type="submit" className="w-full" onClick={handleSignUp} disabled={isLoading}>
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </div>
           </CardContent>

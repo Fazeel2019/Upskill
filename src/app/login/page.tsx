@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,8 +13,36 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mountain } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 export default function LoginPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const router = useRouter();
+    const { toast } = useToast();
+
+
+    const handleLogin = async () => {
+        setIsLoading(true);
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            router.push('/dashboard');
+        } catch (error: any) {
+            toast({
+                title: "Login Failed",
+                description: error.message,
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
   const SocialButton = ({
     provider,
     children,
@@ -20,7 +50,7 @@ export default function LoginPage() {
     provider: string;
     children: React.ReactNode;
   }) => (
-    <Button variant="outline" className="w-full">
+    <Button variant="outline" className="w-full" disabled>
       {children}
       <span className="ml-2">Login with {provider}</span>
     </Button>
@@ -54,7 +84,7 @@ export default function LoginPage() {
             <div className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" placeholder="m@example.com" required value={email} onChange={e => setEmail(e.target.value)} />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
@@ -63,10 +93,10 @@ export default function LoginPage() {
                     Forgot password?
                   </Link>
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)}/>
               </div>
-              <Button type="submit" className="w-full" asChild>
-                <Link href="/dashboard">Log In</Link>
+              <Button type="submit" className="w-full" onClick={handleLogin} disabled={isLoading}>
+                {isLoading ? 'Logging In...' : 'Log In'}
               </Button>
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
