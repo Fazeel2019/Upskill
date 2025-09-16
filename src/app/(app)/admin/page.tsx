@@ -8,6 +8,7 @@ import { Shield, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageEvents from "./manage-events";
 import ManageResources from "./manage-resources";
+import ManageUsers from "./manage-users";
 
 function AdminAccessDenied() {
     return (
@@ -40,12 +41,16 @@ export default function AdminPage() {
                 <TabsList>
                     <TabsTrigger value="events">Manage Events</TabsTrigger>
                     <TabsTrigger value="resources">Manage Resources</TabsTrigger>
+                    <TabsTrigger value="users">Manage Users</TabsTrigger>
                 </TabsList>
                 <TabsContent value="events">
                     <ManageEvents />
                 </TabsContent>
                 <TabsContent value="resources">
                     <ManageResources />
+                </TabsContent>
+                <TabsContent value="users">
+                    <ManageUsers />
                 </TabsContent>
             </Tabs>
         </div>
