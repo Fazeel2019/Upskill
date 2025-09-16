@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageEvents from "./manage-events";
+import ManageResources from "./manage-resources";
 
 function AdminAccessDenied() {
     return (
@@ -38,13 +39,13 @@ export default function AdminPage() {
             <Tabs defaultValue="events">
                 <TabsList>
                     <TabsTrigger value="events">Manage Events</TabsTrigger>
-                    <TabsTrigger value="resources" disabled>Manage Resources</TabsTrigger>
+                    <TabsTrigger value="resources">Manage Resources</TabsTrigger>
                 </TabsList>
                 <TabsContent value="events">
                     <ManageEvents />
                 </TabsContent>
                 <TabsContent value="resources">
-                    {/* Placeholder for resource management */}
+                    <ManageResources />
                 </TabsContent>
             </Tabs>
         </div>

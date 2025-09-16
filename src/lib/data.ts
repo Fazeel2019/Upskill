@@ -12,3 +12,12 @@ export type Event = {
   imageUrl: string;
   imageHint: string;
 };
+
+export type Resource = {
+  id: string;
+  title: string;
+  description: string;
+  category: "Career" | "STEM" | "Healthcare" | "Public Health";
+  youtubeUrl: string;
+  createdAt: Timestamp;
+};
