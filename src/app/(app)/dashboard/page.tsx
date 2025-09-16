@@ -5,39 +5,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Bell, Calendar, Edit, MessageSquare, Plus, Users } from "lucide-react"
 import Link from "next/link"
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts"
 import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
-
-const notifications = [
-    { user: "David Chen, MPH", action: "commented on your post" },
-    { user: "Event Reminder", action: "'AI in Diagnostics' starts in 1 hour" },
-    { user: "Aisha Khan, RN", action: "sent you a new message" },
-]
-
 
 export default function DashboardPage() {
-  const [chartData, setChartData] = useState<any[]>([]);
-
-  useEffect(() => {
-    // Generate random data on client side to avoid hydration mismatch
-    const data = [
-      { name: "Jan", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Feb", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Mar", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Apr", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "May", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Jun", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Jul", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Aug", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Sep", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Oct", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Nov", total: Math.floor(Math.random() * 5000) + 1000 },
-      { name: "Dec", total: Math.floor(Math.random() * 5000) + 1000 },
-    ];
-    setChartData(data);
-  }, []);
-
   const containerVariants = {
     hidden: { opacity: 1 },
     visible: {
@@ -65,7 +35,7 @@ export default function DashboardPage() {
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
-        <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back, Dr. Lovelace!</h1>
+        <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back!</h1>
         <p className="text-muted-foreground">Here's a snapshot of your community activity.</p>
       </motion.div>
       
@@ -77,8 +47,8 @@ export default function DashboardPage() {
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">45</div>
-              <p className="text-xs text-muted-foreground">+12 since yesterday</p>
+              <div className="text-2xl font-bold">0</div>
+              <p className="text-xs text-muted-foreground">No new posts yet</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -89,8 +59,8 @@ export default function DashboardPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-muted-foreground">1 new webinar this week</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">No upcoming events</p>
           </CardContent>
         </Card>
         </motion.div>
@@ -101,8 +71,8 @@ export default function DashboardPage() {
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">5</div>
-            <p className="text-xs text-muted-foreground">2 from new connections</p>
+            <div className="text-2xl font-bold">0</div>
+            <p className="text-xs text-muted-foreground">No unread messages</p>
           </CardContent>
         </Card>
         </motion.div>
@@ -117,7 +87,7 @@ export default function DashboardPage() {
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <Button asChild variant="outline" size="lg">
-                        <Link href="/community"><Plus className="mr-2 h-4 w-4"/>Create a Post</Link>
+                        <Link href="/community/create-post"><Plus className="mr-2 h-4 w-4"/>Create a Post</Link>
                     </Button>
                     <Button asChild variant="outline" size="lg">
                         <Link href="/events"><Calendar className="mr-2 h-4 w-4"/>Find an Event</Link>
@@ -133,30 +103,12 @@ export default function DashboardPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="font-headline">Community Engagement</CardTitle>
-                    <CardDescription>A look at posts and comments over the last year.</CardDescription>
+                    <CardDescription>Your engagement activity will appear here.</CardDescription>
                 </CardHeader>
                 <CardContent className="pl-2">
-                    {chartData.length > 0 && (
-                      <ResponsiveContainer width="100%" height={300}>
-                      <BarChart data={chartData}>
-                          <XAxis
-                          dataKey="name"
-                          stroke="#888888"
-                          fontSize={12}
-                          tickLine={false}
-                          axisLine={false}
-                          />
-                          <YAxis
-                          stroke="#888888"
-                          fontSize={12}
-                          tickLine={false}
-                          axisLine={false}
-                          tickFormatter={(value) => `${value}`}
-                          />
-                          <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-                      </BarChart>
-                      </ResponsiveContainer>
-                    )}
+                    <div className="h-[300px] flex items-center justify-center text-muted-foreground bg-muted/50 rounded-md">
+                        No data to display
+                    </div>
                 </CardContent>
             </Card>
             </motion.div>
@@ -166,23 +118,12 @@ export default function DashboardPage() {
           <Card>
               <CardHeader>
                   <CardTitle className="font-headline">Notifications</CardTitle>
-                  <CardDescription>Recent updates and reminders.</CardDescription>
+                  <CardDescription>Recent updates and reminders will show up here.</CardDescription>
               </CardHeader>
               <CardContent>
-                  <div className="space-y-4">
-                  {notifications.map((notification, index) => (
-                      <div key={index} className="flex items-start gap-4">
-                          <div className="bg-primary/10 p-2 rounded-full">
-                              <Bell className="h-4 w-4 text-primary" />
-                          </div>
-                          <div>
-                              <p className="text-sm">
-                                  <span className="font-semibold">{notification.user}</span> {notification.action}.
-                              </p>
-                              <p className="text-xs text-muted-foreground">{index + 1}h ago</p>
-                          </div>
-                      </div>
-                  ))}
+                  <div className="space-y-4 text-center text-muted-foreground py-8">
+                     <Bell className="h-8 w-8 mx-auto" />
+                     <p>You're all caught up!</p>
                   </div>
               </CardContent>
           </Card>
