@@ -30,6 +30,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Skeleton } from "@/components/ui/skeleton";
+import { NotificationBell } from "@/components/notification-bell";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
@@ -114,6 +115,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <PanelLeft />
           </SidebarTrigger>
           <div className="flex items-center gap-4">
+            <NotificationBell />
             <UserNav />
           </div>
         </header>
