@@ -33,10 +33,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { updateProfile } from "firebase/auth";
+import { updateProfile as updateFirebaseProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
+import { Textarea } from "@/components/ui/textarea";
+import { updateUserProfile } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
@@ -47,7 +49,7 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 
 function EditProfileDialog({ children }: { children: React.ReactNode }) {
-  const { user } = useAuth();
+  const { user, reloadProfile } = useAuth();
   const { toast } = useToast();
   const [open, setOpen] = React.useState(false);
 
@@ -62,15 +64,16 @@ function EditProfileDialog({ children }: { children: React.ReactNode }) {
     if (!user) return;
 
     try {
-      await updateProfile(user, {
+      await updateFirebaseProfile(user, {
         displayName: data.displayName,
       });
+       await updateUserProfile(user.uid, { displayName: data.displayName });
+      reloadProfile();
       toast({
         title: "Profile Updated",
-        description: "Your profile has been successfully updated.",
+        description: "Your name has been successfully updated.",
       });
       setOpen(false);
-      // The useAuth hook will automatically reflect the change, no need to manually update state here
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -94,7 +97,7 @@ function EditProfileDialog({ children }: { children: React.ReactNode }) {
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Make changes to your name here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -131,8 +134,98 @@ function EditProfileDialog({ children }: { children: React.ReactNode }) {
   );
 }
 
+const bioFormSchema = z.object({
+  bio: z.string().max(280, { message: "Bio must be less than 280 characters." }).optional(),
+});
+
+type BioFormValues = z.infer<typeof bioFormSchema>;
+
+function EditBioDialog() {
+  const { user, profile, reloadProfile } = useAuth();
+  const { toast } = useToast();
+  const [open, setOpen] = React.useState(false);
+
+  const form = useForm<BioFormValues>({
+    resolver: zodResolver(bioFormSchema),
+    defaultValues: {
+      bio: profile?.bio || "",
+    },
+  });
+
+  const onSubmit = async (data: BioFormValues) => {
+    if (!user) return;
+
+    try {
+      await updateUserProfile(user.uid, { bio: data.bio });
+      reloadProfile();
+      toast({
+        title: "Bio Updated",
+        description: "Your bio has been successfully updated.",
+      });
+      setOpen(false);
+    } catch (error: any) {
+      toast({
+        title: "Update Failed",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    if (profile && open) {
+      form.reset({ bio: profile.bio || "" });
+    }
+  }, [profile, open, form]);
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="link" className="p-0 h-auto">Edit Bio</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit Bio</DialogTitle>
+          <DialogDescription>
+            Tell the community a little bit about yourself.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="bio"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Your professional background, interests, and expertise..."
+                      className="min-h-[120px]"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" variant="secondary">Cancel</Button>
+              </DialogClose>
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? "Saving..." : "Save Bio"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -151,7 +244,7 @@ export default function ProfilePage() {
     },
   };
 
-  if (!user) return null;
+  if (!user || !profile) return null;
 
   return (
     <motion.div 
@@ -173,7 +266,7 @@ export default function ProfilePage() {
               priority
             />
             <div className="absolute top-4 right-4">
-              <Button variant="secondary" size="sm">
+              <Button variant="secondary" size="sm" disabled>
                 <Edit className="mr-2 h-4 w-4" /> Edit Cover
               </Button>
             </div>
@@ -187,11 +280,11 @@ export default function ProfilePage() {
                   </Avatar>
               </div>
               <div className="flex-grow">
-                <h1 className="text-2xl sm:text-3xl font-bold font-headline">{user.displayName || "Your Name"}</h1>
-                <p className="text-muted-foreground">Your professional title will appear here.</p>
+                <h1 className="text-2xl sm:text-3xl font-bold font-headline">{profile.displayName || "Your Name"}</h1>
+                <p className="text-muted-foreground">{profile.title || "Your professional title will appear here."}</p>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2">
-                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>Your Location</div>
-                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>Your Company</div>
+                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>{profile.location || "Your Location"}</div>
+                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>{profile.company || "Your Company"}</div>
                 </div>
               </div>
               <div className="shrink-0 flex gap-2">
@@ -218,8 +311,8 @@ export default function ProfilePage() {
                             <CardTitle className="font-headline">Bio</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4 text-muted-foreground">
-                            <p>Share a bit about your professional background, interests, and expertise. This is a great place to introduce yourself to the community.</p>
-                             <Button variant="link" className="p-0 h-auto">Edit Bio</Button>
+                            <p className="whitespace-pre-wrap">{profile.bio || "Share a bit about your professional background, interests, and expertise. This is a great place to introduce yourself to the community."}</p>
+                             <EditBioDialog />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -232,7 +325,7 @@ export default function ProfilePage() {
                              <Briefcase className="w-12 h-12 mx-auto mb-4" />
                              <h3 className="font-semibold">Add Your Experience</h3>
                              <p className="mt-2">Showcase your professional history.</p>
-                             <Button variant="outline" className="mt-4">Add Position</Button>
+                             <Button variant="outline" className="mt-4" disabled>Add Position</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -245,7 +338,7 @@ export default function ProfilePage() {
                              <GraduationCap className="w-12 h-12 mx-auto mb-4" />
                              <h3 className="font-semibold">Add Your Education</h3>
                              <p className="mt-2">List your degrees and qualifications.</p>
-                             <Button variant="outline" className="mt-4">Add School</Button>
+                             <Button variant="outline" className="mt-4" disabled>Add School</Button>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -273,7 +366,7 @@ export default function ProfilePage() {
                      <Award className="w-12 h-12 mx-auto mb-4" />
                      <h3 className="font-semibold">Add Achievements</h3>
                      <p className="mt-2">Highlight your awards and recognitions.</p>
-                     <Button variant="outline" className="mt-4">Add Achievement</Button>
+                     <Button variant="outline" className="mt-4" disabled>Add Achievement</Button>
                 </CardContent>
             </Card>
            </motion.div>
