@@ -1,6 +1,6 @@
 // src/services/profile.ts
 import { db } from "@/lib/firebase";
-import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt, endAt } from "firebase/firestore";
 
 export interface Experience {
   id: string;
@@ -143,25 +143,51 @@ export const listenToFriendRequests = (uid: string, callback: (users: UserProfil
 }
 
 export const searchUsers = async (searchQuery: string, currentUserId: string): Promise<UserProfile[]> => {
-    if (!searchQuery) return [];
-    
     const usersRef = collection(db, "users");
-    
-    const q = query(
+
+    if (!searchQuery) {
+        const q = query(usersRef, orderBy("displayName"), limit(20));
+        const querySnapshot = await getDocs(q);
+        const users: UserProfile[] = [];
+        querySnapshot.forEach((doc) => {
+            if (doc.id !== currentUserId) {
+                users.push(doc.data() as UserProfile);
+            }
+        });
+        return users;
+    }
+
+    const nameQuery = query(
         usersRef,
         orderBy("displayName"),
         startAt(searchQuery),
-        limit(10)
+        endAt(searchQuery + '\uf8ff')
     );
 
-    const querySnapshot = await getDocs(q);
+    const emailQuery = query(
+        usersRef,
+        orderBy("email"),
+        startAt(searchQuery),
+        endAt(searchQuery + '\uf8ff')
+    );
 
-    const users: UserProfile[] = [];
-    querySnapshot.forEach((doc) => {
-        if (doc.id !== currentUserId) {
-            users.push(doc.data() as UserProfile);
-        }
-    });
+    const [nameSnapshot, emailSnapshot] = await Promise.all([
+        getDocs(nameQuery),
+        getDocs(emailQuery)
+    ]);
 
-    return users.filter(user => user.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()));
+    const usersMap = new Map<string, UserProfile>();
+
+    const processSnapshot = (snapshot: any) => {
+        snapshot.forEach((doc: any) => {
+            if (doc.id !== currentUserId && !usersMap.has(doc.id)) {
+                usersMap.set(doc.id, doc.data() as UserProfile);
+            }
+        });
+    };
+
+    processSnapshot(nameSnapshot);
+    processSnapshot(emailSnapshot);
+
+    return Array.from(usersMap.values());
 };

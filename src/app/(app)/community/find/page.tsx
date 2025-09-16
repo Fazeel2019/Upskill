@@ -62,7 +62,7 @@ function UserCard({ user, currentUserProfile, onFriendRequestSent }: { user: Use
             <Link href={`/profile/${user.uid}`}>
                 <p className="font-semibold hover:underline">{user.displayName}</p>
             </Link>
-            <p className="text-sm text-muted-foreground">{user.title || 'Community Member'}</p>
+            <p className="text-sm text-muted-foreground">{user.email || 'Community Member'}</p>
           </div>
         </div>
         {FriendButton}
@@ -74,22 +74,25 @@ function UserCard({ user, currentUserProfile, onFriendRequestSent }: { user: Use
 export default function FindMembersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [searched, setSearched] = useState(true);
   const { user, profile, reloadProfile } = useAuth();
 
   useEffect(() => {
-    const handler = setTimeout(async () => {
-      if (searchQuery.trim().length > 1) {
+    const performSearch = async () => {
+        if (!user) return;
         setLoading(true);
         setSearched(true);
-        const users = await searchUsers(searchQuery, user!.uid);
+        const users = await searchUsers(searchQuery, user.uid);
         setResults(users);
         setLoading(false);
-      } else {
-        setResults([]);
-        setSearched(false);
-      }
+    }
+    
+    // Initial fetch
+    performSearch();
+    
+    const handler = setTimeout(() => {
+        performSearch();
     }, 500); // Debounce search
 
     return () => {
@@ -114,9 +117,9 @@ export default function FindMembersPage() {
     <div className="max-w-2xl mx-auto">
       <motion.div initial="hidden" animate="visible" variants={itemVariants}>
         <h1 className="text-3xl font-bold tracking-tight font-headline">Find Members</h1>
-        <p className="text-muted-foreground mb-6">Search for other professionals in the community by name.</p>
+        <p className="text-muted-foreground mb-6">Search for other professionals in the community by name or email.</p>
         <Input
-          placeholder="Search by name..."
+          placeholder="Search by name or email..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="text-lg p-6"
@@ -137,7 +140,7 @@ export default function FindMembersPage() {
                 <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                 <h3 className="font-semibold text-lg">No Members Found</h3>
                 <p className="text-muted-foreground mt-2">
-                  No users matched your search for "{searchQuery}". Try a different name.
+                  {searchQuery ? `No users matched your search for "${searchQuery}".` : "There are no other users in the community yet."}
                 </p>
               </CardContent>
             </Card>
