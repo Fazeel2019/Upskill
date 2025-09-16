@@ -43,6 +43,9 @@ import { addAchievement, addEducation, updateUserProfile, type Experience, type 
 
 const profileFormSchema = z.object({
   displayName: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50, { message: "Name must be less than 50 characters." }),
+  title: z.string().max(100, { message: "Title must be less than 100 characters."}).optional(),
+  company: z.string().max(100, { message: "Company must be less than 100 characters."}).optional(),
+  location: z.string().max(100, { message: "Location must be less than 100 characters."}).optional(),
   linkedin: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
   website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
@@ -58,6 +61,9 @@ function EditProfileDialog({ children, onOpenChange, open }: { children: React.R
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       displayName: user?.displayName || "",
+      title: profile?.title || "",
+      company: profile?.company || "",
+      location: profile?.location || "",
       linkedin: profile?.linkedin || "",
       website: profile?.website || "",
     },
@@ -75,6 +81,9 @@ function EditProfileDialog({ children, onOpenChange, open }: { children: React.R
       
       await updateUserProfile(user.uid, { 
         displayName: data.displayName,
+        title: data.title,
+        company: data.company,
+        location: data.location,
         linkedin: data.linkedin,
         website: data.website
       });
@@ -97,6 +106,9 @@ function EditProfileDialog({ children, onOpenChange, open }: { children: React.R
     if (user && profile && open) {
       form.reset({ 
         displayName: user.displayName || "",
+        title: profile.title || "",
+        company: profile.company || "",
+        location: profile.location || "",
         linkedin: profile.linkedin || "",
         website: profile.website || ""
       });
@@ -124,6 +136,45 @@ function EditProfileDialog({ children, onOpenChange, open }: { children: React.R
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Title</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="e.g. Clinical Research Coordinator"/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="e.g. Genentech"/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="e.g. San Francisco Bay Area"/>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -747,5 +798,7 @@ export default function ProfilePage() {
     </motion.div>
   );
 }
+
+    
 
     
