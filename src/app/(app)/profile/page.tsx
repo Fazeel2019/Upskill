@@ -38,25 +38,28 @@ import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement } from "@/services/profile";
+import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
   displayName: z.string().min(2, { message: "Name must be at least 2 characters." }).max(50, { message: "Name must be less than 50 characters." }),
+  linkedin: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
+  website: z.string().url({ message: "Please enter a valid URL." }).optional().or(z.literal('')),
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
 
 
-function EditProfileDialog({ children }: { children: React.ReactNode }) {
-  const { user, reloadProfile } = useAuth();
+function EditProfileDialog({ children, onOpenChange, open }: { children: React.ReactNode, open: boolean, onOpenChange: (open: boolean) => void }) {
+  const { user, profile, reloadProfile } = useAuth();
   const { toast } = useToast();
-  const [open, setOpen] = React.useState(false);
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       displayName: user?.displayName || "",
+      linkedin: profile?.linkedin || "",
+      website: profile?.website || "",
     },
   });
 
@@ -64,16 +67,23 @@ function EditProfileDialog({ children }: { children: React.ReactNode }) {
     if (!user) return;
 
     try {
-      await updateFirebaseProfile(user, {
+      if (data.displayName !== user.displayName) {
+        await updateFirebaseProfile(user, {
+          displayName: data.displayName,
+        });
+      }
+      
+      await updateUserProfile(user.uid, { 
         displayName: data.displayName,
+        linkedin: data.linkedin,
+        website: data.website
       });
-       await updateUserProfile(user.uid, { displayName: data.displayName });
       reloadProfile();
       toast({
         title: "Profile Updated",
-        description: "Your name has been successfully updated.",
+        description: "Your profile has been successfully updated.",
       });
-      setOpen(false);
+      onOpenChange(false);
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -84,39 +94,67 @@ function EditProfileDialog({ children }: { children: React.ReactNode }) {
   };
 
   React.useEffect(() => {
-    if (user && open) {
-      form.reset({ displayName: user.displayName || "" });
+    if (user && profile && open) {
+      form.reset({ 
+        displayName: user.displayName || "",
+        linkedin: profile.linkedin || "",
+        website: profile.website || ""
+      });
     }
-  }, [user, open, form]);
+  }, [user, profile, open, form]);
 
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit profile</DialogTitle>
           <DialogDescription>
-            Make changes to your name here. Click save when you're done.
+            Make changes to your profile here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid gap-4 py-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="displayName"
                 render={({ field }) => (
-                  <FormItem className="grid grid-cols-4 items-center gap-4">
-                    <FormLabel className="text-right">Name</FormLabel>
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input {...field} className="col-span-3" />
+                      <Input {...field} />
                     </FormControl>
-                    <FormMessage className="col-span-4" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
+              <FormField
+                control={form.control}
+                name="linkedin"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn Profile</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="https://linkedin.com/in/your-profile"/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Personal Website</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="https://your-website.com"/>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             <DialogFooter>
                <DialogClose asChild>
                 <Button type="button" variant="secondary">
@@ -209,9 +247,7 @@ function EditBioDialog() {
               )}
             />
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">Cancel</Button>
-              </DialogClose>
+              <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Saving..." : "Save Bio"}
               </Button>
@@ -516,6 +552,7 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
 
 export default function ProfilePage() {
   const { user, profile } = useAuth();
+  const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -578,8 +615,8 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="shrink-0 flex gap-2">
-                  <EditProfileDialog>
-                    <Button><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
+                  <EditProfileDialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
+                    <Button onClick={() => setIsEditProfileOpen(true)}><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
                   </EditProfileDialog>
               </div>
             </div>
@@ -664,8 +701,20 @@ export default function ProfilePage() {
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
                       <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground"/>{user.email}</div>
-                      <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">Add LinkedIn profile</Link></div>
-                      <div className="flex items-center gap-2"><Link2 className="w-4 h-4 text-muted-foreground"/><Link href="#" className="text-primary hover:underline">Add personal website</Link></div>
+                      <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/>
+                        {profile.linkedin ? (
+                            <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.linkedin}</a>
+                        ) : (
+                            <button onClick={() => setIsEditProfileOpen(true)} className="text-primary hover:underline">Add LinkedIn profile</button>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2"><Link2 className="w-4 h-4 text-muted-foreground"/>
+                        {profile.website ? (
+                             <a href={profile.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.website}</a>
+                        ) : (
+                             <button onClick={() => setIsEditProfileOpen(true)} className="text-primary hover:underline">Add personal website</button>
+                        )}
+                      </div>
                   </CardContent>
               </Card>
             </motion.div>
