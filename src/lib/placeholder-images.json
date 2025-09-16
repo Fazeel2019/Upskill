@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Professionals collaborating in a modern office.",
+      "imageUrl": "https://picsum.photos/seed/hero/1200/600",
+      "imageHint": "team collaboration"
+    },
+    {
+      "id": "profile1",
+      "description": "Profile picture for Dr. Emily Carter",
+      "imageUrl": "https://picsum.photos/seed/101/100/100",
+      "imageHint": "woman portrait"
+    },
+    {
+      "id": "profile2",
+      "description": "Profile picture for David Chen, MPH",
+      "imageUrl": "https://picsum.photos/seed/102/100/100",
+      "imageHint": "man portrait"
+    },
+    {
+      "id": "profile3",
+      "description": "Profile picture for Aisha Khan, RN",
+      "imageUrl": "https://picsum.photos/seed/103/100/100",
+      "imageHint": "woman professional"
+    },
+    {
+      "id": "podcast1",
+      "description": "Podcast cover art for 'The Mind of a Surgeon'",
+      "imageUrl": "https://picsum.photos/seed/podcast1/200/200",
+      "imageHint": "abstract brain"
+    },
+    {
+      "id": "podcast2",
+      "description": "Podcast cover art for 'From Lab to Market'",
+      "imageUrl": "https://picsum.photos/seed/podcast2/200/200",
+      "imageHint": "science lab"
+    },
+    {
+      "id": "event1",
+      "description": "Event image for 'AI in Diagnostics Webinar'",
+      "imageUrl": "https://picsum.photos/seed/event1/400/250",
+      "imageHint": "artificial intelligence"
+    },
+    {
+      "id": "event2",
+      "description": "Event image for 'Networking for STEM Grads'",
+      "imageUrl": "https://picsum.photos/seed/event2/400/250",
+      "imageHint": "people networking"
+    },
+    {
+      "id": "profile_cover",
+      "description": "Default profile cover image.",
+      "imageUrl": "https://picsum.photos/seed/cover/1200/300",
+      "imageHint": "abstract pattern"
+    },
+    {
+      "id": "about_timeline",
+      "description": "Image for about page timeline section.",
+      "imageUrl": "https://picsum.photos/seed/timeline/500/300",
+      "imageHint": "business growth"
+    }
+  ]
 }
