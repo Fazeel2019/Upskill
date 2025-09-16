@@ -4,13 +4,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, FlaskConical, Stethoscope, BookOpen, Youtube, Loader2 } from "lucide-react";
+import { Download, FileText, FlaskConical, Stethoscope, BookOpen, Youtube, Loader2, PlayCircle, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { listenToResources } from "@/services/resources";
 import type { Resource } from "@/lib/data";
 import Link from "next/link";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 function getYouTubeThumbnail(url: string) {
     const videoId = url.split('v=')[1]?.split('&')[0];
@@ -20,8 +21,16 @@ function getYouTubeThumbnail(url: string) {
     return 'https://picsum.photos/seed/placeholder-thumb/400/225'; // Fallback
 }
 
+function getYouTubeEmbedUrl(url: string) {
+    const videoId = url.split('v=')[1]?.split('&')[0];
+    if (videoId) {
+        return `https://www.youtube.com/embed/${videoId}`;
+    }
+    return '';
+}
 
-function ResourceCard({ resource }: { resource: Resource }) {
+
+function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (url: string) => void }) {
     const categoryColors = {
         Career: "border-purple-500",
         STEM: "border-blue-500",
@@ -44,14 +53,17 @@ function ResourceCard({ resource }: { resource: Resource }) {
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
                     <h3 className="text-white font-bold text-lg leading-tight">{resource.title}</h3>
                 </div>
+                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <PlayCircle className="w-16 h-16 text-white/80" />
+                </div>
             </div>
             <CardContent className="pt-4 flex-grow">
                 <p className="text-sm text-muted-foreground line-clamp-3">{resource.description}</p>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
                  <Badge variant="outline">{resource.category}</Badge>
-                <Button size="sm" asChild>
-                    <Link href="#">Start Learning</Link>
+                <Button size="sm" onClick={() => onPlay(resource.youtubeUrl)}>
+                    Start Learning
                 </Button>
             </CardFooter>
         </Card>
@@ -63,6 +75,7 @@ export default function ResourcesPage() {
     const [resources, setResources] = useState<Resource[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState<string | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -106,6 +119,8 @@ export default function ResourcesPage() {
 
     const filters = ["All", "Career", "STEM", "Healthcare", "Public Health"];
     const filteredResources = resources.filter(r => activeFilter === "All" || r.category === activeFilter);
+    
+    const embedUrl = selectedVideoUrl ? getYouTubeEmbedUrl(selectedVideoUrl) : '';
 
   return (
     <motion.div 
@@ -138,13 +153,33 @@ export default function ResourcesPage() {
         >
             {filteredResources.length > 0 ? filteredResources.map((resource) => (
             <motion.div key={resource.id} variants={itemVariants}>
-                <ResourceCard resource={resource} />
+                <ResourceCard resource={resource} onPlay={setSelectedVideoUrl} />
             </motion.div>
             )) : (
                 <EmptyState />
             )}
         </motion.div>
       )}
+
+      <Dialog open={!!selectedVideoUrl} onOpenChange={(open) => !open && setSelectedVideoUrl(null)}>
+        <DialogContent className="max-w-3xl p-0">
+           <div className="aspect-video">
+                {embedUrl && (
+                     <iframe
+                        width="100%"
+                        height="100%"
+                        src={embedUrl}
+                        title="YouTube video player"
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="rounded-t-lg"
+                    ></iframe>
+                )}
+            </div>
+        </DialogContent>
+      </Dialog>
     </motion.div>
   );
 }
+
