@@ -1,9 +1,8 @@
-
 rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    
+  
     // Users can only read/write their own profile
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
@@ -11,11 +10,16 @@ service cloud.firestore {
       allow get: if request.auth != null;
     }
     
-    // Anyone can read posts, but only authenticated users can create/update/delete their own
+    // Posts can be created by any authenticated user
+    // Posts can be read by any authenticated user
+    // Posts can only be updated/deleted by their author
     match /posts/{postId} {
-      allow read: if request.auth != null;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null && request.auth.uid == resource.data.author.uid;
+        allow read, create: if request.auth != null;
+        allow update, delete: if request.auth != null && request.resource.data.author.uid == request.auth.uid;
+    }
+    
+    match /{document=**} {
+      allow read, write: if false;
     }
   }
 }

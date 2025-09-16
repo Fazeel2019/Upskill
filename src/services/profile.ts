@@ -1,6 +1,6 @@
 // src/services/profile.ts
 import { db } from "@/lib/firebase";
-import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt } from "firebase/firestore";
 
 export interface Experience {
   id: string;
@@ -141,3 +141,27 @@ export const listenToFriendRequests = (uid: string, callback: (users: UserProfil
 
     return unsubscribe;
 }
+
+export const searchUsers = async (searchQuery: string, currentUserId: string): Promise<UserProfile[]> => {
+    if (!searchQuery) return [];
+    
+    const usersRef = collection(db, "users");
+    
+    const q = query(
+        usersRef,
+        orderBy("displayName"),
+        startAt(searchQuery),
+        limit(10)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    const users: UserProfile[] = [];
+    querySnapshot.forEach((doc) => {
+        if (doc.id !== currentUserId) {
+            users.push(doc.data() as UserProfile);
+        }
+    });
+
+    return users.filter(user => user.displayName.toLowerCase().startsWith(searchQuery.toLowerCase()));
+};

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Post as PostType } from "@/services/posts";
-import { MessageCircle, Heart, Share2, MoreHorizontal, Users, Loader2 } from "lucide-react";
+import { MessageCircle, Heart, Share2, MoreHorizontal, Users, Loader2, Search } from "lucide-react";
 import CreatePost from "./create-post";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -100,6 +100,11 @@ export default function CommunityPage() {
 
     return () => unsubscribe();
   }, []);
+  
+  const handlePostCreated = () => {
+    // Optionally re-fetch or scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -119,7 +124,7 @@ export default function CommunityPage() {
   };
 
   const filteredPosts = posts.filter(post => 
-    activeTab === 'all' || post.category.toLowerCase().replace(' ','-') === activeTab
+    activeTab === 'all' || (post.category && post.category.toLowerCase().replace(' ','-') === activeTab)
   );
 
   return (
@@ -135,18 +140,23 @@ export default function CommunityPage() {
         </motion.div>
         
         <motion.div variants={itemVariants}>
-          <CreatePost />
+          <CreatePost onPostCreated={handlePostCreated}/>
         </motion.div>
 
-        <motion.div className="my-8" variants={itemVariants}>
+        <motion.div className="my-8 flex justify-between items-center" variants={itemVariants}>
             <Tabs defaultValue="all" onValueChange={setActiveTab}>
-            <TabsList>
-                <TabsTrigger value="all">All Posts</TabsTrigger>
-                <TabsTrigger value="stem">STEM</TabsTrigger>
-                <TabsTrigger value="healthcare">Healthcare</TabsTrigger>
-                <TabsTrigger value="public-health">Public Health</TabsTrigger>
-            </TabsList>
+              <TabsList>
+                  <TabsTrigger value="all">All Posts</TabsTrigger>
+                  <TabsTrigger value="stem">STEM</TabsTrigger>
+                  <TabsTrigger value="healthcare">Healthcare</TabsTrigger>
+                  <TabsTrigger value="public-health">Public Health</TabsTrigger>
+              </TabsList>
             </Tabs>
+            <Button asChild variant="outline">
+              <Link href="/community/find">
+                <Search className="mr-2 h-4 w-4" /> Find Members
+              </Link>
+            </Button>
         </motion.div>
 
         <motion.div 
