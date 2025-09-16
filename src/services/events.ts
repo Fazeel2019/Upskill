@@ -32,11 +32,20 @@ export const listenToEvents = (callback: (events: Event[]) => void) => {
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
     const events = querySnapshot.docs.map(doc => {
         const data = doc.data();
+        let eventDate: string;
+
+        if (data.date && typeof data.date.toDate === 'function') {
+            // It's a Firestore Timestamp
+            eventDate = (data.date as Timestamp).toDate().toISOString();
+        } else {
+            // It's already a string or some other format
+            eventDate = data.date;
+        }
+
         return {
             id: doc.id,
             ...data,
-            // Convert Firestore Timestamp to string if needed, or handle in component
-            date: (data.date as Timestamp).toDate().toISOString(),
+            date: eventDate,
         } as Event;
     });
     callback(events);
@@ -44,3 +53,4 @@ export const listenToEvents = (callback: (events: Event[]) => void) => {
 
   return unsubscribe;
 };
+
