@@ -24,7 +24,7 @@ function getYouTubeThumbnail(url: string) {
 function getYouTubeEmbedUrl(url: string) {
     const videoId = url.split('v=')[1]?.split('&')[0];
     if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
     return '';
 }
