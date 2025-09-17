@@ -1,4 +1,5 @@
 
+
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { addResource, listenToResources, updateResource } from "@/services/resources";
+import { addResource, listenToResources, updateResource, deleteResource } from "@/services/resources";
 import type { Resource } from "@/lib/data";
 import {
   Select,
@@ -19,8 +20,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Loader2, Edit } from "lucide-react";
+import { Loader2, Edit, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 const resourceFormSchema = z.object({
@@ -81,6 +93,43 @@ function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resourc
             </DialogContent>
         </Dialog>
     );
+}
+
+function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    const handleDelete = async () => {
+        try {
+            await deleteResource(resourceId);
+            toast({ title: "Resource Deleted", description: "The resource has been removed." });
+            setOpen(false);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to delete resource.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the resource.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
 }
 
 export default function ManageResources() {
@@ -184,7 +233,10 @@ export default function ManageResources() {
                                   <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
                                 )}
                             </div>
-                            <EditResourceDialog resource={resource} onResourceUpdated={fetchResources} />
+                            <div className="flex items-center">
+                                <EditResourceDialog resource={resource} onResourceUpdated={fetchResources} />
+                                <DeleteResourceAlert resourceId={resource.id} />
+                            </div>
                         </li>
                     ))}
                 </ul>
