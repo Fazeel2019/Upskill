@@ -3,24 +3,31 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy } from "lucide-react"
+import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { listenToPosts, type Post } from "@/services/posts"
+import { listenToEvents, type Event } from "@/services/events"
+import { isToday } from "date-fns"
 
-const StatCard = ({ title, value, description, icon: Icon }: { title: string, value: string, description: string, icon: React.ElementType }) => (
+const StatCard = ({ title, value, description, icon: Icon, href }: { title: string, value: string, description: string, icon: React.ElementType, href?: string }) => (
     <motion.div variants={itemVariants}>
         <Card className="rounded-2xl hover:bg-card/95 transition-colors duration-300 h-full">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-              <Icon className="h-5 w-5 text-primary" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{value}</div>
-              <p className="text-xs text-muted-foreground">{description}</p>
-            </CardContent>
+             <Link href={href || "#"} className={!href ? "pointer-events-none" : ""}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+                  <Icon className="h-5 w-5 text-primary" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{value}</div>
+                  <p className="text-xs text-muted-foreground">{description}</p>
+                </CardContent>
+            </Link>
         </Card>
     </motion.div>
 );
+
 
 const QuickActionCard = ({ href, icon: Icon, title, description }: { href: string, icon: React.ElementType, title: string, description: string }) => (
      <motion.div variants={itemVariants}>
@@ -34,7 +41,7 @@ const QuickActionCard = ({ href, icon: Icon, title, description }: { href: strin
                     <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
                 <Button asChild size="sm" className="mt-4">
-                    <Link href={href}>Go</Link>
+                    <Link href={href}>Go <ArrowRight className="ml-2 h-4 w-4"/></Link>
                 </Button>
             </CardContent>
         </Card>
@@ -62,6 +69,31 @@ const itemVariants = {
 };
 
 export default function DashboardPage() {
+  const [postsTodayCount, setPostsTodayCount] = useState(0);
+  const [upcomingEventsCount, setUpcomingEventsCount] = useState(0);
+
+  useEffect(() => {
+    const unsubscribePosts = listenToPosts((posts: Post[]) => {
+      const todayPosts = posts.filter(post => post.timestamp && isToday(post.timestamp.toDate()));
+      setPostsTodayCount(todayPosts.length);
+    });
+
+    const unsubscribeEvents = listenToEvents((events: Event[]) => {
+      const futureEvents = events.filter(event => {
+        const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
+        const today = new Date();
+        today.setHours(0,0,0,0); // Set to start of today
+        return eventDate >= today;
+      });
+      setUpcomingEventsCount(futureEvents.length);
+    });
+
+    return () => {
+      unsubscribePosts();
+      unsubscribeEvents();
+    };
+  }, []);
+
   return (
     <motion.div 
       className="space-y-8"
@@ -81,21 +113,24 @@ export default function DashboardPage() {
       <motion.div className="grid gap-6 md:grid-cols-3" variants={containerVariants}>
         <StatCard 
             title="New Posts Today" 
-            value="0" 
-            description="No new posts yet" 
+            value={String(postsTodayCount)} 
+            description={`${postsTodayCount} new discussions`}
             icon={Newspaper}
+            href="/community"
         />
         <StatCard 
             title="Upcoming Events" 
-            value="0" 
-            description="No upcoming events" 
+            value={String(upcomingEventsCount)} 
+            description={`${upcomingEventsCount} events scheduled`}
             icon={Calendar}
+            href="/events"
         />
         <StatCard 
-            title="Unread Messages" 
-            value="0" 
-            description="No unread messages" 
+            title="Go to Messages" 
+            value=">" 
+            description="View your conversations" 
             icon={MessageSquare}
+            href="/messaging"
         />
       </motion.div>
 
@@ -145,3 +180,5 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
+
+    
