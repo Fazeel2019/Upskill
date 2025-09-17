@@ -77,7 +77,6 @@ export default function ResourcesPage() {
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
     const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
-    const [embedUrl, setEmbedUrl] = useState<string | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -87,19 +86,6 @@ export default function ResourcesPage() {
         });
         return () => unsubscribe();
     }, []);
-
-    const handlePlay = (resource: Resource) => {
-        const url = getYouTubeEmbedUrl(resource.youtubeUrl);
-        if (url) {
-            setSelectedResource(resource);
-            setEmbedUrl(url);
-        }
-    };
-    
-    const handleCloseDialog = () => {
-        setSelectedResource(null);
-        setEmbedUrl(null);
-    }
 
     const containerVariants = {
       hidden: { opacity: 0 },
@@ -167,7 +153,7 @@ export default function ResourcesPage() {
         >
             {filteredResources.length > 0 ? filteredResources.map((resource) => (
             <motion.div key={resource.id} variants={itemVariants}>
-                <ResourceCard resource={resource} onPlay={handlePlay} />
+                <ResourceCard resource={resource} onPlay={setSelectedResource} />
             </motion.div>
             )) : (
                 <EmptyState />
@@ -175,9 +161,9 @@ export default function ResourcesPage() {
         </motion.div>
       )}
 
-      <Dialog open={!!embedUrl} onOpenChange={(open) => !open && handleCloseDialog()}>
+      <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
         <DialogContent className="max-w-3xl p-0">
-           {selectedResource && embedUrl && (
+           {selectedResource && (
              <>
                <DialogHeader>
                  <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
@@ -186,7 +172,7 @@ export default function ResourcesPage() {
                     <iframe
                         width="100%"
                         height="100%"
-                        src={embedUrl}
+                        src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
                         title={selectedResource.title}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
