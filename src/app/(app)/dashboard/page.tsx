@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import { Button } from "@/components/ui/button"
@@ -37,7 +36,7 @@ const QuickActionCard = ({ href, icon: Icon, title, description }: { href: strin
                 <Button asChild size="sm" className="mt-4">
                     <Link href={href}>Go</Link>
                 </Button>
-            </div>
+            </CardContent>
         </Card>
      </motion.div>
 );
