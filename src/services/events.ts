@@ -1,7 +1,7 @@
 
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc, deleteDoc, getDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import type { Event } from "@/lib/data";
 
 type NewEvent = Omit<Event, 'id'>;
@@ -12,6 +12,7 @@ export const addEvent = async (eventData: NewEvent) => {
         await addDoc(eventsCollection, {
             ...eventData,
             createdAt: serverTimestamp(),
+            registeredUids: [],
         });
     } catch (error) {
         console.error("Error adding event: ", error);
@@ -67,6 +68,30 @@ export const getEvent = async (eventId: string): Promise<Event | null> => {
         throw new Error("Could not retrieve event");
     }
 }
+
+export const registerForEvent = async (eventId: string, userId: string): Promise<void> => {
+    try {
+        const eventDoc = doc(db, "events", eventId);
+        await updateDoc(eventDoc, {
+            registeredUids: arrayUnion(userId)
+        });
+    } catch (error) {
+        console.error("Error registering for event:", error);
+        throw new Error("Could not register for event");
+    }
+};
+
+export const unregisterFromEvent = async (eventId: string, userId: string): Promise<void> => {
+    try {
+        const eventDoc = doc(db, "events", eventId);
+        await updateDoc(eventDoc, {
+            registeredUids: arrayRemove(userId)
+        });
+    } catch (error) {
+        console.error("Error unregistering from event:", error);
+        throw new Error("Could not unregister from event");
+    }
+};
 
 export const listenToEvents = (callback: (events: Event[]) => void) => {
   const eventsCollection = collection(db, "events");

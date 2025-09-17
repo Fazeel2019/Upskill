@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Event as EventType } from "@/lib/data";
-import { getEvent } from "@/services/events";
-import { ArrowLeft, Calendar, Clock, Ticket } from "lucide-react";
+import { getEvent, registerForEvent, unregisterFromEvent } from "@/services/events";
+import { ArrowLeft, Calendar, Clock, Ticket, CheckCircle, XCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
 
 
 function EventDetailSkeleton() {
@@ -41,34 +42,71 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
     const [event, setEvent] = useState<EventType | null>(null);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
+    const { user } = useAuth();
+    
+    const isRegistered = useMemo(() => {
+        if (!user || !event?.registeredUids) return false;
+        return event.registeredUids.includes(user.uid);
+    }, [user, event]);
+    
+    const fetchEvent = async () => {
+        try {
+            const eventData = await getEvent(params.eventId);
+            if (eventData) {
+                setEvent(eventData);
+            } else {
+                notFound();
+            }
+        } catch (error) {
+            console.error("Failed to fetch event:", error);
+            notFound();
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     useEffect(() => {
-        const fetchEvent = async () => {
-            setLoading(true);
-            try {
-                const eventData = await getEvent(params.eventId);
-                if (eventData) {
-                    setEvent(eventData);
-                } else {
-                    notFound();
-                }
-            } catch (error) {
-                console.error("Failed to fetch event:", error);
-                notFound();
-            } finally {
-                setLoading(false);
-            }
-        };
-
+        setLoading(true);
         fetchEvent();
     }, [params.eventId]);
     
-    const handleRegister = () => {
-        toast({
-            title: "Registration Successful!",
-            description: `You are now registered for ${event?.title}.`,
-        });
+    const handleRegister = async () => {
+        if (!user) return;
+        try {
+            await registerForEvent(params.eventId, user.uid);
+            toast({
+                title: "Registration Successful!",
+                description: `You are now registered for ${event?.title}.`,
+            });
+            await fetchEvent(); // Refetch to update UI
+        } catch (error) {
+            toast({
+                title: "Registration Failed",
+                description: "Could not register for the event. Please try again.",
+                variant: "destructive"
+            });
+        }
     }
+
+     const handleUnregister = async () => {
+        if (!user) return;
+        try {
+            await unregisterFromEvent(params.eventId, user.uid);
+            toast({
+                title: "Unregistered",
+                description: `You are no longer registered for ${event?.title}.`,
+            });
+            await fetchEvent(); // Refetch to update UI
+        } catch (error) {
+             toast({
+                title: "Unregistration Failed",
+                description: "Could not unregister from the event. Please try again.",
+                variant: "destructive"
+            });
+        }
+    }
+
 
     if (loading) {
         return <EventDetailSkeleton />;
@@ -153,10 +191,19 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
                                     <p className="text-muted-foreground">{event.time}</p>
                                 </div>
                             </div>
-                            <Button size="lg" className="w-full" onClick={handleRegister}>
-                                <Ticket className="mr-2 h-5 w-5" />
-                                Register for this Event
-                            </Button>
+                            {user && (
+                                isRegistered ? (
+                                    <Button size="lg" className="w-full" variant="outline" onClick={handleUnregister}>
+                                        <XCircle className="mr-2 h-5 w-5" />
+                                        Unregister
+                                    </Button>
+                                ) : (
+                                    <Button size="lg" className="w-full" onClick={handleRegister}>
+                                        <Ticket className="mr-2 h-5 w-5" />
+                                        Register for this Event
+                                    </Button>
+                                )
+                            )}
                         </CardContent>
                     </Card>
                 </motion.div>

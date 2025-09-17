@@ -11,6 +11,7 @@ export type Event = {
   category: "STEM" | "Healthcare" | "Public Health";
   imageUrl: string;
   imageHint: string;
+  registeredUids?: string[];
 };
 
 export type Resource = {
