@@ -39,6 +39,7 @@ function EventDetailSkeleton() {
 }
 
 export default function EventDetailPage({ params }: { params: { eventId: string } }) {
+    const { eventId } = params;
     const [event, setEvent] = useState<EventType | null>(null);
     const [loading, setLoading] = useState(true);
     const { toast } = useToast();
@@ -49,9 +50,10 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
         return event.registeredUids.includes(user.uid);
     }, [user, event]);
     
-    const fetchEvent = async () => {
+    const fetchEvent = useCallback(async () => {
+        setLoading(true);
         try {
-            const eventData = await getEvent(params.eventId);
+            const eventData = await getEvent(eventId);
             if (eventData) {
                 setEvent(eventData);
             } else {
@@ -63,18 +65,17 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
         } finally {
             setLoading(false);
         }
-    };
+    }, [eventId]);
 
 
     useEffect(() => {
-        setLoading(true);
         fetchEvent();
-    }, [params.eventId]);
+    }, [fetchEvent]);
     
     const handleRegister = async () => {
         if (!user) return;
         try {
-            await registerForEvent(params.eventId, user.uid);
+            await registerForEvent(eventId, user.uid);
             toast({
                 title: "Registration Successful!",
                 description: `You are now registered for ${event?.title}.`,
@@ -92,7 +93,7 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
      const handleUnregister = async () => {
         if (!user) return;
         try {
-            await unregisterFromEvent(params.eventId, user.uid);
+            await unregisterFromEvent(eventId, user.uid);
             toast({
                 title: "Unregistered",
                 description: `You are no longer registered for ${event?.title}.`,
