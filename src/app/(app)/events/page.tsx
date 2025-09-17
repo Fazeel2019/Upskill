@@ -7,15 +7,16 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Event as EventType } from "@/lib/data";
-import { ArrowRight, Clock, Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import { ArrowRight, Clock, Calendar as CalendarIcon, Loader2, CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { listenToEvents } from "@/services/events";
+import { useAuth } from "@/hooks/use-auth";
 
-function EventCard({ event }: { event: EventType }) {
+function EventCard({ event, userId }: { event: EventType, userId?: string }) {
     const categoryColors = {
         STEM: "border-blue-500",
         Healthcare: "border-green-500",
@@ -24,6 +25,11 @@ function EventCard({ event }: { event: EventType }) {
     
     const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
     const eventUrl = `/events/${event.id}`;
+
+    const isRegistered = useMemo(() => {
+        if (!userId || !event.registeredUids) return false;
+        return event.registeredUids.includes(userId);
+    }, [userId, event.registeredUids]);
 
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[event.category]}`}>
@@ -57,9 +63,16 @@ function EventCard({ event }: { event: EventType }) {
                     <Clock className="w-4 h-4"/>
                     <span>{event.time}</span>
                 </div>
-                <Button size="sm" asChild>
-                    <Link href={eventUrl}>RSVP Now <ArrowRight className="ml-2 w-4 h-4"/></Link>
-                </Button>
+                {isRegistered ? (
+                    <Badge variant="secondary" className="border-green-500 text-green-700">
+                        <CheckCircle className="w-4 h-4 mr-1"/>
+                        Registered
+                    </Badge>
+                ) : (
+                    <Button size="sm" asChild>
+                        <Link href={eventUrl}>RSVP Now <ArrowRight className="ml-2 w-4 h-4"/></Link>
+                    </Button>
+                )}
             </CardFooter>
         </Card>
     )
@@ -69,6 +82,7 @@ function EventCard({ event }: { event: EventType }) {
 export default function EventsPage() {
   const [events, setEvents] = useState<EventType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     setLoading(true);
@@ -142,7 +156,7 @@ export default function EventsPage() {
                             >
                                 {upcomingEvents.map((event, i) => (
                                     <motion.div key={event.id} variants={cardVariants}>
-                                        <EventCard event={event} />
+                                        <EventCard event={event} userId={user?.uid} />
                                     </motion.div>
                                 ))}
                             </motion.div>
@@ -160,7 +174,7 @@ export default function EventsPage() {
                             >
                                 {pastEvents.map(event => (
                                     <motion.div key={event.id} variants={cardVariants}>
-                                        <EventCard event={event} />
+                                        <EventCard event={event} userId={user?.uid} />
                                     </motion.div>
                                 ))}
                             </motion.div>
