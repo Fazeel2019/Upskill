@@ -26,6 +26,7 @@ export default function SignupPage() {
     const [password, setPassword] = useState('');
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
+    const [agreedToTerms, setAgreedToTerms] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
     const { toast } = useToast();
@@ -34,8 +35,19 @@ export default function SignupPage() {
         setIsLoading(true);
         try {
             if (provider) {
+                // For social sign-up, we assume agreement by proceeding.
                 await signInWithPopup(auth, provider);
             } else {
+                // For email sign-up, explicitly check the box.
+                if (!agreedToTerms) {
+                    toast({
+                        title: "Agreement Required",
+                        description: "You must agree to the Terms of Service and Privacy Policy.",
+                        variant: "destructive",
+                    });
+                    setIsLoading(false);
+                    return;
+                }
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 await updateProfile(userCredential.user, {
                     displayName: `${firstName} ${lastName}`
@@ -110,12 +122,12 @@ export default function SignupPage() {
                                 <Input id="password" type="password" required value={password} onChange={e => setPassword(e.target.value)} disabled={isLoading}/>
                               </div>
                                <div className="flex items-center space-x-2">
-                                <Checkbox id="terms" required/>
+                                <Checkbox id="terms" checked={agreedToTerms} onCheckedChange={(checked) => setAgreedToTerms(checked as boolean)} />
                                 <Label htmlFor="terms" className="text-sm text-muted-foreground">
                                     I agree to the <Link href="#" className="underline text-primary">Terms of Service</Link> and <Link href="#" className="underline text-primary">Privacy Policy</Link>.
                                 </Label>
                                </div>
-                              <Button type="submit" className="w-full" disabled={isLoading}>
+                              <Button type="submit" className="w-full" disabled={isLoading || !agreedToTerms}>
                                 {isLoading ? 'Creating Account...' : 'Create Account'}
                               </Button>
                             </div>
