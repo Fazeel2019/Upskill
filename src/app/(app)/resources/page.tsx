@@ -30,7 +30,7 @@ function getYouTubeEmbedUrl(url: string) {
 }
 
 
-function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (url: string) => void }) {
+function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resource: Resource) => void }) {
     const categoryColors = {
         Career: "border-purple-500",
         STEM: "border-blue-500",
@@ -40,7 +40,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (url: 
     
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category]}`}>
-            <div className="relative h-48">
+            <div className="relative h-48 cursor-pointer" onClick={() => onPlay(resource)}>
                 <Image 
                     src={getYouTubeThumbnail(resource.youtubeUrl)}
                     alt={resource.title} 
@@ -62,7 +62,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (url: 
             </CardContent>
             <CardFooter className="flex justify-between items-center">
                  <Badge variant="outline">{resource.category}</Badge>
-                <Button size="sm" onClick={() => onPlay(resource.youtubeUrl)}>
+                <Button size="sm" onClick={() => onPlay(resource)}>
                     Start Learning
                 </Button>
             </CardFooter>
@@ -75,7 +75,7 @@ export default function ResourcesPage() {
     const [resources, setResources] = useState<Resource[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
-    const [selectedVideoUrl, setSelectedVideoUrl] = useState<string | null>(null);
+    const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -120,7 +120,7 @@ export default function ResourcesPage() {
     const filters = ["All", "Career", "STEM", "Healthcare", "Public Health"];
     const filteredResources = resources.filter(r => activeFilter === "All" || r.category === activeFilter);
     
-    const embedUrl = selectedVideoUrl ? getYouTubeEmbedUrl(selectedVideoUrl) : '';
+    const embedUrl = selectedResource ? getYouTubeEmbedUrl(selectedResource.youtubeUrl) : '';
 
   return (
     <motion.div 
@@ -153,7 +153,7 @@ export default function ResourcesPage() {
         >
             {filteredResources.length > 0 ? filteredResources.map((resource) => (
             <motion.div key={resource.id} variants={itemVariants}>
-                <ResourceCard resource={resource} onPlay={setSelectedVideoUrl} />
+                <ResourceCard resource={resource} onPlay={setSelectedResource} />
             </motion.div>
             )) : (
                 <EmptyState />
@@ -161,15 +161,18 @@ export default function ResourcesPage() {
         </motion.div>
       )}
 
-      <Dialog open={!!selectedVideoUrl} onOpenChange={(open) => !open && setSelectedVideoUrl(null)}>
+      <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
         <DialogContent className="max-w-3xl p-0">
+           <DialogHeader>
+             <DialogTitle className="sr-only">{selectedResource?.title}</DialogTitle>
+           </DialogHeader>
            <div className="aspect-video">
                 {embedUrl && (
                      <iframe
                         width="100%"
                         height="100%"
                         src={embedUrl}
-                        title="YouTube video player"
+                        title={selectedResource?.title || "YouTube video player"}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
@@ -182,4 +185,3 @@ export default function ResourcesPage() {
     </motion.div>
   );
 }
-
