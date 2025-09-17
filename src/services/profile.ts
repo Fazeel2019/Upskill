@@ -1,6 +1,7 @@
+
 // src/services/profile.ts
 import { db } from "@/lib/firebase";
-import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt, endAt } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt, endAt, deleteField } from "firebase/firestore";
 
 export interface Experience {
   id: string;
@@ -61,7 +62,15 @@ export const getUserProfile = async (uid: string): Promise<UserProfile | null> =
 
 export const updateUserProfile = async (uid: string, data: Partial<UserProfile>): Promise<void> => {
   const userRef = doc(db, "users", uid);
-  await setDoc(userRef, data, { merge: true });
+  const updateData = { ...data };
+
+  // Firestore's `set` with `merge: true` won't remove fields if the value is `undefined`.
+  // We need to explicitly use `deleteField()` for fields that should be removed.
+  if (data.role === undefined || data.role === null) {
+    updateData.role = deleteField() as any;
+  }
+
+  await setDoc(userRef, updateData, { merge: true });
 };
 
 
@@ -113,8 +122,9 @@ export const declineFriendRequest = async (fromUid: string, toUid: string) => {
     const fromUserRef = doc(db, "users", fromUid);
     const toUserRef = doc(db, "users", toUid);
 
-    batch.update(fromUserRef, { [`connections.${toUid}`]: null });
-    batch.update(toUserRef, { [`connections.${fromUid}`]: null });
+    // Use deleteField to properly remove the connection status
+    batch.update(fromUserRef, { [`connections.${toUid}`]: deleteField() });
+    batch.update(toUserRef, { [`connections.${fromUid}`]: deleteField() });
     
     await batch.commit();
 }
@@ -192,3 +202,4 @@ export const searchUsers = async (searchQuery: string, currentUserId: string): P
 
     return Array.from(usersMap.values());
 };
+
