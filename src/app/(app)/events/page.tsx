@@ -23,19 +23,22 @@ function EventCard({ event }: { event: EventType }) {
     };
     
     const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
+    const eventUrl = `/events/${event.id}`;
 
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[event.category]}`}>
             <div className="relative h-48">
-                <Image 
-                    src={event.imageUrl} 
-                    alt={event.title} 
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{objectFit: "cover"}}
-                    className="transition-transform duration-300 group-hover:scale-105"
-                    data-ai-hint={event.imageHint}
-                />
+                 <Link href={eventUrl}>
+                    <Image 
+                        src={event.imageUrl} 
+                        alt={event.title} 
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        style={{objectFit: "cover"}}
+                        className="transition-transform duration-300 group-hover:scale-105"
+                        data-ai-hint={event.imageHint}
+                    />
+                </Link>
             </div>
             <CardHeader>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -43,7 +46,7 @@ function EventCard({ event }: { event: EventType }) {
                     <Badge variant="secondary">{eventDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</Badge>
                 </div>
                 <CardTitle className="font-headline text-lg mt-2 leading-tight">
-                    <Link href="#" className="hover:text-primary transition-colors">{event.title}</Link>
+                    <Link href={eventUrl} className="hover:text-primary transition-colors">{event.title}</Link>
                 </CardTitle>
             </CardHeader>
             <CardContent className="flex-grow">
@@ -55,7 +58,7 @@ function EventCard({ event }: { event: EventType }) {
                     <span>{event.time}</span>
                 </div>
                 <Button size="sm" asChild>
-                    <Link href="#">RSVP Now <ArrowRight className="ml-2 w-4 h-4"/></Link>
+                    <Link href={eventUrl}>RSVP Now <ArrowRight className="ml-2 w-4 h-4"/></Link>
                 </Button>
             </CardFooter>
         </Card>

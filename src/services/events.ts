@@ -1,6 +1,7 @@
 
+
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc, deleteDoc, getDoc } from "firebase/firestore";
 import type { Event } from "@/lib/data";
 
 type NewEvent = Omit<Event, 'id'>;
@@ -43,6 +44,28 @@ export const getEvents = async (): Promise<Event[]> => {
     const q = query(eventsCollection, orderBy("date", "desc"));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Event));
+}
+
+export const getEvent = async (eventId: string): Promise<Event | null> => {
+    try {
+        const eventDoc = doc(db, "events", eventId);
+        const docSnap = await getDoc(eventDoc);
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            let eventDate: string;
+
+            if (data.date && typeof data.date.toDate === 'function') {
+                eventDate = (data.date as Timestamp).toDate().toISOString().split('T')[0];
+            } else {
+                eventDate = data.date;
+            }
+             return { id: docSnap.id, ...data, date: eventDate } as Event;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error getting event:", error);
+        throw new Error("Could not retrieve event");
+    }
 }
 
 export const listenToEvents = (callback: (events: Event[]) => void) => {
