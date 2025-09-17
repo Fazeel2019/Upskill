@@ -10,7 +10,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { addEvent, listenToEvents, updateEvent } from "@/services/events";
+import { addEvent, listenToEvents, updateEvent, deleteEvent } from "@/services/events";
 import type { Event as EventType } from "@/lib/data";
 import {
   Select,
@@ -19,8 +19,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Loader2, Edit } from "lucide-react";
+import { Loader2, Edit, Trash2 } from "lucide-react";
 import { format } from "date-fns";
 
 const eventFormSchema = z.object({
@@ -35,6 +46,41 @@ const eventFormSchema = z.object({
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
+
+function DeleteEventAlert({ eventId }: { eventId: string }) {
+    const { toast } = useToast();
+
+    const handleDelete = async () => {
+        try {
+            await deleteEvent(eventId);
+            toast({ title: "Event Deleted", description: "The event has been removed." });
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to delete event.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <AlertDialog>
+            <AlertDialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        This action cannot be undone. This will permanently delete the event.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">Delete</AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
+}
 
 function EditEventDialog({ event, onEventUpdated }: { event: EventType, onEventUpdated: () => void }) {
     const { toast } = useToast();
@@ -235,7 +281,10 @@ export default function ManageEvents() {
                                 <p className="font-semibold">{event.title}</p>
                                 <p className="text-sm text-muted-foreground">{format(new Date(event.date as string), 'PPP')} at {event.time}</p>
                             </div>
-                            <EditEventDialog event={event} onEventUpdated={fetchEvents} />
+                            <div className="flex items-center">
+                                <EditEventDialog event={event} onEventUpdated={fetchEvents} />
+                                <DeleteEventAlert eventId={event.id} />
+                            </div>
                         </li>
                     ))}
                 </ul>

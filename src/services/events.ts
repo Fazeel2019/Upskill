@@ -1,6 +1,6 @@
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, type Timestamp, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import type { Event } from "@/lib/data";
 
 type NewEvent = Omit<Event, 'id'>;
@@ -25,6 +25,16 @@ export const updateEvent = async (eventId: string, eventData: Partial<Event>) =>
     } catch (error) {
         console.error("Error updating event: ", error);
         throw new Error("Could not update event");
+    }
+};
+
+export const deleteEvent = async (eventId: string) => {
+    try {
+        const eventDoc = doc(db, "events", eventId);
+        await deleteDoc(eventDoc);
+    } catch (error) {
+        console.error("Error deleting event: ", error);
+        throw new Error("Could not delete event");
     }
 };
 
