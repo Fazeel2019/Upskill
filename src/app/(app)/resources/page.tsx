@@ -21,7 +21,7 @@ function getYouTubeThumbnail(url: string) {
     return 'https://picsum.photos/seed/placeholder-thumb/400/225'; // Fallback
 }
 
-function getYouTubeEmbedUrl(url: string) {
+function getYouTubeEmbedUrl(url: string): string {
     if (!url) return '';
     const videoId = url.split('v=')[1]?.split('&')[0];
     if (videoId) {
@@ -77,6 +77,7 @@ export default function ResourcesPage() {
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
     const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+    const [embedUrl, setEmbedUrl] = useState<string | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -86,6 +87,19 @@ export default function ResourcesPage() {
         });
         return () => unsubscribe();
     }, []);
+
+    const handlePlay = (resource: Resource) => {
+        const url = getYouTubeEmbedUrl(resource.youtubeUrl);
+        if (url) {
+            setSelectedResource(resource);
+            setEmbedUrl(url);
+        }
+    };
+    
+    const handleCloseDialog = () => {
+        setSelectedResource(null);
+        setEmbedUrl(null);
+    }
 
     const containerVariants = {
       hidden: { opacity: 0 },
@@ -121,7 +135,6 @@ export default function ResourcesPage() {
     const filters = ["All", "Career", "STEM", "Healthcare", "Public Health"];
     const filteredResources = resources.filter(r => activeFilter === "All" || r.category === activeFilter);
     
-    const embedUrl = selectedResource ? getYouTubeEmbedUrl(selectedResource.youtubeUrl) : '';
 
   return (
     <motion.div 
@@ -154,7 +167,7 @@ export default function ResourcesPage() {
         >
             {filteredResources.length > 0 ? filteredResources.map((resource) => (
             <motion.div key={resource.id} variants={itemVariants}>
-                <ResourceCard resource={resource} onPlay={setSelectedResource} />
+                <ResourceCard resource={resource} onPlay={handlePlay} />
             </motion.div>
             )) : (
                 <EmptyState />
@@ -162,9 +175,9 @@ export default function ResourcesPage() {
         </motion.div>
       )}
 
-      <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
+      <Dialog open={!!embedUrl} onOpenChange={(open) => !open && handleCloseDialog()}>
         <DialogContent className="max-w-3xl p-0">
-           {selectedResource && (
+           {selectedResource && embedUrl && (
              <>
                <DialogHeader>
                  <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
@@ -173,7 +186,7 @@ export default function ResourcesPage() {
                     <iframe
                         width="100%"
                         height="100%"
-                        src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
+                        src={embedUrl}
                         title={selectedResource.title}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
