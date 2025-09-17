@@ -169,6 +169,7 @@ export default function ResourcesPage() {
                  <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
                </DialogHeader>
                <div className="aspect-video">
+                  {getYouTubeEmbedUrl(selectedResource.youtubeUrl) && (
                     <iframe
                         width="100%"
                         height="100%"
@@ -179,6 +180,7 @@ export default function ResourcesPage() {
                         allowFullScreen
                         className="rounded-t-lg"
                     ></iframe>
+                  )}
                 </div>
              </>
            )}
