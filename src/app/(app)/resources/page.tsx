@@ -22,6 +22,7 @@ function getYouTubeThumbnail(url: string) {
 }
 
 function getYouTubeEmbedUrl(url: string) {
+    if (!url) return '';
     const videoId = url.split('v=')[1]?.split('&')[0];
     if (videoId) {
         return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
@@ -163,23 +164,25 @@ export default function ResourcesPage() {
 
       <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
         <DialogContent className="max-w-3xl p-0">
-           <DialogHeader>
-             <DialogTitle className="sr-only">{selectedResource?.title}</DialogTitle>
-           </DialogHeader>
-           <div className="aspect-video">
-                {embedUrl && (
-                     <iframe
+           {selectedResource && (
+             <>
+               <DialogHeader>
+                 <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
+               </DialogHeader>
+               <div className="aspect-video">
+                    <iframe
                         width="100%"
                         height="100%"
-                        src={embedUrl}
-                        title={selectedResource?.title || "YouTube video player"}
+                        src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
+                        title={selectedResource.title}
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
                         className="rounded-t-lg"
                     ></iframe>
-                )}
-            </div>
+                </div>
+             </>
+           )}
         </DialogContent>
       </Dialog>
     </motion.div>
