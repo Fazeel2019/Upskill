@@ -50,7 +50,7 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
         return event.registeredUids.includes(user.uid);
     }, [user, event]);
     
-    const fetchEvent = useCallback(async () => {
+    const fetchEvent = async () => {
         setLoading(true);
         try {
             const eventData = await getEvent(eventId);
@@ -65,12 +65,14 @@ export default function EventDetailPage({ params }: { params: { eventId: string 
         } finally {
             setLoading(false);
         }
-    }, [eventId]);
+    };
 
 
     useEffect(() => {
-        fetchEvent();
-    }, [fetchEvent]);
+        if (eventId) {
+            fetchEvent();
+        }
+    }, [eventId]);
     
     const handleRegister = async () => {
         if (!user) return;
