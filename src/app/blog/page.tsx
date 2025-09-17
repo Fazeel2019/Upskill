@@ -9,6 +9,8 @@ import Footer from "@/components/footer";
 import PublicHeader from "@/components/public-header";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
 
 const blogPosts = [
   {
@@ -67,40 +69,59 @@ const blogPosts = [
   },
 ];
 
+const categories = ["All", "Career Development", "Healthcare", "STEM", "Public Health"];
+
 export default function BlogPage() {
+  const [activeFilter, setActiveFilter] = useState("All");
+
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut", staggerChildren: 0.1 } },
   };
   
   const cardVariants = {
-      hidden: { opacity: 0, y: 30 },
+      hidden: { opacity: 0, scale: 0.95 },
       visible: {
           opacity: 1,
-          y: 0,
+          scale: 1,
           transition: {
               duration: 0.5,
               ease: "easeOut",
           },
       },
   };
+
+  const filteredPosts = activeFilter === "All" ? blogPosts : blogPosts.filter(post => post.category === activeFilter);
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background text-white">
       <PublicHeader />
       <main className="flex-grow">
         <motion.section 
-          className="bg-card pt-24 pb-16 md:pt-32 md:pb-24 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          className="relative pt-32 pb-20 md:pt-48 md:pb-32 text-center overflow-hidden"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="container mx-auto px-4">
-            <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tighter">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 animate-gradient-x bg-300%"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="container relative mx-auto px-4">
+            <motion.h1 
+              className="font-headline text-4xl md:text-6xl font-bold tracking-tighter"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
               Upskill Blog
-            </h1>
-            <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+            </motion.h1>
+            <motion.p 
+              className="mt-4 text-lg md:text-xl text-white/80 max-w-3xl mx-auto"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+            >
               Thought leadership, career tips, and insights from the forefront of science and health.
-            </p>
+            </motion.p>
           </div>
         </motion.section>
 
@@ -112,23 +133,35 @@ export default function BlogPage() {
           variants={sectionVariants}
         >
           <div className="container mx-auto px-4">
+            <div className="flex flex-wrap justify-center gap-2 mb-12">
+              {categories.map(category => (
+                <Button 
+                  key={category} 
+                  variant={activeFilter === category ? "secondary" : "outline"}
+                  onClick={() => setActiveFilter(category)}
+                  className="rounded-2xl"
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {blogPosts.map((post, index) => (
+              {filteredPosts.map((post, index) => (
                 <motion.div key={index} variants={cardVariants}>
-                  <Card className="flex flex-col h-full overflow-hidden group">
-                    <div className="relative">
+                  <Card className="flex flex-col h-full group glass-card overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
+                    <div className="relative overflow-hidden">
                       <Image
                         src={post.image}
                         alt={post.title}
                         width={400}
                         height={250}
-                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-105"
+                        className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                         data-ai-hint={post.imageHint}
                       />
                     </div>
                     <CardHeader>
                       <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
-                      <CardTitle className="font-headline text-xl leading-tight">
+                      <CardTitle className="font-headline text-xl leading-tight text-white">
                         <Link href="#" className="hover:text-primary transition-colors">{post.title}</Link>
                       </CardTitle>
                     </CardHeader>
