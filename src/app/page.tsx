@@ -1,5 +1,4 @@
 
-
 "use client"
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
@@ -275,7 +274,7 @@ export default function Home() {
           </div>
         </motion.section>
 
-        <motion.section needs a
+        <motion.section
           className="py-16 md:py-24"
           initial="hidden"
           whileInView="visible"
