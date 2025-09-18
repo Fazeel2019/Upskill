@@ -84,7 +84,7 @@ export default function Home() {
                       <Link href="/signup">Start Free Trial Today</Link>
                     </Button>
                   </div>
-                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-1 gap-4 text-center md:text-left">
+                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center md:text-left">
                     <div className="bg-white/10 border border-white/20 p-4 rounded-lg">
                       <p className="font-semibold text-white">Expert Coaching</p>
                       <p className="text-sm text-blue-200">C-suite mentors</p>
