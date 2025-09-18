@@ -84,7 +84,7 @@ export default function Home() {
                       <Link href="/signup">Start Free Trial Today</Link>
                     </Button>
                   </div>
-                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center md:text-left">
+                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-1 gap-4 text-center md:text-left">
                     <div className="bg-white/10 border border-white/20 p-4 rounded-lg">
                       <p className="font-semibold text-white">Expert Coaching</p>
                       <p className="text-sm text-blue-200">C-suite mentors</p>
@@ -144,17 +144,18 @@ export default function Home() {
                     <div className="scroll-container w-full overflow-hidden">
                         <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
                             {[...features, ...features].map((feature, index) => (
-                                <Card key={index} className="w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500 flex flex-col justify-between">
+                                <Card key={index} className="group relative w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500 flex flex-col justify-between overflow-hidden">
                                   <div>
                                     <div className="flex items-start justify-between mb-4">
-                                        <div className={cn("p-3 rounded-lg", feature.iconBg)}>
+                                        <div className={cn("p-3 rounded-lg transition-transform duration-300 group-hover:rotate-[-15deg]", feature.iconBg)}>
                                             <feature.icon className={cn("w-7 h-7", feature.iconColor)} />
                                         </div>
-                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">{feature.tag}</Badge>
+                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 transition-transform duration-300 group-hover:rotate-[10deg]">{feature.tag}</Badge>
                                     </div>
                                     <h3 className="font-semibold text-xl text-foreground font-headline">{feature.title}</h3>
                                     <p className="text-muted-foreground mt-2">{feature.description}</p>
                                   </div>
+                                  <div className="absolute -bottom-1/4 -right-1/4 w-48 h-48 bg-gradient-to-tr from-blue-500/20 via-purple-500/20 to-red-500/20 rounded-full opacity-0 scale-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-in-out"></div>
                                 </Card>
                             ))}
                         </div>
