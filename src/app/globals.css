@@ -70,9 +70,9 @@
         content: '';
         @apply absolute inset-0 z-0;
         background: radial-gradient(circle at 100% 100%, hsl(0 100% 50% / 0.15), transparent 20%);
-        backdrop-filter: blur(10px);
     }
 }
+
 
 
 
