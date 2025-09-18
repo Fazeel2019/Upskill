@@ -31,13 +31,13 @@ const StatCard = ({ title, value, description, icon: Icon, href, className }: { 
 );
 
 
-const QuickActionCard = ({ href, icon: Icon, title, description, children }: { href: string, icon: React.ElementType, title: string, description: string, children?: React.ReactNode }) => (
+const QuickActionCard = ({ href, icon: Icon, title, description, children, bgClass, iconClass }: { href: string, icon: React.ElementType, title: string, description: string, children?: React.ReactNode, bgClass: string, iconClass: string }) => (
      <motion.div variants={itemVariants}>
         <Card className="group relative overflow-hidden rounded-2xl h-full hover:shadow-lg transition-shadow duration-300">
              <CardContent className="p-6 flex flex-col items-start justify-between h-full">
                 <div>
-                    <div className="mb-4 rounded-lg p-3 bg-primary/10 w-fit">
-                        <Icon className="h-6 w-6 text-primary" />
+                    <div className={cn("mb-4 rounded-lg p-3 w-fit", bgClass)}>
+                        <Icon className={cn("h-6 w-6", iconClass)} />
                     </div>
                     <h3 className="font-semibold mb-1 text-card-foreground">{title}</h3>
                     <p className="text-sm text-muted-foreground">{description}</p>
@@ -156,10 +156,10 @@ export default function DashboardPage() {
                     <CardTitle className="font-headline">Quick Actions</CardTitle>
                 </CardHeader>
                 <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <QuickActionCard href="/community" icon={Plus} title="Create a Post" description="Share your thoughts."/>
-                    <QuickActionCard href="/events" icon={Calendar} title="Find an Event" description="Join a workshop." />
-                    <QuickActionCard href="/messaging" icon={MessageSquare} title="Message a Mentor" description="Get guidance." />
-                     <QuickActionCard href="/resources" icon={BookOpen} title="Continue Learning" description="Finish your course.">
+                    <QuickActionCard href="/community" icon={Plus} title="Create a Post" description="Share your thoughts." bgClass="bg-purple-100" iconClass="text-purple-600"/>
+                    <QuickActionCard href="/events" icon={Calendar} title="Find an Event" description="Join a workshop." bgClass="bg-orange-100" iconClass="text-orange-600"/>
+                    <QuickActionCard href="/messaging" icon={MessageSquare} title="Message a Mentor" description="Get guidance." bgClass="bg-blue-100" iconClass="text-blue-600" />
+                     <QuickActionCard href="/resources" icon={BookOpen} title="Continue Learning" description="Finish your course." bgClass="bg-green-100" iconClass="text-green-600">
                          <div className="w-full mt-2">
                             <Progress value={60} className="h-2" />
                             <p className="text-xs text-muted-foreground mt-1">60% complete</p>
