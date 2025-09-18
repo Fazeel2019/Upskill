@@ -16,8 +16,9 @@ export default function PublicHeader() {
 
   const navLinks = [
     { href: "/#features", label: "Features" },
-    { href: "/#pricing", label: "Pricing" },
     { href: "/blog", label: "Blog" },
+    { href: "/podcast", label: "Podcast" },
+    { href: "/about", label: "About" },
   ];
 
   useEffect(() => {
@@ -30,27 +31,27 @@ export default function PublicHeader() {
 
   const headerClasses = cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-lg border-b" : "bg-transparent"
+      isScrolled ? "bg-background/80 backdrop-blur-lg border-b border-white/10" : "bg-transparent"
   );
   
   const linkClasses = cn(
-      "transition-colors",
-      isScrolled ? "text-foreground/80 hover:text-foreground" : "text-white/80 hover:text-white"
+      "transition-colors font-medium",
+      "text-white/70 hover:text-white"
   );
 
   return (
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
-          <Logo className={cn("h-8 w-auto", isScrolled ? "text-primary" : "text-white")} />
-           <span className={cn("font-headline font-bold text-2xl", isScrolled ? "text-foreground": "text-white")}>Upskill</span>
+          <Logo className={cn("h-8 w-auto")} />
+           <span className={cn("font-headline font-bold text-2xl text-white")}>Upskill</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={cn(linkClasses, pathname === link.href && (isScrolled ? "text-primary" : "text-white"))}
+              className={cn(linkClasses, pathname === link.href && "text-white font-semibold")}
             >
               {link.label}
             </Link>
@@ -60,13 +61,13 @@ export default function PublicHeader() {
           <Button variant="ghost" asChild className={linkClasses}>
             <Link href="/login">Log In</Link>
           </Button>
-          <Button asChild className="cta-gradient text-white rounded-lg">
+          <Button asChild className="bg-primary text-primary-foreground rounded-full font-semibold hover:bg-primary/90">
             <Link href="/signup">Start Free Trial</Link>
           </Button>
         </div>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className={cn("md:hidden", isScrolled ? "text-foreground" : "text-white hover:bg-white/10 hover:text-white")}>
+            <Button variant="ghost" size="icon" className={cn("md:hidden text-white hover:bg-white/10 hover:text-white")}>
               <Menu className="h-6 w-6" />
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
@@ -88,7 +89,7 @@ export default function PublicHeader() {
                 ))}
               </nav>
               <div className="grid gap-4 mt-8">
-                <Button asChild className="cta-gradient text-white">
+                <Button asChild className="bg-primary text-primary-foreground">
                   <Link href="/signup">Start Free Trial</Link>
                 </Button>
                 <Button variant="outline" asChild>

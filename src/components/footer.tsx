@@ -8,7 +8,7 @@ const SocialIcon = ({ href, children }: { href: string; children: React.ReactNod
     href={href}
     target="_blank"
     rel="noopener noreferrer"
-    className="text-muted-foreground transition-colors hover:text-primary"
+    className="text-muted-foreground transition-all duration-300 hover:text-primary hover:scale-110 hover:glow-sm"
   >
     {children}
   </a>
@@ -16,8 +16,9 @@ const SocialIcon = ({ href, children }: { href: string; children: React.ReactNod
 
 export default function Footer() {
   return (
-    <footer className="bg-background border-t">
-      <div className="container mx-auto py-16 px-4 md:px-6">
+    <footer className="bg-background/50 border-t border-white/10 relative">
+      <div className="absolute inset-0 hero-gradient opacity-20"></div>
+      <div className="container mx-auto py-16 px-4 md:px-6 relative">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           <div className="col-span-2">
              <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-foreground">
@@ -69,7 +70,7 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left text-sm text-muted-foreground">
                 <p>&copy; {new Date().getFullYear()} Upskill Community. All rights reserved.</p>
             </div>
