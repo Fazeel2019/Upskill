@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight } from "lucide-react"
+import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -11,6 +11,7 @@ import { listenToPosts, type Post } from "@/services/posts"
 import { listenToEvents, type Event } from "@/services/events"
 import { isToday } from "date-fns"
 import { cn } from "@/lib/utils"
+import { Progress } from "@/components/ui/progress"
 
 const StatCard = ({ title, value, description, icon: Icon, href, className }: { title: string, value: string, description: string, icon: React.ElementType, href?: string, className?: string }) => (
     <motion.div variants={itemVariants}>
@@ -30,7 +31,7 @@ const StatCard = ({ title, value, description, icon: Icon, href, className }: { 
 );
 
 
-const QuickActionCard = ({ href, icon: Icon, title, description }: { href: string, icon: React.ElementType, title: string, description: string }) => (
+const QuickActionCard = ({ href, icon: Icon, title, description, children }: { href: string, icon: React.ElementType, title: string, description: string, children?: React.ReactNode }) => (
      <motion.div variants={itemVariants}>
         <Card className="group relative overflow-hidden rounded-2xl h-full hover:shadow-lg transition-shadow duration-300">
              <CardContent className="p-6 flex flex-col items-start justify-between h-full">
@@ -41,6 +42,7 @@ const QuickActionCard = ({ href, icon: Icon, title, description }: { href: strin
                     <h3 className="font-semibold mb-1 text-card-foreground">{title}</h3>
                     <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
+                {children}
                 <Button asChild size="sm" className="mt-4">
                     <Link href={href}>Go <ArrowRight className="ml-2 h-4 w-4"/></Link>
                 </Button>
@@ -111,7 +113,7 @@ export default function DashboardPage() {
         </Card>
       </motion.div>
       
-      <motion.div className="grid gap-6 md:grid-cols-3" variants={containerVariants}>
+      <motion.div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" variants={containerVariants}>
         <StatCard 
             title="New Posts Today" 
             value={String(postsTodayCount)} 
@@ -129,12 +131,20 @@ export default function DashboardPage() {
             className="bg-red-600 text-white hover:bg-red-700 [&_p]:text-red-100 [&_svg]:text-white"
         />
         <StatCard 
+            title="Courses Completed" 
+            value="0" 
+            description="Keep up the great work!" 
+            icon={Trophy}
+            href="#"
+             className="bg-blue-600 text-white hover:bg-blue-700 [&_p]:text-blue-100 [&_svg]:text-white"
+        />
+         <StatCard 
             title="Go to Messages" 
             value=">" 
             description="View your conversations" 
             icon={MessageSquare}
             href="/messaging"
-             className="bg-blue-600 text-white hover:bg-blue-700 [&_p]:text-blue-100 [&_svg]:text-white"
+             className="bg-purple-600 text-white hover:bg-purple-700 [&_p]:text-purple-100 [&_svg]:text-white"
         />
       </motion.div>
 
@@ -145,9 +155,16 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle className="font-headline">Quick Actions</CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <QuickActionCard href="/community" icon={Plus} title="Create a Post" description="Share your thoughts."/>
                     <QuickActionCard href="/events" icon={Calendar} title="Find an Event" description="Join a workshop." />
+                    <QuickActionCard href="/messaging" icon={MessageSquare} title="Message a Mentor" description="Get guidance." />
+                     <QuickActionCard href="/resources" icon={BookOpen} title="Continue Learning" description="Finish your course.">
+                         <div className="w-full mt-2">
+                            <Progress value={60} className="h-2" />
+                            <p className="text-xs text-muted-foreground mt-1">60% complete</p>
+                        </div>
+                    </QuickActionCard>
                 </CardContent>
              </Card>
             </motion.div>
