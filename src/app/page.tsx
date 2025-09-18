@@ -117,11 +117,9 @@ export default function Home() {
         <section className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
-                <div className="bg-blue-50/50 rounded-2xl p-8">
-                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-                     ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
-                    </h2>
-                </div>
+                <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+                 ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
+                </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our platform provides a comprehensive suite of hyper-targeted tools and resources, from 1-on-1 mentorship sessions with C-suite executives to AI-powered insights that guide your career path.</p>
 
                 <div className="mt-12 grid md:grid-cols-3 gap-8">
