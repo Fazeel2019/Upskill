@@ -87,7 +87,7 @@ export default function Home() {
                     <div className="flex items-center gap-2"><Zap className="w-5 h-5 text-white"/> AI Insights</div>
                   </div>
                 </div>
-                 <div className="relative h-80 md:h-[500px] w-full">
+                 <div className="relative h-80 md:h-[500px] w-full z-10">
                     <Image src="https://storage.googleapis.com/aifirebase-79ed2.appspot.com/dev/0a53fd5c-20bd-477c-a496-0370425a1ab0.png" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
                 </div>
               </motion.div>
