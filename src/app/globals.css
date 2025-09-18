@@ -64,8 +64,9 @@
         @apply bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent;
     }
     .hero-gradient {
-       background: radial-gradient(circle at 100% 100%, hsl(240 100% 50% / 0.1), transparent 20%),
-                  radial-gradient(circle at 0% 0%, hsl(240 100% 50% / 0.15), transparent 30%);
+       background: radial-gradient(circle at 100% 100%, hsl(0 100% 50% / 0.1), transparent 25%),
+                  radial-gradient(circle at 0% 0%, hsl(240 100% 50% / 0.2), transparent 40%);
     }
 }
+
 
