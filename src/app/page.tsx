@@ -61,7 +61,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden hero-gradient bg-blue-600">
+        <section className="relative min-h-screen flex items-center text-foreground overflow-hidden hero-gradient bg-blue-600">
            <div className="container relative mx-auto px-4">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
