@@ -110,11 +110,8 @@ export default function PodcastPage() {
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.6, duration: 0.5 }}
             >
-              <Button size="lg" variant="outline" className="rounded-2xl text-white border-white hover:bg-white hover:text-black">
+              <Button size="lg" className="rounded-2xl">
                 <Rss className="mr-2 h-4 w-4" /> Follow on Spotify
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-2xl text-white border-white hover:bg-white hover:text-black">
-                <Rss className="mr-2 h-4 w-4" /> Subscribe on Apple
               </Button>
             </motion.div>
           </div>
@@ -132,7 +129,7 @@ export default function PodcastPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {podcastEpisodes.map((episode) => (
                 <motion.div key={episode.episode} variants={cardVariants}>
-                    <Card className="group overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
+                    <Card className="group overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-lg hover:shadow-purple-500/10">
                     <div className="flex flex-col sm:flex-row">
                         <div className="sm:w-1/3 relative">
                         <Image
