@@ -43,7 +43,7 @@ const QuickActionCard = ({ href, icon: Icon, title, description, children, bgCla
                     <p className="text-sm text-muted-foreground">{description}</p>
                 </div>
                 {children}
-                <Button asChild size="sm" className="mt-4">
+                <Button asChild size="sm" className="mt-4 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white">
                     <Link href={href}>Go <ArrowRight className="ml-2 h-4 w-4"/></Link>
                 </Button>
             </CardContent>
