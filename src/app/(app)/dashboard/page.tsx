@@ -17,12 +17,12 @@ const StatCard = ({ title, value, description, icon: Icon, href, className }: { 
         <Card className={cn("rounded-2xl hover:bg-card/95 transition-colors duration-300 h-full", className)}>
              <Link href={href || "#"} className={!href ? "pointer-events-none" : ""}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-                  <Icon className="h-5 w-5 text-primary" />
+                  <CardTitle className="text-sm font-medium">{title}</CardTitle>
+                  <Icon className="h-5 w-5" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{value}</div>
-                  <p className="text-xs text-muted-foreground">{description}</p>
+                  <p className="text-xs">{description}</p>
                 </CardContent>
             </Link>
         </Card>
@@ -118,7 +118,7 @@ export default function DashboardPage() {
             description={`${postsTodayCount} new discussions`}
             icon={Newspaper}
             href="/community"
-            className="bg-green-500/10 backdrop-blur-sm border-green-500/20 text-green-900 dark:text-green-100 [&_p]:text-green-900/70 dark:[&_p]:text-green-100/70 [&_svg]:text-green-500"
+            className="bg-green-600 text-white hover:bg-green-700 [&_p]:text-green-100 [&_svg]:text-white"
         />
         <StatCard 
             title="Upcoming Events" 
@@ -126,6 +126,7 @@ export default function DashboardPage() {
             description={`${upcomingEventsCount} events scheduled`}
             icon={Calendar}
             href="/events"
+            className="text-muted-foreground"
         />
         <StatCard 
             title="Go to Messages" 
@@ -133,6 +134,7 @@ export default function DashboardPage() {
             description="View your conversations" 
             icon={MessageSquare}
             href="/messaging"
+             className="text-muted-foreground"
         />
       </motion.div>
 
