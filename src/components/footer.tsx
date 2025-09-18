@@ -16,12 +16,13 @@ const SocialIcon = ({ href, children }: { href: string; children: React.ReactNod
 
 export default function Footer() {
   return (
-    <footer className="bg-muted/50 border-t">
+    <footer className="bg-background border-t">
       <div className="container mx-auto py-16 px-4 md:px-6">
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           <div className="col-span-2">
              <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-foreground">
-                <Logo className="h-10 w-auto" />
+                <Logo className="h-8 w-auto text-primary" />
+                 <span className="font-headline font-bold text-2xl">Upskill</span>
             </Link>
              <p className="text-muted-foreground text-sm mt-4 max-w-xs">
               Empowering healthcare and STEM professionals to accelerate their careers through AI-powered insights, expert mentorship, and exclusive networking.
@@ -82,5 +83,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-    

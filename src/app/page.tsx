@@ -3,58 +3,36 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckIcon, MedalIcon, SparklesIcon, UsersIcon, BarChart, Zap, Star, ShieldCheck, Trophy, Group } from "lucide-react";
+import { CheckIcon, MedalIcon, SparklesIcon, UsersIcon, BarChart, Zap, Star, ShieldCheck, Trophy, Group, Briefcase, Calendar, Verified } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
 import PublicHeader from "@/components/public-header";
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 const features = [
     {
-        title: "AI-Powered Career Insights",
-        description: "Get personalized career recommendations and skill gap analysis powered by advanced AI algorithms.",
-        icon: Zap,
-    },
-    {
-        title: "Expert Mentorship Network",
-        description: "Connect with C-suite executives and industry leaders for transformative small group coaching.",
-        icon: UsersIcon,
-    },
-    {
         title: "Exclusive Leadership Events",
-        description: "Access monthly leadership summits, workshops, and networking events.",
-        icon: Star,
+        description: "Access monthly leadership summits, workshops, and exclusive mentorship from C-suite executives and industry leaders.",
+        icon: Calendar,
+        tag: "Premium",
+        color: "orange"
     },
     {
         title: "Advanced Career Analytics",
-        description: "Monitor growth with detailed analytics, milestone tracking, and predictive insights.",
+        description: "Monitor your career growth with detailed analytics, milestone tracking, and predictive insights powered by our AI.",
         icon: BarChart,
+        tag: "Analytics",
+        color: "blue"
     },
     {
         title: "Verified Professional Network",
-        description: "Connect with trusted healthcare and STEM professionals.",
-        icon: ShieldCheck,
-    },
-    {
-        title: "Accelerated Skill Development",
-        description: "Curated courses, projects, and training programs.",
-        icon: SparklesIcon,
-    },
-    {
-        title: "Strategic Goal Framework",
-        description: "Achieve ambitious milestones with proven frameworks.",
-        icon: MedalIcon,
-    },
-    {
-        title: "Industry Recognition Program",
-        description: "Earn certificates and badges recognized by top companies.",
-        icon: Trophy,
-    },
-    {
-        title: "Elite Community Forums",
-        description: "Peer discussions and thought leadership exchange.",
-        icon: Group,
+        description: "Connect with a trusted, curated network of healthcare and STEM professionals, designed for meaningful collaboration.",
+        icon: Verified,
+        tag: "Community",
+        color: "green"
     },
 ];
 
@@ -62,71 +40,46 @@ const testimonials = [
   {
     name: "Dr. Sarah Chen",
     title: "CMO, MedTech Innovations",
-    quote: "Secured CMO role in 6 months, +150% salary increase.",
+    quote: "The mentorship program was transformative. I secured my CMO role in just 6 months, leading to a 150% salary increase.",
     image: "https://picsum.photos/seed/testimonial1/100/100",
+    rating: 5,
+    tag: "Promotion",
+    tagColor: "green"
   },
   {
     name: "Marcus Rodriguez",
     title: "Sr. Data Scientist, BioAnalytics Corp",
-    quote: "5 job offers from C-suite networking.",
+    quote: "I received 5 job offers from top-tier companies thanks to the C-suite networking opportunities. The connections here are invaluable.",
     image: "https://picsum.photos/seed/testimonial2/100/100",
+    rating: 5,
+    tag: "Networking",
+    tagColor: "blue"
   },
     {
     name: "Dr. Emily Watson",
     title: "Research Director, Genomics Institute",
-    quote: "200+ new connections, expanded leadership.",
+    quote: "Gaining over 200 new, meaningful connections has dramatically expanded my leadership and collaborative research capabilities.",
     image: "https://picsum.photos/seed/testimonial3/100/100",
+    rating: 5,
+    tag: "Leadership",
+    tagColor: "orange"
   },
   {
     name: "James Park",
     title: "VP Engineering, HealthTech Solutions",
-    quote: "Promoted 8 months early, doubled team size.",
+    quote: "The leadership coaching helped me get promoted 8 months ahead of schedule and confidently double my team's size.",
     image: "https://picsum.photos/seed/testimonial4/100/100",
-  },
-  {
-    name: "Dr. Lisa Thompson",
-    title: "Clinical Research Lead, Pharma Dynamics",
-    quote: "Peer support, 3 leadership awards.",
-    image: "https://picsum.photos/seed/testimonial5/100/100",
-  },
-  {
-    name: "Alex Kumar",
-    title: "Principal Scientist, Biotech Innovations",
-    quote: "Cutting-edge skills → promotion.",
-    image: "https://picsum.photos/seed/testimonial6/100/100",
-  },
-  {
-    name: "Dr. Rachel Kim",
-    title: "Head of Innovation, Digital Health Corp",
-    quote: "Career growth → Head of Innovation.",
-    image: "https://picsum.photos/seed/testimonial7/100/100",
-  },
-    {
-    name: "Michael Torres",
-    title: "Senior Scientist, Pharmaceutical Research Inc",
-    quote: "Exceptional networking → breakthrough collaborations.",
-    image: "https://picsum.photos/seed/testimonial8/100/100",
+    rating: 5,
+    tag: "Promotion",
+    tagColor: "green"
   },
 ];
 
 const highlights = [
-    { text: "C-suite mentors", icon: UsersIcon },
-    { text: "Monthly exclusives", icon: Star },
-    { text: "AI-powered insights", icon: Zap },
-    { text: "AI Assistant", icon: SparklesIcon },
-    { text: "Live Coaching (Weekly sessions)", icon: Group },
-    { text: "94% Career progress", icon: MedalIcon },
+    { text: "Expert Mentorship", icon: UsersIcon },
+    { text: "Exclusive Events", icon: Star },
+    { text: "AI Insights", icon: Zap },
 ]
-
-const FeatureCard = ({ feature }: { feature: typeof features[0] }) => (
-    <Card className="w-[350px] flex-shrink-0 text-left p-6 group transition-all duration-300 mx-4">
-        <div className="mb-4 bg-primary/10 rounded-lg p-3 w-fit">
-            <feature.icon className="w-8 h-8 text-primary" />
-        </div>
-        <h3 className="font-semibold text-xl mb-2 text-foreground">{feature.title}</h3>
-        <p className="text-muted-foreground">{feature.description}</p>
-    </Card>
-);
 
 export default function Home() {
   const cardVariants = {
@@ -143,14 +96,12 @@ export default function Home() {
   };
   
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground">
+    <div className="flex flex-col min-h-screen bg-background text-foreground light">
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 text-center md:text-left overflow-hidden">
-           <div className="absolute inset-0 static-gradient"></div>
-           <div className="absolute inset-0 bg-black/20"></div>
-          <div className="container relative mx-auto px-4">
+        <section className="relative pt-32 pb-20 md:pt-48 md:pb-32 text-center md:text-left overflow-hidden hero-gradient">
+           <div className="container relative mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -163,24 +114,32 @@ export default function Home() {
                 <p className="mt-4 text-lg md:text-xl text-white/80 max-w-xl mx-auto md:mx-0">
                   Join 10,000+ professionals advancing their careers through expert coaching, exclusive networking, and AI-powered insights.
                 </p>
-                <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-                  <Button asChild size="lg" className="rounded-2xl bg-gradient-to-r from-purple-500 to-red-500 text-white hover:shadow-lg hover:shadow-red-500/50 transition-shadow transform hover:-translate-y-1">
-                    <Link href="/signup">Join Now For Free</Link>
+                <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
+                  <Button asChild size="lg" className="rounded-xl cta-gradient text-white hover:shadow-lg hover:shadow-primary/50 transition-shadow transform hover:-translate-y-1 w-full sm:w-auto">
+                    <Link href="/signup">Start Free Trial Today</Link>
                   </Button>
                 </div>
+                 <div className="mt-8 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2">
+                    {highlights.map((highlight, i) => (
+                      <div key={i} className="flex items-center gap-2 text-white/90">
+                        <highlight.icon className="w-4 h-4 text-white/90" />
+                        <span className="font-medium text-sm">{highlight.text}</span>
+                      </div>
+                    ))}
+                 </div>
               </motion.div>
               <motion.div 
-                className="relative hidden md:block"
+                className="relative hidden md:block h-[450px]"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
               >
                 <Image
-                  src="https://picsum.photos/seed/professionals/600/600"
+                  src="https://picsum.photos/seed/professionals/600/700"
                   alt="Diverse professionals"
                   width={600}
-                  height={600}
-                  className="rounded-full shadow-2xl shadow-black/50"
+                  height={700}
+                  className="rounded-2xl shadow-2xl absolute right-0 top-1/2 -translate-y-1/2"
                   data-ai-hint="diverse professionals team"
                   priority
                 />
@@ -189,130 +148,150 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Floating Stat Pills */}
-        <motion.div 
-          className="container mx-auto px-4 -mt-12 relative z-10"
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ staggerChildren: 0.1 }}
-        >
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-foreground">
-            {highlights.map((highlight, i) => (
-              <motion.div key={i} variants={cardVariants} className="glass-card p-4 flex items-center gap-3">
-                <highlight.icon className="w-5 h-5 text-primary shrink-0" />
-                <p className="font-semibold text-sm">{highlight.text}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Features Section */}
-        <section className="py-16 md:py-24">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">
-             ✨ Platform Features — <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-transparent bg-clip-text">Everything You Need to Accelerate Your Career</span>
-            </h2>
-          </div>
-          <div className="relative mt-12 group flex gap-8 overflow-hidden">
-            <div className="flex shrink-0 animate-marquee group-hover:paused">
-                {[...features, ...features].map((feature, index) => (
-                    <FeatureCard key={`${feature.title}-${index}`} feature={feature} />
-                ))}
-            </div>
-             <div aria-hidden="true" className="flex shrink-0 animate-marquee group-hover:paused">
-                {[...features, ...features].map((feature, index) => (
-                    <FeatureCard key={`${feature.title}-dup-${index}`} feature={feature} />
-                ))}
-            </div>
-          </div>
+        {/* Everything you need section */}
+        <section className="py-16 md:py-32 bg-secondary">
+             <div className="container mx-auto px-4 text-center">
+                 <Badge variant="outline" className="mb-4 font-semibold text-primary border-primary/50 bg-primary/10">Platform Features</Badge>
+                <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight text-foreground">
+                 Everything You Need to <br/> <span className="bg-gradient-to-r from-purple-500 to-red-500 text-transparent bg-clip-text">Accelerate Your Career</span>
+                </h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our platform provides a powerful, all-in-one strategy with exclusive guidance to help you reach the pinnacle of value creation and impact within the healthcare and tech fields.</p>
+                <div className="mt-8">
+                     <Button variant="outline">Explore Platform Features</Button>
+                </div>
+                <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+                    {features.map((feature) => (
+                        <Card key={feature.title} className="text-left p-6 group transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-2">
+                           <div className="flex items-center justify-between mb-4">
+                             <div className={cn("rounded-lg p-2 w-fit", 
+                                feature.color === 'orange' && 'bg-orange-500/10',
+                                feature.color === 'blue' && 'bg-blue-500/10',
+                                feature.color === 'green' && 'bg-green-500/10',
+                              )}>
+                                <feature.icon className={cn("w-6 h-6",
+                                    feature.color === 'orange' && 'text-orange-500',
+                                    feature.color === 'blue' && 'text-blue-500',
+                                    feature.color === 'green' && 'text-green-500',
+                                )} />
+                            </div>
+                            <Badge variant="outline">{feature.tag}</Badge>
+                           </div>
+                            <h3 className="font-semibold text-xl mb-2 text-foreground">{feature.title}</h3>
+                            <p className="text-muted-foreground text-sm">{feature.description}</p>
+                        </Card>
+                    ))}
+                </div>
+                <Card className="mt-12 p-8 bg-background/50 flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div className="text-center md:text-left">
+                        <h3 className="font-bold text-xl">Ready to unlock your potential?</h3>
+                        <p className="text-muted-foreground mt-1">Join thousands of members already on their way to success.</p>
+                    </div>
+                     <div className="flex gap-4">
+                        <Button asChild className="cta-gradient text-white"><Link href="/signup">Start Free Trial</Link></Button>
+                        <Button variant="outline">Book a Demo</Button>
+                    </div>
+                </Card>
+             </div>
         </section>
 
         {/* Trusted By Professionals Section */}
-        <section className="bg-muted/50 py-16 md:py-24">
+        <section className="bg-background py-16 md:py-32">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight mb-4 text-foreground">
-             🌟 Success Stories — <span className="bg-gradient-to-r from-purple-500 to-red-500 text-transparent bg-clip-text">Trusted by Leading</span> Healthcare & STEM Professionals
+            <Badge variant="outline" className="mb-4 font-semibold text-primary border-primary/50 bg-primary/10">Success Stories</Badge>
+            <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
+             Trusted by Leading <br/> <span className="bg-gradient-to-r from-purple-500 to-red-500 text-transparent bg-clip-text">Healthcare & STEM Professionals</span>
             </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our members have successfully transitioned into executive roles, secured significant salary increases, and expanded their influence across the venture ecosystem.</p>
+
             <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
               <div><p className="text-4xl font-bold text-primary">10,000+</p><p className="text-muted-foreground">Active Members</p></div>
               <div><p className="text-4xl font-bold text-primary">94%</p><p className="text-muted-foreground">Success Rate</p></div>
               <div><p className="text-4xl font-bold text-primary">500+</p><p className="text-muted-foreground">Expert Mentors</p></div>
               <div><p className="text-4xl font-bold text-primary">4.9/5</p><p className="text-muted-foreground">Average Rating</p></div>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-              {testimonials.map((testimonial, i) => (
-                <motion.div
-                  key={testimonial.name}
-                  initial="offscreen"
-                  whileInView="onscreen"
-                  viewport={{ once: true, amount: 0.5 }}
-                  variants={cardVariants}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Card className="h-full text-left p-6">
-                     <div className="flex items-center gap-4 mb-4">
-                      <Image src={testimonial.image} alt={testimonial.name} width={50} height={50} className="rounded-full" data-ai-hint="person portrait" />
-                      <div>
-                        <p className="font-semibold text-foreground">{testimonial.name}</p>
-                        <p className="text-sm text-muted-foreground">{testimonial.title}</p>
-                      </div>
-                    </div>
-                    <p className="text-lg font-medium text-foreground">"{testimonial.quote}"</p>
-                  </Card>
-                </motion.div>
-              ))}
+             <div className="relative">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {testimonials.map((testimonial) => (
+                    <Card key={testimonial.name} className="h-full text-left p-6 flex flex-col justify-between">
+                        <div>
+                             <div className="flex items-center mb-2">
+                                {[...Array(testimonial.rating)].map((_, i) => (
+                                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                                ))}
+                                <Badge variant="outline" className={cn("ml-auto", 
+                                    testimonial.tagColor === "green" && "text-green-600 border-green-500/50 bg-green-500/10",
+                                    testimonial.tagColor === "blue" && "text-blue-600 border-blue-500/50 bg-blue-500/10",
+                                    testimonial.tagColor === "orange" && "text-orange-600 border-orange-500/50 bg-orange-500/10",
+                                )}>{testimonial.tag}</Badge>
+                            </div>
+                            <p className="font-medium text-foreground mb-4">"{testimonial.quote}"</p>
+                        </div>
+                        <div className="flex items-center gap-3 mt-4">
+                        <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" />
+                        <div>
+                            <p className="font-semibold text-sm text-foreground">{testimonial.name}</p>
+                            <p className="text-xs text-muted-foreground">{testimonial.title}</p>
+                        </div>
+                        </div>
+                    </Card>
+                ))}
+                </div>
             </div>
+             <Card className="mt-12 p-8 bg-secondary flex flex-col md:flex-row items-center justify-between gap-6">
+                <div className="text-center md:text-left">
+                    <h3 className="font-bold text-xl">Ready to Join Our Success Stories?</h3>
+                    <p className="text-muted-foreground mt-1">See how our members leverage the platform to achieve their goals.</p>
+                </div>
+                <Button asChild className="cta-gradient text-white"><Link href="/signup">Join Community</Link></Button>
+             </Card>
           </div>
         </section>
 
-        {/* Membership Pricing Section */}
-        <section className="py-16 md:py-24 relative overflow-hidden bg-muted/30">
-          <div className="container mx-auto px-4 relative text-center text-foreground">
-            <motion.div
-              initial="offscreen"
-              whileInView="onscreen"
-              viewport={{ once: true, amount: 0.5 }}
-              variants={cardVariants}
-            >
-              <Card className="max-w-md mx-auto border-purple-500/50 shadow-2xl shadow-purple-500/20 rounded-2xl">
-                <CardContent className="p-8">
-                  <div className="bg-primary text-primary-foreground font-semibold rounded-full px-4 py-1 inline-block mb-4 text-sm">Most Popular Choice</div>
-                  <h3 className="text-2xl font-bold font-headline mb-2">Executive Membership</h3>
-                  <p className="text-5xl font-bold mb-2"><span className="text-2xl text-muted-foreground line-through">$297</span> $97<span className="text-lg font-normal text-muted-foreground">/month</span></p>
-                  <p className="text-green-600 font-semibold mb-4">Save $200</p>
-                  <ul className="space-y-3 text-left my-8">
-                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Executive Masterclass Series ($2,000 value)</li>
-                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Personal Branding Toolkit ($500 value)</li>
-                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Career Workbook ($300 value)</li>
-                  </ul>
-                  <Button size="lg" className="w-full rounded-2xl bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white hover:shadow-lg hover:shadow-purple-500/50 transition-shadow">Start Your Free Trial Today</Button>
-                  <p className="text-sm text-muted-foreground mt-4">Cancel anytime, 30-day money-back guarantee.</p>
-                  <div className="mt-6 p-3 bg-yellow-400/10 border border-yellow-400/50 rounded-lg text-yellow-500 text-sm">
-                    <b>Success Guarantee:</b> 94% of members achieve goals within 6 months — otherwise continued support until success.
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
+        {/* Transform your career section */}
+        <section className="py-16 md:py-32 relative overflow-hidden dark-gradient">
+            <div className="container mx-auto px-4 relative text-center text-white">
+                <Badge variant="outline" className="mb-4 font-semibold text-primary border-primary/50 bg-primary/20">Our Framework</Badge>
+                <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">Transform Your Career Starting Today</h2>
+                <p className="mt-4 text-lg text-white/70 max-w-3xl mx-auto">
+                    We provide the framework, mentorship, and network to help you achieve your most ambitious career goals.
+                </p>
+                <div className="mt-12 max-w-4xl mx-auto">
+                    <Card className="bg-background/80 backdrop-blur-sm border-white/10 text-left">
+                       <CardContent className="p-8 grid md:grid-cols-2 gap-8 items-center">
+                            <div>
+                                <Image src="https://picsum.photos/seed/dashboard-ui/500/400" alt="Dashboard UI" width={500} height={400} className="rounded-lg shadow-lg" data-ai-hint="dashboard ui" />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-2xl mb-4">Everything You Need To Succeed</h3>
+                                <ul className="space-y-3">
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>AI-Powered Goal Setting & Tracking</li>
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Personalized Skill Gap Analysis</li>
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>1-on-1 Mentorship Scheduling</li>
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Access to Exclusive Workshops</li>
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Curated Leadership Content</li>
+                                    <li className="flex items-center gap-3"><CheckIcon className="w-5 h-5 text-green-500"/>Networking & Collaboration Tools</li>
+                                </ul>
+                                <Button asChild className="mt-6 cta-gradient text-white w-full"><Link href="/signup">View Your Personalized Plan</Link></Button>
+                            </div>
+                       </CardContent>
+                    </Card>
+                </div>
+            </div>
         </section>
+
 
         {/* Final CTA Section */}
-        <section className="py-20 md:py-32 text-center relative overflow-hidden">
-             <div className="absolute inset-0 static-gradient"></div>
+        <section className="py-20 md:py-32 text-center relative overflow-hidden hero-gradient">
             <div className="container mx-auto px-4 relative">
                 <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-white">Ready to Transform Your Career?</h2>
                 <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Join thousands of professionals who are already leveling up. Your next opportunity awaits.</p>
                 <div className="mt-8 flex justify-center gap-4">
-                  <Button asChild size="lg" className="rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-lg hover:shadow-purple-500/50 transition-shadow">
+                  <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90">
                       <Link href="/signup">Join Now For Free</Link>
                   </Button>
-                </div>
-                 <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
-                    <div><p className="text-3xl font-bold">10,000+</p><p className="text-white/70">Active Members</p></div>
-                    <div><p className="text-3xl font-bold">94%</p><p className="text-white/70">Success Rate</p></div>
-                    <div><p className="text-3xl font-bold">500+</p><p className="text-white/70">Expert Mentors</p></div>
-                    <div><p className="text-3xl font-bold">4.9/5</p><p className="text-white/70">Average Rating</p></div>
+                   <Button asChild size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
+                      <Link href="#">Book a Demo</Link>
+                  </Button>
                 </div>
             </div>
         </section>
@@ -321,3 +300,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

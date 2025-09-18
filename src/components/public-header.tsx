@@ -15,9 +15,8 @@ export default function PublicHeader() {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const navLinks = [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/podcast", label: "Podcast" },
+    { href: "/#features", label: "Features" },
+    { href: "/#pricing", label: "Pricing" },
     { href: "/blog", label: "Blog" },
   ];
 
@@ -29,40 +28,40 @@ export default function PublicHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <header className={cn(
+  const headerClasses = cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-      isScrolled ? "bg-background/80 backdrop-blur-lg shadow-lg border-b" : "bg-transparent"
-    )}>
+      isScrolled ? "bg-background/80 backdrop-blur-lg border-b" : "bg-transparent"
+  );
+  
+  const linkClasses = cn(
+      "transition-colors",
+      isScrolled ? "text-foreground/80 hover:text-foreground" : "text-white/80 hover:text-white"
+  );
+
+  return (
+    <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-        <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-white">
-          <Logo className={cn("h-10 w-auto", isScrolled ? "text-foreground" : "text-white")} />
+        <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
+          <Logo className={cn("h-8 w-auto", isScrolled ? "text-primary" : "text-white")} />
+           <span className={cn("font-headline font-bold text-2xl", isScrolled ? "text-foreground": "text-white")}>Upskill</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={cn(
-                "relative transition-colors group",
-                isScrolled ? "text-foreground/80 hover:text-foreground" : "text-white/80 hover:text-white",
-                pathname === link.href && (isScrolled ? "text-foreground" : "text-white")
-              )}
+              className={cn(linkClasses, pathname === link.href && (isScrolled ? "text-primary" : "text-white"))}
             >
               {link.label}
-              <span className={cn(
-                "absolute bottom-[-4px] left-0 w-full h-0.5 bg-gradient-to-r from-purple-500 to-red-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-center",
-                pathname === link.href ? "scale-x-100" : "scale-x-0"
-              )}/>
             </Link>
           ))}
         </nav>
         <div className="hidden md:flex items-center gap-2">
-          <Button variant="ghost" asChild className={cn(isScrolled ? "text-foreground hover:bg-muted" : "text-white hover:bg-white/10 hover:text-white")}>
+          <Button variant="ghost" asChild className={linkClasses}>
             <Link href="/login">Log In</Link>
           </Button>
-          <Button asChild className={cn(isScrolled ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-white text-black hover:bg-white/90")}>
-            <Link href="/signup">Join Now</Link>
+          <Button asChild className="cta-gradient text-white rounded-lg">
+            <Link href="/signup">Start Free Trial</Link>
           </Button>
         </div>
         <Sheet>
@@ -89,8 +88,8 @@ export default function PublicHeader() {
                 ))}
               </nav>
               <div className="grid gap-4 mt-8">
-                <Button asChild>
-                  <Link href="/signup">Join Now</Link>
+                <Button asChild className="cta-gradient text-white">
+                  <Link href="/signup">Start Free Trial</Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="/login">Log In</Link>
