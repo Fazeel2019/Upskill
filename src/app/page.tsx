@@ -162,7 +162,7 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg hover:shadow-xl transition-all duration-300 max-w-4xl mx-auto">
                     <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
                     <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
