@@ -66,5 +66,3 @@ export const listenToNotifications = (uid: string, callback: (notifications: Not
     
     return unsubscribe;
 }
-
-    

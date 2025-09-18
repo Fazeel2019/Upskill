@@ -150,5 +150,3 @@ export function NotificationBell() {
         </DropdownMenu>
     );
 }
-
-    
