@@ -5,14 +5,14 @@
 
 @layer base {
   :root {
-    --background: 224 71% 4%; /* Deep Blue-Black */
-    --foreground: 210 40% 98%; /* Almost White */
+    --background: 0 0% 100%; /* White */
+    --foreground: 222.2 84% 4.9%; /* Dark Blue/Black for text */
 
-    --card: 224 71% 4%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
     --primary: 221 83% 53%; /* Bright Blue */
     --primary-foreground: 210 40% 98%;
@@ -20,18 +20,18 @@
     --secondary: 262 83% 58%; /* Vibrant Purple */
     --secondary-foreground: 210 40% 98%;
     
-    --muted: 223 47% 11%;
-    --muted-foreground: 215 28% 65%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 350 89% 60%; /* Bright Pink/Red */
-    --accent-foreground: 210 40% 98%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 350 89% 60%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 221 83% 53%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
 
     --radius: 1rem;
   }
@@ -67,12 +67,15 @@
     @apply bg-background text-foreground;
   }
   .glass-card {
+    @apply bg-white/50 backdrop-blur-lg border border-black/10 rounded-2xl shadow-lg;
+  }
+  .dark .glass-card {
     @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl shadow-lg;
   }
 }
 
 @layer utilities {
-    .animate-gradient-x {
-        animation: gradient-x 15s ease infinite;
+    .static-gradient {
+        background: linear-gradient(to bottom right, hsl(var(--primary)) 0%, hsl(var(--destructive)) 100%);
     }
 }

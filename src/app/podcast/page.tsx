@@ -68,7 +68,7 @@ export default function PodcastPage() {
         },
     };
   return (
-    <div className="flex flex-col min-h-screen bg-background text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <PublicHeader />
       <main className="flex-grow">
         <motion.section 
@@ -77,7 +77,7 @@ export default function PodcastPage() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 animate-gradient-x bg-300%"></div>
+          <div className="absolute inset-0 static-gradient"></div>
           <div className="absolute inset-0 bg-black/50"></div>
           <div className="container relative mx-auto px-4">
             <motion.div 
@@ -89,7 +89,7 @@ export default function PodcastPage() {
                 <Mic className="w-10 h-10 text-white" />
             </motion.div>
             <motion.h1 
-              className="font-headline text-4xl md:text-6xl font-bold tracking-tighter"
+              className="font-headline text-4xl md:text-6xl font-bold tracking-tighter text-white"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -132,7 +132,7 @@ export default function PodcastPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {podcastEpisodes.map((episode) => (
                 <motion.div key={episode.episode} variants={cardVariants}>
-                    <Card className="group glass-card overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
+                    <Card className="group overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
                     <div className="flex flex-col sm:flex-row">
                         <div className="sm:w-1/3 relative">
                         <Image
@@ -153,7 +153,7 @@ export default function PodcastPage() {
                               <p>Episode {episode.episode}</p>
                               <p>{episode.date}</p>
                               </div>
-                              <CardTitle className="font-headline text-xl text-white">
+                              <CardTitle className="font-headline text-xl text-foreground">
                               <Link href="#" className="hover:text-primary transition-colors">{episode.title}</Link>
                               </CardTitle>
                           </CardHeader>

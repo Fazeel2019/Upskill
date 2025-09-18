@@ -94,7 +94,7 @@ export default function BlogPage() {
   const filteredPosts = activeFilter === "All" ? blogPosts : blogPosts.filter(post => post.category === activeFilter);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background text-white">
+    <div className="flex flex-col min-h-screen bg-background text-foreground">
       <PublicHeader />
       <main className="flex-grow">
         <motion.section 
@@ -103,11 +103,11 @@ export default function BlogPage() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 animate-gradient-x bg-300%"></div>
+          <div className="absolute inset-0 static-gradient"></div>
           <div className="absolute inset-0 bg-black/50"></div>
           <div className="container relative mx-auto px-4">
             <motion.h1 
-              className="font-headline text-4xl md:text-6xl font-bold tracking-tighter"
+              className="font-headline text-4xl md:text-6xl font-bold tracking-tighter text-white"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.5 }}
@@ -137,7 +137,7 @@ export default function BlogPage() {
               {categories.map(category => (
                 <Button 
                   key={category} 
-                  variant={activeFilter === category ? "secondary" : "outline"}
+                  variant={activeFilter === category ? "default" : "outline"}
                   onClick={() => setActiveFilter(category)}
                   className="rounded-2xl"
                 >
@@ -148,7 +148,7 @@ export default function BlogPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPosts.map((post, index) => (
                 <motion.div key={index} variants={cardVariants}>
-                  <Card className="flex flex-col h-full group glass-card overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
+                  <Card className="flex flex-col h-full group overflow-hidden transition-all duration-300 hover:border-purple-500/50 hover:shadow-purple-500/20 hover:scale-105">
                     <div className="relative overflow-hidden">
                       <Image
                         src={post.image}
@@ -161,7 +161,7 @@ export default function BlogPage() {
                     </div>
                     <CardHeader>
                       <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
-                      <CardTitle className="font-headline text-xl leading-tight text-white">
+                      <CardTitle className="font-headline text-xl leading-tight text-foreground">
                         <Link href="#" className="hover:text-primary transition-colors">{post.title}</Link>
                       </CardTitle>
                     </CardHeader>
