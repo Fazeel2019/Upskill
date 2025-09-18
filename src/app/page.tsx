@@ -88,7 +88,7 @@ export default function Home() {
                   <Button asChild size="lg" className="rounded-2xl bg-gradient-to-r from-purple-500 to-red-500 text-white hover:shadow-lg hover:shadow-red-500/50 transition-shadow transform hover:-translate-y-1">
                     <Link href="/signup">Start Free Trial</Link>
                   </Button>
-                  <Button asChild size="lg" variant="outline" className="rounded-2xl border-white text-white hover:bg-white hover:text-black transition-colors">
+                  <Button asChild size="lg" className="rounded-2xl bg-white text-black hover:bg-white/90 transition-colors">
                     <Link href="#">Book a Demo</Link>
                   </Button>
                 </div>
@@ -228,7 +228,6 @@ export default function Home() {
         {/* Final CTA Section */}
         <section className="py-20 md:py-32 text-center relative overflow-hidden">
              <div className="absolute inset-0 static-gradient"></div>
-              <div className="absolute inset-0 bg-background/80"></div>
             <div className="container mx-auto px-4 relative">
                 <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-white">Ready to Transform Your Career?</h2>
                 <p className="mt-4 text-lg text-white/80 max-w-2xl mx-auto">Join thousands of professionals who are already leveling up. Your next opportunity awaits.</p>
