@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap } from "lucide-react";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -180,7 +180,7 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg max-w-4xl mx-auto">
+                <div className="mt-16 bg-blue-50 rounded-2xl p-8 text-center shadow-lg max-w-4xl mx-auto">
                     <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
                     <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
@@ -258,7 +258,7 @@ export default function Home() {
                 </div>
             </div>
             
-            <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg">
+            <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg max-w-4xl mx-auto">
                 <h3 className="font-headline text-3xl font-bold">Ready to Join Our Success Stories?</h3>
                 <p className="text-muted-foreground mt-2 text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
                 <Button asChild size="lg" className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
@@ -272,7 +272,9 @@ export default function Home() {
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Limited Time Offer</Badge>
-                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Transform Your Career<br/>Starting Today</h2>
+                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
+                        Transform Your Career<br/>Starting Today
+                    </h2>
                     <p className="mt-4 text-lg text-blue-200/80 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
                 </div>
                 
@@ -280,7 +282,7 @@ export default function Home() {
                   <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-500/50 to-transparent rounded-t-2xl"></div>
                    <div className="relative bg-gray-900 rounded-2xl">
                      <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center">
-                        <p className="font-semibold"><Sparkles className="inline-block mr-2 text-yellow-300"/>Most Popular Choice - Join 10,000+ Professionals</p>
+                        <p className="font-semibold">🚀 Most Popular Choice - Join 10,000+ Professionals</p>
                      </div>
                      <div className="grid lg:grid-cols-2 gap-8 p-8">
                        {/* Left Column */}
@@ -296,8 +298,7 @@ export default function Home() {
                           </div>
 
                           <div>
-                             <p className="text-5xl font-bold">$97<span className="text-lg font-normal text-gray-400">/month</span></p>
-                             <p className="line-through text-gray-500 mt-1">$297</p>
+                             <p className="text-5xl font-bold"><span className="line-through text-gray-500 text-3xl">$297</span> $97<span className="text-lg font-normal text-gray-400">/month</span></p>
                              <p className="text-green-400 font-semibold mt-2">Save $200/month - Limited Time</p>
                              <p className="text-gray-400 text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
                           </div>
@@ -389,8 +390,14 @@ export default function Home() {
         {/* Final CTA Section */}
         <section className="py-20 md:py-32 text-center relative overflow-hidden bg-background">
             <div className="container mx-auto px-4 relative">
-                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">Ready to Transform Your Career?</h2>
-                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join a thriving community of ambitious professionals, access world-class resources, and take control of your career trajectory today. Your next big opportunity is just a click away.</p>
+                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+                  Ready to Transform <br/>
+                  <span className="text-yellow-500">Your Career?</span>
+                </h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join thousands of healthcare and STEM professionals who are already accelerating their careers with AI-powered insights, expert mentorship, and exclusive networking opportunities.</p>
+                <p className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
+                    <Timer className="w-4 h-4" /> This special offer is ending soon.
+                </p>
                 <div className="mt-8 flex justify-center gap-4">
                   <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-base shadow-lg">
                       <Link href="/signup">Join Now For Free</Link>
