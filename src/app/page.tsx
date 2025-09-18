@@ -62,7 +62,6 @@ export default function Home() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden hero-gradient bg-blue-600">
-           <div className="absolute inset-0 backdrop-blur-2xl"></div>
            <div className="container relative mx-auto px-4">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -89,7 +88,7 @@ export default function Home() {
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full">
-                    <Image src="https://picsum.photos/seed/professionals/800/600" alt="Professionals" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals"/>
+                    <Image src="https://storage.googleapis.com/aifirebase-79ed2.appspot.com/dev/0a53fd5c-20bd-477c-a496-0370425a1ab0.png" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
                 </div>
               </motion.div>
            </div>
