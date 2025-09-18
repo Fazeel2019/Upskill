@@ -61,7 +61,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden hero-gradient">
+        <section className="relative pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden hero-gradient bg-blue-600">
            <div className="absolute inset-0 backdrop-blur-2xl"></div>
            <div className="container relative mx-auto px-4">
               <motion.div
@@ -71,21 +71,21 @@ export default function Home() {
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
                 <div className="text-center md:text-left">
-                  <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-                    Premier Community Platform for <span className="text-blue-600">STEM & Healthcare</span> Professionals
+                  <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight text-white">
+                    Premier Community Platform for <span className="text-blue-300">STEM & Healthcare</span> Professionals
                   </h1>
-                  <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto md:mx-0">
+                  <p className="mt-6 text-lg md:text-xl text-blue-100/90 max-w-xl mx-auto md:mx-0">
                     Join 10,000+ professionals advancing their careers through expert coaching, exclusive networking, and AI-powered insights.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
-                    <Button asChild size="lg" className="w-full sm:w-auto rounded-full bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-transform transform hover:scale-105 shadow-lg shadow-blue-500/20">
+                    <Button asChild size="lg" className="w-full sm:w-auto rounded-full bg-white text-blue-600 font-semibold hover:bg-blue-100 transition-transform transform hover:scale-105 shadow-lg">
                       <Link href="/signup">Start Free Trial Today</Link>
                     </Button>
                   </div>
-                   <div className="mt-8 flex justify-center md:justify-start gap-6 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-blue-600"/> Expert Mentorship</div>
-                    <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-blue-600"/> Exclusive Events</div>
-                    <div className="flex items-center gap-2"><Zap className="w-5 h-5 text-blue-600"/> AI Insights</div>
+                   <div className="mt-8 flex justify-center md:justify-start gap-6 text-sm text-blue-200">
+                    <div className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-white"/> Expert Mentorship</div>
+                    <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-white"/> Exclusive Events</div>
+                    <div className="flex items-center gap-2"><Zap className="w-5 h-5 text-white"/> AI Insights</div>
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full">
@@ -127,7 +127,7 @@ export default function Home() {
                             <Link href="/signup">Become a Member</Link>
                         </Button>
                         <Button asChild size="lg" variant="outline" className="rounded-full">
-                            <Link href="#">Book a Demo</Link>
+                            <Link href="/login">Book a Demo</Link>
                         </Button>
                     </div>
                 </div>
@@ -246,7 +246,7 @@ export default function Home() {
                       <Link href="/signup">Join Now For Free</Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 hover:text-white rounded-full font-semibold text-base">
-                      <Link href="#">Book a Demo</Link>
+                      <Link href="/login">Book a Demo</Link>
                   </Button>
                 </div>
                  <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
