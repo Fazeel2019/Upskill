@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen } from "lucide-react"
+import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen, Briefcase } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -169,12 +169,12 @@ export default function DashboardPage() {
       
       <motion.div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" variants={containerVariants}>
         <StatCard 
-            title="New Posts Today" 
-            value={String(postsTodayCount)} 
-            description={`${postsTodayCount} new discussions`}
-            icon={Newspaper}
-            href="/community"
-            className="bg-green-600 text-white hover:bg-green-700 [&_p]:text-green-100 [&_svg]:text-white"
+            title="Career Progress" 
+            value="75%" 
+            description="Profile Completion"
+            icon={Briefcase}
+            href="/profile"
+            className="bg-purple-600 text-white hover:bg-purple-700 [&_p]:text-purple-100 [&_svg]:text-white"
         />
         <StatCard 
             title="Upcoming Events" 
@@ -198,7 +198,7 @@ export default function DashboardPage() {
             description="View your conversations" 
             icon={MessageSquare}
             href="/messaging"
-             className="bg-purple-600 text-white hover:bg-purple-700 [&_p]:text-purple-100 [&_svg]:text-white"
+             className="bg-green-600 text-white hover:bg-green-700 [&_p]:text-green-100 [&_svg]:text-white"
         />
       </motion.div>
 
@@ -250,5 +250,3 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
-
-    
