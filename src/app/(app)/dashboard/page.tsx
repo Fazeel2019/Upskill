@@ -12,6 +12,9 @@ import { listenToEvents, type Event } from "@/services/events"
 import { isToday } from "date-fns"
 import { cn } from "@/lib/utils"
 import { Progress } from "@/components/ui/progress"
+import { useAuth } from "@/hooks/use-auth"
+import { addNotification } from "@/services/notifications"
+import { useToast } from "@/hooks/use-toast"
 
 const StatCard = ({ title, value, description, icon: Icon, href, className }: { title: string, value: string, description: string, icon: React.ElementType, href?: string, className?: string }) => (
     <motion.div variants={itemVariants}>
@@ -51,6 +54,52 @@ const QuickActionCard = ({ href, icon: Icon, title, description, children, bgCla
      </motion.div>
 );
 
+function LearningCard() {
+    const [progress, setProgress] = useState(60);
+    const { user } = useAuth();
+    const { toast } = useToast();
+
+    const handleStudy = async () => {
+        const newProgress = Math.min(progress + 15, 100);
+        setProgress(newProgress);
+
+        if (user) {
+            await addNotification(user.uid, {
+                type: 'course_progress',
+                message: `You've completed another 15% of your course! Keep going!`,
+                link: '/resources',
+            });
+            toast({
+                title: "Progress Saved!",
+                description: "Your learning progress has been updated.",
+            });
+        }
+    };
+    
+    return (
+         <motion.div variants={itemVariants}>
+            <Card className="group relative overflow-hidden rounded-2xl h-full hover:shadow-lg transition-shadow duration-300">
+                 <CardContent className="p-6 flex flex-col items-start justify-between h-full">
+                    <div>
+                        <div className={cn("mb-4 rounded-lg p-3 w-fit", "bg-green-100")}>
+                            <BookOpen className={cn("h-6 w-6", "text-green-600")} />
+                        </div>
+                        <h3 className="font-semibold mb-1 text-card-foreground">Continue Learning</h3>
+                        <p className="text-sm text-muted-foreground">Finish your course on modern healthcare.</p>
+                    </div>
+                     <div className="w-full mt-2">
+                        <Progress value={progress} className="h-2" />
+                        <p className="text-xs text-muted-foreground mt-1">{progress}% complete</p>
+                    </div>
+                    <Button size="sm" className="mt-4" onClick={handleStudy}>
+                        Study for 15 mins
+                    </Button>
+                </CardContent>
+            </Card>
+         </motion.div>
+    );
+}
+
 const containerVariants = {
     hidden: { opacity: 1 },
     visible: {
@@ -77,12 +126,17 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const unsubscribePosts = listenToPosts((posts: Post[]) => {
-      const todayPosts = posts.filter(post => post.timestamp && isToday(post.timestamp.toDate()));
+      const todayPosts = posts.filter(post => {
+          if (!post.timestamp) return false;
+          const postDate = post.timestamp.toDate();
+          return isToday(postDate);
+      });
       setPostsTodayCount(todayPosts.length);
     });
 
     const unsubscribeEvents = listenToEvents((events: Event[]) => {
       const futureEvents = events.filter(event => {
+        if (!event.date) return false;
         const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
         const today = new Date();
         today.setHours(0,0,0,0); // Set to start of today
@@ -155,16 +209,11 @@ export default function DashboardPage() {
                 <CardHeader>
                     <CardTitle className="font-headline">Quick Actions</CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
                     <QuickActionCard href="/community" icon={Plus} title="Create a Post" description="Share your thoughts." bgClass="bg-purple-100" iconClass="text-purple-600"/>
                     <QuickActionCard href="/events" icon={Calendar} title="Find an Event" description="Join a workshop." bgClass="bg-orange-100" iconClass="text-orange-600"/>
                     <QuickActionCard href="/messaging" icon={MessageSquare} title="Message a Mentor" description="Get guidance." bgClass="bg-blue-100" iconClass="text-blue-600" />
-                     <QuickActionCard href="/resources" icon={BookOpen} title="Continue Learning" description="Finish your course." bgClass="bg-green-100" iconClass="text-green-600">
-                         <div className="w-full mt-2">
-                            <Progress value={60} className="h-2" />
-                            <p className="text-xs text-muted-foreground mt-1">60% complete</p>
-                        </div>
-                    </QuickActionCard>
+                    <LearningCard />
                 </CardContent>
              </Card>
             </motion.div>
@@ -201,3 +250,5 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
+
+    
