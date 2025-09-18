@@ -118,7 +118,7 @@ export default function Home() {
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10">
-                    <Image src="https://storage.googleapis.com/aifirebase-79ed2.appspot.com/dev/0a53fd5c-20bd-477c-a496-0370425a1ab0.png" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
+                    <Image src="https://picsum.photos/seed/professionals/1200/800" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
                 </div>
               </motion.div>
            </div>
@@ -426,4 +426,5 @@ export default function Home() {
     </div>
   );
 }
+
 
