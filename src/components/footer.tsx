@@ -1,7 +1,7 @@
 
 import { Logo } from "@/components/logo";
 import Link from "next/link";
-import { Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
+import { Instagram, Linkedin, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
 
 const SocialIcon = ({ href, children }: { href: string; children: React.ReactNode; }) => (
   <a
@@ -18,13 +18,13 @@ export default function Footer() {
   return (
     <footer className="bg-muted/50 border-t">
       <div className="container mx-auto py-16 px-4 md:px-6">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
-          <div className="col-span-2 md:col-span-1">
+        <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
+          <div className="col-span-2">
              <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-foreground">
                 <Logo className="h-10 w-auto" />
             </Link>
              <p className="text-muted-foreground text-sm mt-4 max-w-xs">
-              Premier community for STEM, Healthcare, and Public Health professionals.
+              Empowering healthcare and STEM professionals to accelerate their careers through AI-powered insights, expert mentorship, and exclusive networking.
             </p>
              <div className="flex space-x-4 mt-6">
               <SocialIcon href="#"><Linkedin className="w-5 h-5"/></SocialIcon>
@@ -68,10 +68,19 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t mt-12 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Upskill Community. All rights reserved.</p>
+         <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="text-center md:text-left text-sm text-muted-foreground">
+                <p>&copy; {new Date().getFullYear()} Upskill Community. All rights reserved.</p>
+            </div>
+            <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2"><MapPin className="w-4 h-4"/>San Francisco, CA & Remote</div>
+                <a href="tel:+15551234567" className="flex items-center gap-2 hover:text-foreground"><Phone className="w-4 h-4"/>+1 (555) 123-4567</a>
+                <a href="mailto:hello@upskillcommunity.com" className="flex items-center gap-2 hover:text-foreground"><Mail className="w-4 h-4"/>hello@upskillcommunity.com</a>
+            </div>
         </div>
       </div>
     </footer>
   );
 }
+
+    
