@@ -3,7 +3,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, Goal, HeartHandshake, Mic, PlayCircle, ShieldCheck, Star, Users, Zap } from "lucide-react";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Mic, PlayCircle, ShieldCheck, Star, Users, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -61,7 +61,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center text-foreground overflow-hidden hero-gradient bg-blue-600">
+        <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient">
            <div className="container relative mx-auto px-4">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -92,6 +92,16 @@ export default function Home() {
                 </div>
               </motion.div>
            </div>
+           <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+                <motion.div
+                    animate={{ y: [0, 10, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                    className="flex flex-col items-center gap-1 text-white/80"
+                >
+                    <span className="text-xs">Scroll for more</span>
+                    <ChevronDown className="w-5 h-5" />
+                </motion.div>
+            </div>
         </section>
 
         {/* Features Section */}
