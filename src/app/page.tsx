@@ -129,7 +129,8 @@ export default function Home() {
                     <div className="scroll-container w-full overflow-hidden">
                         <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
                             {[...features, ...features].map((feature, index) => (
-                                <Card key={index} className="w-[350px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500">
+                                <Card key={index} className="w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500 flex flex-col justify-between">
+                                  <div>
                                     <div className="flex items-start justify-between mb-4">
                                         <div className={cn("p-3 rounded-lg", feature.iconBg)}>
                                             <feature.icon className={cn("w-7 h-7", feature.iconColor)} />
@@ -138,6 +139,7 @@ export default function Home() {
                                     </div>
                                     <h3 className="font-semibold text-xl text-foreground font-headline">{feature.title}</h3>
                                     <p className="text-muted-foreground mt-2 text-sm">{feature.description}</p>
+                                  </div>
                                 </Card>
                             ))}
                         </div>
