@@ -94,7 +94,7 @@ export default function Home() {
                   <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight text-white">
                     Premier Community Platform for <span className="text-blue-300">STEM & Healthcare</span> Professionals
                   </h1>
-                  <p className="mt-6 text-lg md:text-xl text-blue-100/90 max-wxl mx-auto md:mx-0">
+                  <p className="mt-6 text-lg md:text-xl text-blue-100/90 max-w-xl mx-auto md:mx-0">
                     Join 10,000+ professionals advancing their careers through expert coaching, exclusive networking, and AI-powered insights.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
@@ -426,4 +426,3 @@ export default function Home() {
     </div>
   );
 }
-

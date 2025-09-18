@@ -2,6 +2,7 @@
 import { Logo } from "@/components/logo";
 import Link from "next/link";
 import { Instagram, Linkedin, Twitter, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import { Button } from "./ui/button";
 
 const SocialIcon = ({ href, children }: { href: string; children: React.ReactNode; }) => (
   <a
@@ -21,7 +22,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           <div className="col-span-2">
              <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-white">
-                <Logo className="h-8 w-auto bg-white/10" />
+                <Logo className="h-8 w-auto bg-transparent border border-white/20" />
                  <span className="font-headline font-bold text-2xl">Upskill</span>
             </Link>
              <p className="text-gray-400 text-sm mt-4 max-w-xs">
@@ -37,19 +38,17 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white mb-4 tracking-wide">Platform</h4>
             <ul className="space-y-3 text-sm">
-              <li><Link href="/" className="text-gray-400 hover:text-white">Home</Link></li>
-              <li><Link href="/dashboard" className="text-gray-400 hover:text-white">Dashboard</Link></li>
-              <li><Link href="/community" className="text-gray-400 hover:text-white">Community</Link></li>
-              <li><Link href="/podcast" className="text-gray-400 hover:text-white">Podcast</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white">Features</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white">Pricing</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white">Success Stories</Link></li>
             </ul>
           </div>
-          <div>
+           <div>
             <h4 className="font-semibold text-white mb-4 tracking-wide">Resources</h4>
             <ul className="space-y-3 text-sm">
               <li><Link href="/blog" className="text-gray-400 hover:text-white">Blog</Link></li>
               <li><Link href="/events" className="text-gray-400 hover:text-white">Events</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Guides</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Workshops</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white">Help Center</Link></li>
             </ul>
           </div>
           <div>
@@ -57,8 +56,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li><Link href="/about" className="text-gray-400 hover:text-white">About Us</Link></li>
               <li><Link href="#" className="text-gray-400 hover:text-white">Careers</Link></li>
-              <li><Link href="#" className="text-gray-400 hover:text-white">Partnerships</Link></li>
-               <li><Link href="#" className="text-gray-400 hover:text-white">Contact</Link></li>
+              <li><Link href="#" className="text-gray-400 hover:text-white">Contact</Link></li>
             </ul>
           </div>
            <div>
@@ -72,11 +70,10 @@ export default function Footer() {
          <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-center md:text-left text-sm text-gray-500">
                 <p>&copy; {new Date().getFullYear()} Upskill. All rights reserved.</p>
+                 <p className="mt-1">Made with ❤️ for professionals</p>
             </div>
             <div className="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 text-sm text-gray-400">
-                <div className="flex items-center gap-2"><MapPin className="w-4 h-4"/>San Francisco, CA & Remote</div>
-                <a href="tel:+15551234567" className="flex items-center gap-2 hover:text-white"><Phone className="w-4 h-4"/>+1 (555) 123-4567</a>
-                <a href="mailto:hello@upskillcommunity.com" className="flex items-center gap-2 hover:text-white"><Mail className="w-4 h-4"/>hello@upskillcommunity.com</a>
+               <p className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-green-500"></span>All systems operational</p>
             </div>
         </div>
       </div>
