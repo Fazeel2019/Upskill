@@ -120,7 +120,7 @@ export default function Home() {
                 <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
                  ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
                 </h2>
-                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our platform provides a comprehensive suite of hyper-targeted tools and resources, from 1-on-1 mentorship sessions with C-suite executives to AI-powered insights that guide your career path.</p>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
 
                 <div className="mt-12 grid md:grid-cols-3 gap-8">
                     {features.map((feature, index) => (
