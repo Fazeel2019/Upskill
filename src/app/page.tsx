@@ -190,11 +190,27 @@ export default function Home() {
               Join thousands of professionals who have accelerated their careers and achieved remarkable success with our comprehensive platform.
             </p>
 
-            <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
-                <Card className="p-6 shadow-md"><p className="text-4xl font-bold gradient-text">10,000+</p><p className="text-muted-foreground mt-1 font-semibold">Active Members</p></Card>
-                <Card className="p-6 shadow-md"><p className="text-4xl font-bold gradient-text">94%</p><p className="text-muted-foreground mt-1 font-semibold">Success Rate</p></Card>
-                <Card className="p-6 shadow-md"><p className="text-4xl font-bold gradient-text">500+</p><p className="text-muted-foreground mt-1 font-semibold">Expert Mentors</p></Card>
-                <Card className="p-6 shadow-md"><p className="text-4xl font-bold gradient-text">4.9/5</p><p className="text-muted-foreground mt-1 font-semibold">Average Rating</p></Card>
+            <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-8">
+                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-blue-100">
+                    <p className="text-6xl">👥</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">10,000+</p>
+                    <p className="text-muted-foreground mt-1 font-semibold">Active Members</p>
+                </Card>
+                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-green-100">
+                    <p className="text-6xl">📈</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">94%</p>
+                    <p className="text-muted-foreground mt-1 font-semibold">Success Rate</p>
+                </Card>
+                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-purple-100">
+                    <p className="text-6xl">🎯</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">500+</p>
+                    <p className="text-muted-foreground mt-1 font-semibold">Expert Mentors</p>
+                </Card>
+                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-yellow-100">
+                    <p className="text-6xl">⭐</p>
+                    <p className="text-4xl font-bold gradient-text mt-2">4.9/5</p>
+                    <p className="text-muted-foreground mt-1 font-semibold">Average Rating</p>
+                </Card>
             </div>
 
             <Carousel opts={{ loop: true, align: "start" }} className="w-full">
