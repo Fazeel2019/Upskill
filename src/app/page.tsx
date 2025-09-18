@@ -167,9 +167,6 @@ export default function Home() {
                   <Button asChild size="lg" className="rounded-2xl bg-gradient-to-r from-purple-500 to-red-500 text-white hover:shadow-lg hover:shadow-red-500/50 transition-shadow transform hover:-translate-y-1">
                     <Link href="/signup">Join Now For Free</Link>
                   </Button>
-                  <Button asChild size="lg" className="rounded-2xl bg-white text-black hover:bg-white/90 transition-colors">
-                    <Link href="#">Book a Demo</Link>
-                  </Button>
                 </div>
               </motion.div>
               <motion.div 
@@ -309,9 +306,6 @@ export default function Home() {
                 <div className="mt-8 flex justify-center gap-4">
                   <Button asChild size="lg" className="rounded-2xl bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-lg hover:shadow-purple-500/50 transition-shadow">
                       <Link href="/signup">Join Now For Free</Link>
-                  </Button>
-                  <Button asChild size="lg" variant="outline" className="rounded-2xl border-white text-white bg-transparent hover:bg-white hover:text-black">
-                      <Link href="#">Book a Demo</Link>
                   </Button>
                 </div>
                  <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
