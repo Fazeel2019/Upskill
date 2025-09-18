@@ -10,10 +10,11 @@ import { useEffect, useState } from "react"
 import { listenToPosts, type Post } from "@/services/posts"
 import { listenToEvents, type Event } from "@/services/events"
 import { isToday } from "date-fns"
+import { cn } from "@/lib/utils"
 
-const StatCard = ({ title, value, description, icon: Icon, href }: { title: string, value: string, description: string, icon: React.ElementType, href?: string }) => (
+const StatCard = ({ title, value, description, icon: Icon, href, className }: { title: string, value: string, description: string, icon: React.ElementType, href?: string, className?: string }) => (
     <motion.div variants={itemVariants}>
-        <Card className="rounded-2xl hover:bg-card/95 transition-colors duration-300 h-full">
+        <Card className={cn("rounded-2xl hover:bg-card/95 transition-colors duration-300 h-full", className)}>
              <Link href={href || "#"} className={!href ? "pointer-events-none" : ""}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
@@ -117,6 +118,7 @@ export default function DashboardPage() {
             description={`${postsTodayCount} new discussions`}
             icon={Newspaper}
             href="/community"
+            className="bg-green-500/10 backdrop-blur-sm border-green-500/20 text-green-900 dark:text-green-100 [&_p]:text-green-900/70 dark:[&_p]:text-green-100/70 [&_svg]:text-green-500"
         />
         <StatCard 
             title="Upcoming Events" 
@@ -180,5 +182,3 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
-
-    
