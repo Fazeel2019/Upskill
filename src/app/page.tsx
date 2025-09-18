@@ -271,8 +271,8 @@ export default function Home() {
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Take Control</Badge>
-                    <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">Transform Your Career Starting Today</h2>
-                    <p className="mt-4 text-lg text-blue-200/80 max-w-3xl mx-auto">Gain a competitive edge with our AI-driven platform and expert guidance. Track your progress, identify growth areas, and achieve your professional goals faster.</p>
+                    <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">Transform Your Career<br />Starting Today</h2>
+                    <p className="mt-4 text-lg text-blue-200/80 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8 items-center">
                     <div className="bg-white/5 p-8 rounded-2xl border border-white/10 shadow-2xl">
@@ -344,5 +344,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
