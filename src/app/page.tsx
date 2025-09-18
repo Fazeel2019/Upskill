@@ -182,9 +182,13 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center">
             <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
             <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
-             Trusted by Leading <span className="gradient-text">Healthcare & STEM</span> Professionals
+             Trusted by Leading<br />
+             <span className="gradient-text">Healthcare & STEM</span><br />
+             Professionals
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">We've helped thousands of professionals land their dream jobs, secure promotions, and expand their networks.</p>
+            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+              Join thousands of professionals who have accelerated their careers and achieved remarkable success with our comprehensive platform.
+            </p>
 
             <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
                 <Card className="p-6 shadow-md"><p className="text-4xl font-bold gradient-text">10,000+</p><p className="text-muted-foreground mt-1 font-semibold">Active Members</p></Card>
@@ -309,5 +313,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
