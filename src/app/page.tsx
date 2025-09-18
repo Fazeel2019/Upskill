@@ -11,6 +11,7 @@ import PublicHeader from "@/components/public-header";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
 
 const features = [
     { title: "Exclusive Leadership Events", description: "Access monthly leadership summits, workshops, and networking events with top-tier executives in healthcare and STEM industries.", icon: Calendar, tag: "Members Only" },
@@ -60,7 +61,8 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-b from-blue-50 to-white pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden">
+        <section className="relative pt-24 pb-12 md:pt-40 md:pb-20 text-foreground overflow-hidden hero-gradient">
+           <div className="absolute inset-0 backdrop-blur-2xl"></div>
            <div className="container relative mx-auto px-4">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -255,7 +257,7 @@ export default function Home() {
                 </div>
                  <div className="mt-12 p-4 rounded-lg bg-white/10 border border-white/20 text-white/80 max-w-2xl mx-auto text-sm">
                     <p><span className="font-bold">✨ Success Guarantee:</span> 94% of members achieve their primary career goal within 6 months, or we provide continued premium support free of charge until they do.</p>
-                </div>
+                 </div>
             </div>
         </section>
       </main>
