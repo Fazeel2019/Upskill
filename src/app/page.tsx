@@ -76,7 +76,7 @@ export default function Home() {
                   <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight text-white">
                     Premier Community Platform for <span className="text-blue-300">STEM & Healthcare</span> Professionals
                   </h1>
-                  <p className="mt-6 text-lg md:text-xl text-blue-100/90 max-w-xl mx-auto md:mx-0">
+                  <p className="mt-6 text-lg md:text-xl text-blue-100/90 max-wxl mx-auto md:mx-0">
                     Join 10,000+ professionals advancing their careers through expert coaching, exclusive networking, and AI-powered insights.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
@@ -162,9 +162,9 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-16 bg-blue-50/50 rounded-2xl p-8 text-center">
-                    <h3 className="font-headline text-2xl font-bold">Ready to unlock your potential?</h3>
-                    <p className="text-muted-foreground mt-2">Join a community of driven professionals and get access to the tools you need to succeed.</p>
+                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                    <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
+                    <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
                         <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
                             <Link href="/signup">Become a Member</Link>
