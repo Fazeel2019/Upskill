@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer } from "lucide-react";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer, TrendingUp, Award } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -396,24 +396,27 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join thousands of healthcare and STEM professionals who are already accelerating their careers with AI-powered insights, expert mentorship, and exclusive networking opportunities.</p>
                 <p className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
-                    <Timer className="w-4 h-4" /> This special offer is ending soon.
+                    <Timer className="w-4 h-4" /> Limited time offer - Save $200/month
                 </p>
                 <div className="mt-8 flex justify-center gap-4">
                   <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-base shadow-lg">
-                      <Link href="/signup">Join Now For Free</Link>
+                      <Link href="/signup">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="rounded-full font-semibold text-base">
-                      <Link href="/login">Book a Demo</Link>
+                      <Link href="/login">Schedule a Demo</Link>
                   </Button>
                 </div>
                  <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
-                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Users className="w-5 h-5" /> Networking</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><BookOpen className="w-5 h-5" /> Courses</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Mic className="w-5 h-5" /> Workshops</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Goal className="w-5 h-5" /> Mentorship</div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Users className="w-8 h-8 text-blue-400" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold">Active Members</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><TrendingUp className="w-8 h-8 text-green-400" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold">Success Rate</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Star className="w-8 h-8 text-yellow-400" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold">User Rating</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Award className="w-8 h-8 text-purple-400" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold">Expert Mentors</p></div>
                 </div>
-                 <div className="mt-12 p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary-foreground max-w-2xl mx-auto text-sm">
-                    <p><span className="font-bold text-primary">✨ Success Guarantee:</span><span className="text-foreground"> 94% of members achieve their primary career goal within 6 months, or we provide continued premium support free of charge until they do.</span></p>
+                 <div className="mt-8 text-xs text-muted-foreground">
+                    30-day money-back guarantee • No setup fees • Cancel anytime
+                 </div>
+                 <div className="mt-12 p-6 rounded-lg bg-primary/10 border border-primary/20 text-primary-foreground max-w-3xl mx-auto">
+                    <p className="font-semibold text-foreground"><span className="text-primary">✨ Success Guarantee:</span> 94% of our members achieve their career goals within 6 months. If you don't see measurable progress, we'll work with you personally until you do.</p>
                  </div>
             </div>
             <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-900 via-purple-900 to-blue-900"></div>
@@ -423,3 +426,4 @@ export default function Home() {
     </div>
   );
 }
+
