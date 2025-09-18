@@ -81,10 +81,19 @@ export default function Home() {
                       <Link href="/signup">Start Free Trial Today</Link>
                     </Button>
                   </div>
-                   <div className="mt-8 flex justify-center md:justify-start gap-6 text-sm text-blue-200">
-                    <div className="flex items-center gap-2"><Briefcase className="w-5 h-5 text-white"/> Expert Mentorship</div>
-                    <div className="flex items-center gap-2"><Calendar className="w-5 h-5 text-white"/> Exclusive Events</div>
-                    <div className="flex items-center gap-2"><Zap className="w-5 h-5 text-white"/> AI Insights</div>
+                   <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center md:text-left">
+                    <div className="bg-white/10 border border-white/20 p-4 rounded-lg">
+                      <p className="font-semibold text-white">Expert Coaching</p>
+                      <p className="text-sm text-blue-200">C-suite mentors</p>
+                    </div>
+                     <div className="bg-white/10 border border-white/20 p-4 rounded-lg">
+                      <p className="font-semibold text-white">Leadership Summits</p>
+                      <p className="text-sm text-blue-200">Monthly exclusives</p>
+                    </div>
+                     <div className="bg-white/10 border border-white/20 p-4 rounded-lg">
+                      <p className="font-semibold text-white">AI Insights</p>
+                      <p className="text-sm text-blue-200">AI-powered insights</p>
+                    </div>
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10">
