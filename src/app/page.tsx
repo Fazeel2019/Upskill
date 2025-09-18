@@ -138,7 +138,7 @@ export default function Home() {
                                         <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">{feature.tag}</Badge>
                                     </div>
                                     <h3 className="font-semibold text-xl text-foreground font-headline">{feature.title}</h3>
-                                    <p className="text-muted-foreground mt-2 text-sm">{feature.description}</p>
+                                    <p className="text-muted-foreground mt-2">{feature.description}</p>
                                   </div>
                                 </Card>
                             ))}
@@ -194,6 +194,7 @@ export default function Home() {
                             <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" />
                             <div>
                                 <p className="font-semibold text-sm text-foreground">{testimonial.name}</p>
+
                                 <p className="text-xs text-muted-foreground">{testimonial.title}</p>
                             </div>
                           </div>
