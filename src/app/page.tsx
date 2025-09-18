@@ -126,6 +126,21 @@ export default function Home() {
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
 
                 <div className="mt-12 relative">
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center justify-center gap-4 py-2 px-6 rounded-lg bg-muted/50 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+                            <div className="flex space-x-1.5">
+                                <span className="h-2 w-2 rounded-full bg-purple-400"></span>
+                                <span className="h-2 w-2 rounded-full bg-blue-400"></span>
+                                <span className="h-2 w-2 rounded-full bg-red-400"></span>
+                            </div>
+                            <h3 className="font-semibold text-foreground">Explore Our Features</h3>
+                             <div className="flex space-x-1.5">
+                                <span className="h-2 w-2 rounded-full bg-purple-400"></span>
+                                <span className="h-2 w-2 rounded-full bg-blue-400"></span>
+                                <span className="h-2 w-2 rounded-full bg-red-400"></span>
+                            </div>
+                        </div>
+                    </div>
                     <div className="scroll-container w-full overflow-hidden">
                         <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
                             {[...features, ...features].map((feature, index) => (
