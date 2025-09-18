@@ -126,7 +126,7 @@ export default function DashboardPage() {
             description={`${upcomingEventsCount} events scheduled`}
             icon={Calendar}
             href="/events"
-            className="text-muted-foreground"
+            className="bg-red-600 text-white hover:bg-red-700 [&_p]:text-red-100 [&_svg]:text-white"
         />
         <StatCard 
             title="Go to Messages" 
@@ -134,7 +134,7 @@ export default function DashboardPage() {
             description="View your conversations" 
             icon={MessageSquare}
             href="/messaging"
-             className="text-muted-foreground"
+             className="bg-blue-600 text-white hover:bg-blue-700 [&_p]:text-blue-100 [&_svg]:text-white"
         />
       </motion.div>
 
