@@ -257,11 +257,11 @@ export default function Home() {
                 </div>
             </div>
             
-            <div className="mt-16 bg-blue-50/50 rounded-2xl p-8 text-center">
-                <h3 className="font-headline text-2xl font-bold">Ready to Join Our Success Stories?</h3>
-                <p className="text-muted-foreground mt-2">Become part of a community that is dedicated to your success.</p>
+            <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg">
+                <h3 className="font-headline text-3xl font-bold">Ready to Join Our Success Stories?</h3>
+                <p className="text-muted-foreground mt-2 text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
                 <Button asChild size="lg" className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
-                    <Link href="/signup">Join Community</Link>
+                    <Link href="/signup">Join the Community</Link>
                 </Button>
             </div>
           </div>
