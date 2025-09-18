@@ -251,6 +251,7 @@ export default function Home() {
                             </div>
                           </div>
                         </div>
+                        <div className="absolute -bottom-1/4 -right-1/4 w-48 h-48 bg-gradient-to-tr from-blue-500/20 via-purple-500/20 to-red-500/20 rounded-full opacity-0 scale-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-in-out"></div>
                       </Card>
                     ))}
                 </div>
