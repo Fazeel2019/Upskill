@@ -135,7 +135,7 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="py-16 md:py-24 bg-white">
+        <section id="features" className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
                 <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
@@ -268,7 +268,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-gray-900 text-white py-16 md:py-24 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
+        <section id="pricing" className="bg-gray-900 text-white py-16 md:py-24 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Limited Time Offer</Badge>
@@ -426,3 +426,4 @@ export default function Home() {
     </div>
   );
 }
+
