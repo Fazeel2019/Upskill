@@ -162,7 +162,7 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg hover:shadow-xl transition-all duration-300 max-w-4xl mx-auto">
+                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg transition-all duration-300 max-w-4xl mx-auto">
                     <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
                     <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
@@ -180,7 +180,7 @@ export default function Home() {
         {/* Success Stories Section */}
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
-            <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50">Success Stories</Badge>
+            <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
             <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
              Trusted by Leading <span className="gradient-text">Healthcare & STEM</span> Professionals
             </h2>
@@ -309,3 +309,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
