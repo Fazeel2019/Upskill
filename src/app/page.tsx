@@ -118,6 +118,16 @@ const highlights = [
     { text: "94% Career progress", icon: MedalIcon },
 ]
 
+const FeatureCard = ({ feature }: { feature: typeof features[0] }) => (
+    <Card className="w-[350px] flex-shrink-0 text-left p-6 group transition-all duration-300 mx-4">
+        <div className="mb-4 bg-primary/10 rounded-lg p-3 w-fit">
+            <feature.icon className="w-8 h-8 text-primary" />
+        </div>
+        <h3 className="font-semibold text-xl mb-2 text-foreground">{feature.title}</h3>
+        <p className="text-muted-foreground">{feature.description}</p>
+    </Card>
+);
+
 export default function Home() {
   const cardVariants = {
     offscreen: { y: 50, opacity: 0 },
@@ -206,25 +216,17 @@ export default function Home() {
             <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight">
              ✨ Platform Features — <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-transparent bg-clip-text">Everything You Need to Accelerate Your Career</span>
             </h2>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8">
-              {features.map((feature, i) => (
-                <motion.div
-                  key={feature.title}
-                  initial="offscreen"
-                  whileInView="onscreen"
-                  viewport={{ once: true, amount: 0.5 }}
-                  variants={cardVariants}
-                  transition={{ delay: i * 0.1 }}
-                >
-                  <Card className="h-full text-left p-6 group hover:scale-105 hover:shadow-xl hover:border-purple-500/50 transition-all duration-300">
-                    <div className="mb-4 bg-primary/10 rounded-lg p-3 w-fit">
-                      <feature.icon className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="font-semibold text-xl mb-2 text-foreground">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
-                  </Card>
-                </motion.div>
-              ))}
+          </div>
+          <div className="relative mt-12 group flex gap-8 overflow-hidden">
+            <div className="flex shrink-0 animate-marquee group-hover:paused">
+                {[...features, ...features].map((feature, index) => (
+                    <FeatureCard key={`${feature.title}-${index}`} feature={feature} />
+                ))}
+            </div>
+             <div aria-hidden="true" className="flex shrink-0 animate-marquee group-hover:paused">
+                {[...features, ...features].map((feature, index) => (
+                    <FeatureCard key={`${feature.title}-dup-${index}`} feature={feature} />
+                ))}
             </div>
           </div>
         </section>
@@ -325,5 +327,3 @@ export default function Home() {
     </div>
   );
 }
-
-    

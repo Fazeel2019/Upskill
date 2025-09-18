@@ -84,11 +84,16 @@ export default {
             '0%, 100%': { 'background-position': '0% 50%' },
             '50%': { 'background-position': '100% 50%' },
         },
+        'marquee': {
+            '0%': { transform: 'translateX(0%)' },
+            '100%': { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'gradient-x': 'gradient-x 15s ease infinite',
+        'marquee': 'marquee 60s linear infinite',
       },
        backgroundSize: {
         '300%': '300% 300%',
