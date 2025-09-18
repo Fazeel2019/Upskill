@@ -3,7 +3,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Mic, PlayCircle, ShieldCheck, Star, Users, Zap } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -267,84 +268,151 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-gray-900 text-white py-16 md:py-24 bg-gradient-to-b from-gray-900 to-gray-800">
+        <section className="bg-gray-900 text-white py-16 md:py-24 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
            <div className="container mx-auto px-4">
-                <div className="text-center mb-12">
-                    <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Take Control</Badge>
-                    <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">Transform Your Career<br />Starting Today</h2>
+                <div className="text-center mb-12 max-w-4xl mx-auto">
+                    <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Limited Time Offer</Badge>
+                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">Transform Your Career<br/>Starting Today</h2>
                     <p className="mt-4 text-lg text-blue-200/80 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
                 </div>
-                <div className="grid md:grid-cols-2 gap-8 items-center">
-                    <div className="bg-white/5 p-8 rounded-2xl border border-white/10 shadow-2xl">
-                        <Image src="https://picsum.photos/seed/uiproduct/600/800" alt="Platform UI" width={600} height={800} className="rounded-lg" data-ai-hint="dashboard ui" />
-                    </div>
-                    <div className="space-y-6">
-                        <div className="flex items-start gap-4">
-                            <CheckCircle className="w-8 h-8 text-green-400 shrink-0 mt-1" />
-                            <div>
-                                <h4 className="font-semibold text-lg">AI-Powered Goal Setting</h4>
-                                <p className="text-blue-200/80">Our platform analyzes your profile to suggest personalized career goals and milestones.</p>
+                
+                <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-px shadow-2xl shadow-blue-500/20">
+                  <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-500/50 to-transparent rounded-t-2xl"></div>
+                   <div className="relative bg-gray-900 rounded-2xl">
+                     <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center">
+                        <p className="font-semibold"><Sparkles className="inline-block mr-2 text-yellow-300"/>Most Popular Choice - Join 10,000+ Professionals</p>
+                     </div>
+                     <div className="grid lg:grid-cols-2 gap-8 p-8">
+                       {/* Left Column */}
+                       <div className="flex flex-col gap-6">
+                          <div className="flex items-center gap-4">
+                             <div className="bg-blue-600/10 border-2 border-blue-500/50 rounded-lg p-3">
+                               <Sparkles className="w-8 h-8 text-blue-300"/>
+                             </div>
+                             <div>
+                                <h3 className="text-2xl font-bold font-headline">Executive Membership</h3>
+                                <Badge className="bg-green-500/20 border-green-500 text-green-300 mt-1">Premium Access</Badge>
+                             </div>
+                          </div>
+
+                          <div>
+                             <p className="text-5xl font-bold">$97<span className="text-lg font-normal text-gray-400">/month</span></p>
+                             <p className="line-through text-gray-500 mt-1">$297</p>
+                             <p className="text-green-400 font-semibold mt-2">Save $200/month - Limited Time</p>
+                             <p className="text-gray-400 text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
+                          </div>
+                          
+                          <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+                            <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Exclusive Bonuses (Worth $2,800)</h4>
+                            <Accordion type="single" collapsible className="w-full mt-4">
+                              <AccordionItem value="item-1">
+                                <AccordionTrigger>
+                                  <div className="flex justify-between w-full pr-4">
+                                    <span>Executive Masterclass Series</span>
+                                    <span className="text-green-400 font-bold">$2,000</span>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <p className="text-sm text-gray-400 pl-2">Monthly sessions with Fortune 500 leaders.</p>
+                                </AccordionContent>
+                              </AccordionItem>
+                              <AccordionItem value="item-2">
+                                <AccordionTrigger>
+                                   <div className="flex justify-between w-full pr-4">
+                                      <span>Personal Branding Toolkit</span>
+                                      <span className="text-green-400 font-bold">$500</span>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <p className="text-sm text-gray-400 pl-2">Professional templates & LinkedIn optimization.</p>
+                                </AccordionContent>
+                              </AccordionItem>
+                              <AccordionItem value="item-3">
+                                <AccordionTrigger>
+                                   <div className="flex justify-between w-full pr-4">
+                                    <span>Career Acceleration Workbook</span>
+                                    <span className="text-green-400 font-bold">$300</span>
+                                  </div>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                  <p className="text-sm text-gray-400 pl-2">Step-by-step guide to leadership roles.</p>
+                                </AccordionContent>
+                              </AccordionItem>
+                            </Accordion>
+                          </div>
+
+                           <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
+                            Start Your Transformation Today <ArrowRight className="ml-2"/>
+                           </Button>
+                           <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
+                       </div>
+
+                       {/* Right Column */}
+                       <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+                           <h4 className="font-bold text-xl mb-4">Everything You Need to Succeed</h4>
+                           <ul className="space-y-3 text-gray-300">
+                            {[
+                                "AI-powered career insights & recommendations",
+                                "Unlimited Group sessions with C-suite executives",
+                                "Access to exclusive leadership summits & networking events",
+                                "Advanced career tracking & goal-setting tools",
+                                "Priority community support & expert guidance",
+                                "Industry trend reports & skill gap analysis",
+                                "Personal brand development & executive coaching",
+                                "Direct job placement assistance & interview prep",
+                                "Custom career roadmaps & strategic planning",
+                                "White-glove onboarding & dedicated success manager"
+                            ].map(item => (
+                               <li key={item} className="flex items-start gap-3">
+                                <CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-0.5"/>
+                                <span>{item}</span>
+                               </li>
+                            ))}
+                           </ul>
+
+                            <div className="mt-6 bg-yellow-400/10 border border-yellow-500/30 text-yellow-200 rounded-lg p-4">
+                              <p className="font-bold flex items-center gap-2"><Sparkles className="text-yellow-300"/>Success Guarantee</p>
+                              <p className="text-sm mt-1">94% of our members achieve their career goals within 6 months, or we'll work with you until you do.</p>
                             </div>
-                        </div>
-                         <div className="flex items-start gap-4">
-                            <CheckCircle className="w-8 h-8 text-green-400 shrink-0 mt-1" />
-                            <div>
-                                <h4 className="font-semibold text-lg">1-on-1 Mentorship</h4>
-                                <p className="text-blue-200/80">Connect with industry veterans for personalized advice and guidance.</p>
-                            </div>
-                        </div>
-                         <div className="flex items-start gap-4">
-                            <CheckCircle className="w-8 h-8 text-green-400 shrink-0 mt-1" />
-                            <div>
-                                <h4 className="font-semibold text-lg">Skill Gap Analysis</h4>
-                                <p className="text-blue-200/80">Identify the exact skills you need to land your next role, with curated learning paths.</p>
-                            </div>
-                        </div>
-                         <div className="flex items-start gap-4">
-                            <CheckCircle className="w-8 h-8 text-green-400 shrink-0 mt-1" />
-                            <div>
-                                <h4 className="font-semibold text-lg">Progress Tracking</h4>
-                                <p className="text-blue-200/80">Visualize your career journey with our advanced analytics and progress reports.</p>
-                            </div>
-                        </div>
-                         <div className="mt-8 p-4 rounded-lg bg-yellow-400/10 border border-yellow-400/30 text-yellow-200">
-                            <p><span className="font-bold">✨ Early Access Bonus:</span> Sign up today and receive a complimentary 1-hour session with a C-suite career coach.</p>
-                         </div>
-                    </div>
+                       </div>
+                     </div>
+                   </div>
                 </div>
+                 <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-blue-200/80">
+                    <p>• 10,000+ Active Members</p>
+                    <p>• 500+ Expert Mentors</p>
+                    <p>• 4.9/5 Average Rating</p>
+                 </div>
            </div>
         </section>
 
         {/* Final CTA Section */}
-        <section className="py-20 md:py-32 text-center relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600">
+        <section className="py-20 md:py-32 text-center relative overflow-hidden bg-background">
             <div className="container mx-auto px-4 relative">
-                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-white">Ready to Transform Your Career?</h2>
-                <p className="mt-4 text-lg text-white/80 max-w-3xl mx-auto">Join a thriving community of ambitious professionals, access world-class resources, and take control of your career trajectory today. Your next big opportunity is just a click away.</p>
+                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">Ready to Transform Your Career?</h2>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join a thriving community of ambitious professionals, access world-class resources, and take control of your career trajectory today. Your next big opportunity is just a click away.</p>
                 <div className="mt-8 flex justify-center gap-4">
-                  <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-gray-100 rounded-full font-semibold text-base shadow-lg">
+                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-base shadow-lg">
                       <Link href="/signup">Join Now For Free</Link>
                   </Button>
-                   <Button asChild size="lg" variant="outline" className="bg-transparent text-white border-white hover:bg-white/10 hover:text-white rounded-full font-semibold text-base">
+                   <Button asChild size="lg" variant="outline" className="rounded-full font-semibold text-base">
                       <Link href="/login">Book a Demo</Link>
                   </Button>
                 </div>
-                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
-                    <div className="flex items-center justify-center gap-2 p-3 bg-white/10 rounded-lg"><Users className="w-5 h-5" /> Networking</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-white/10 rounded-lg"><BookOpen className="w-5 h-5" /> Courses</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-white/10 rounded-lg"><Mic className="w-5 h-5" /> Workshops</div>
-                    <div className="flex items-center justify-center gap-2 p-3 bg-white/10 rounded-lg"><Goal className="w-5 h-5" /> Mentorship</div>
+                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
+                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Users className="w-5 h-5" /> Networking</div>
+                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><BookOpen className="w-5 h-5" /> Courses</div>
+                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Mic className="w-5 h-5" /> Workshops</div>
+                    <div className="flex items-center justify-center gap-2 p-3 bg-muted rounded-lg"><Goal className="w-5 h-5" /> Mentorship</div>
                 </div>
-                 <div className="mt-12 p-4 rounded-lg bg-white/10 border border-white/20 text-white/80 max-w-2xl mx-auto text-sm">
-                    <p><span className="font-bold">✨ Success Guarantee:</span> 94% of members achieve their primary career goal within 6 months, or we provide continued premium support free of charge until they do.</p>
+                 <div className="mt-12 p-4 rounded-lg bg-primary/10 border border-primary/20 text-primary-foreground max-w-2xl mx-auto text-sm">
+                    <p><span className="font-bold text-primary">✨ Success Guarantee:</span><span className="text-foreground"> 94% of members achieve their primary career goal within 6 months, or we provide continued premium support free of charge until they do.</span></p>
                  </div>
             </div>
+            <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-r from-blue-900 via-purple-900 to-blue-900"></div>
         </section>
       </main>
       <Footer />
     </div>
   );
 }
-
-    
-
-    
