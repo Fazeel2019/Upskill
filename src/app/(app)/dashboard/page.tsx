@@ -105,7 +105,7 @@ export default function DashboardPage() {
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
-        <Card className="rounded-2xl bg-card/50 backdrop-blur-lg border shadow-lg text-foreground">
+        <Card className="rounded-2xl bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-lg border shadow-lg text-foreground">
             <CardContent className="p-6">
                 <h1 className="text-3xl font-bold tracking-tight">Welcome back!</h1>
                 <p className="opacity-90">Here's a snapshot of your community activity.</p>
