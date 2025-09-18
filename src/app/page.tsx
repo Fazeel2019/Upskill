@@ -25,36 +25,53 @@ const features = [
 const testimonials = [
   {
     name: "Dr. Sarah Chen",
-    title: "CMO, MedTech Innovations",
-    quote: "Secured my CMO role in just 6 months, leading to a 150% salary increase.",
+    title: "Chief Medical Officer, MedTech Innovations",
+    quote: "The AI-powered insights helped me identify key leadership gaps and develop a strategic career plan. Within 6 months, I secured my dream CMO position at a Fortune 500 company.",
     image: "https://picsum.photos/seed/testimonial1/100/100",
-    result: "+150% Salary Increase",
     rating: 5,
   },
   {
     name: "Marcus Rodriguez",
-    title: "Sr. Data Scientist, BioAnalytics Corp",
-    quote: "The C-suite mentorship was invaluable. I received 5 job offers from top-tier companies.",
+    title: "Senior Data Scientist, BioAnalytics Corp",
+    quote: "The mentorship program connected me with industry leaders who provided invaluable guidance. The networking opportunities alone were worth the investment - I received 5 job offers.",
     image: "https://picsum.photos/seed/testimonial2/100/100",
-    result: "5 Job Offers",
     rating: 5,
   },
   {
     name: "Dr. Emily Watson",
     title: "Research Director, Genomics Institute",
-    quote: "Gaining over 200 new, meaningful connections has dramatically expanded my leadership and collaborative projects.",
+    quote: "The exclusive events and workshops provided cutting-edge insights into industry trends. I've expanded my network significantly and gained confidence in leadership roles.",
     image: "https://picsum.photos/seed/testimonial3/100/100",
-    result: "200+ New Connections",
     rating: 5,
   },
    {
     name: "James Park",
-    title: "VP Engineering, HealthTech Solutions",
-    quote: "The leadership coaching helped me get promoted 8 months ahead of schedule and double my team's size.",
+    title: "VP of Engineering, HealthTech Solutions",
+    quote: "The career tracking tools and goal-setting framework kept me focused and motivated. I achieved my promotion goals 8 months ahead of schedule and doubled my team size.",
     image: "https://picsum.photos/seed/testimonial4/100/100",
-    result: "Promoted 8 Months Early",
     rating: 5,
   },
+  {
+    name: "Dr. Lisa Thompson",
+    title: "Clinical Research Lead, Pharma Dynamics",
+    quote: "The community aspect is incredible. Being able to discuss challenges and solutions with peers facing similar situations has been transformative for my career development.",
+    image: "https://picsum.photos/seed/testimonial5/100/100",
+    rating: 5,
+  },
+  {
+    name: "Alex Kumar",
+    title: "Principal Scientist, Biotech Innovations",
+    quote: "The skill acceleration programs are top-notch. I gained expertise in emerging technologies that directly contributed to my recent promotion to Principal Scientist level.",
+    image: "https://picsum.photos/seed/testimonial6/100/100",
+    rating: 5,
+  },
+  {
+    name: "Dr. Rachel Kim",
+    title: "Head of Innovation, Digital Health Corp",
+    quote: "The platform's comprehensive approach to career development is unmatched. From AI insights to personal mentorship, every tool contributed to my success as Head of Innovation.",
+    image: "https://picsum.photos/seed/testimonial7/100/100",
+    rating: 5,
+  }
 ];
 
 export default function Home() {
@@ -162,7 +179,7 @@ export default function Home() {
                     </div>
                 </div>
 
-                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg transition-all duration-300 max-w-4xl mx-auto">
+                <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg max-w-4xl mx-auto">
                     <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
                     <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
@@ -213,34 +230,31 @@ export default function Home() {
                 </Card>
             </div>
 
-            <Carousel opts={{ loop: true, align: "start" }} className="w-full">
-              <CarouselContent className="-ml-4">
-                {testimonials.map((testimonial, index) => (
-                  <CarouselItem key={index} className="pl-4 md:basis-1/2 lg:basis-1/3">
-                    <div className="h-full p-px">
-                      <Card className="h-full p-6 text-left flex flex-col shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <div className="flex items-center mb-2">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                                <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-                            ))}
+            <div className="scroll-container w-full overflow-hidden">
+                <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
+                    {[...testimonials, ...testimonials].map((testimonial, index) => (
+                      <Card key={index} className="group relative w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-purple-500 flex flex-col justify-between overflow-hidden">
+                        <div>
+                          <div className="flex items-center mb-2">
+                              {Array.from({ length: 5 }).map((_, i) => (
+                                  <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
+                              ))}
+                          </div>
+                          <p className="font-medium text-foreground mb-4 flex-grow italic">"{testimonial.quote}"</p>
                         </div>
-                        <p className="font-medium text-foreground mb-4 flex-grow">"{testimonial.quote}"</p>
                         <div className="flex items-center justify-between gap-3 mt-4">
                           <div className="flex items-center gap-3">
                             <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" />
                             <div>
                                 <p className="font-semibold text-sm text-foreground">{testimonial.name}</p>
-
                                 <p className="text-xs text-muted-foreground">{testimonial.title}</p>
                             </div>
                           </div>
                         </div>
                       </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-            </Carousel>
+                    ))}
+                </div>
+            </div>
             
             <div className="mt-16 bg-blue-50/50 rounded-2xl p-8 text-center">
                 <h3 className="font-headline text-2xl font-bold">Ready to Join Our Success Stories?</h3>
@@ -329,3 +343,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
