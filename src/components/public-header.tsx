@@ -57,10 +57,11 @@ export default function PublicHeader() {
             </Link>
           ))}
         </nav>
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-4">
           <Button variant="ghost" asChild className={linkClasses(false)}>
             <Link href="/login">Log In</Link>
           </Button>
+          <p className={cn("text-sm font-medium", isScrolled ? "text-gray-600" : "text-white/80")}>Join 10,000+ already advancing 🚀</p>
           <Button asChild className="bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 shadow-md">
             <Link href="/signup">Start Free Trial</Link>
           </Button>
