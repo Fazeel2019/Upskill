@@ -71,7 +71,12 @@
         @apply absolute inset-0 z-0;
         background: radial-gradient(circle at 100% 100%, hsl(0 100% 50% / 0.25), transparent 40%);
     }
+    .scroll-container {
+      -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+      mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
+    }
 }
+
 
 
 

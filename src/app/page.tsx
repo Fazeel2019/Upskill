@@ -14,9 +14,12 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import { cn } from "@/lib/utils";
 
 const features = [
-    { title: "Exclusive Leadership Events", description: "Access monthly leadership summits, workshops, and networking events with top-tier executives in healthcare and STEM industries.", icon: Calendar, tag: "Members Only" },
-    { title: "Advanced Career Analytics", description: "Monitor your career growth with detailed analytics, milestone tracking, and predictive insights to stay ahead of the curve.", icon: BarChart, tag: "Analytics" },
-    { title: "Verified Professional Network", description: "Connect with thousands of trusted healthcare and STEM professionals in a verified, exclusive online community.", icon: ShieldCheck, tag: "Verified" },
+    { title: "AI-Powered Career Insights", description: "Get personalized career recommendations and skill gap analysis powered by advanced AI algorithms that understand your unique professional journey.", icon: Goal, tag: "AI-Driven", iconBg: "bg-blue-100", iconColor: "text-blue-600" },
+    { title: "Expert Mentorship Network", description: "Connect with C-suite executives and industry leaders for transformative Small group coaching sessions that accelerate your career growth.", icon: Users, tag: "Premium", iconBg: "bg-purple-100", iconColor: "text-purple-600" },
+    { title: "Exclusive Leadership Events", description: "Access monthly leadership summits, workshops, and networking events with top professionals in healthcare and STEM industries.", icon: Calendar, tag: "Members Only", iconBg: "bg-red-100", iconColor: "text-red-600" },
+    { title: "Advanced Career Analytics", description: "Monitor your professional growth with detailed analytics, milestone tracking, and predictive insights for strategic career planning.", icon: BarChart, tag: "Analytics", iconBg: "bg-green-100", iconColor: "text-green-600" },
+    { title: "Verified Professional Network", description: "Connect with verified healthcare and STEM professionals in a trusted, secure environment designed for serious career advancement.", icon: ShieldCheck, tag: "Verified", iconBg: "bg-yellow-100", iconColor: "text-yellow-600" },
+    { title: "Accelerated Skill Development", description: "Fast-track your learning with curated courses, hands-on projects, and cutting-edge training programs tailored to your career goals.", icon: Zap, tag: "Fast Track", iconBg: "bg-orange-100", iconColor: "text-orange-600" },
 ];
 
 const testimonials = [
@@ -122,19 +125,23 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
 
-                <div className="mt-12 grid md:grid-cols-3 gap-8">
-                    {features.map((feature, index) => (
-                        <Card key={index} className="text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500">
-                             <div className="flex items-center justify-between mb-4">
-                                <div className="p-3 rounded-lg bg-blue-100 text-blue-600">
-                                    <feature.icon className="w-7 h-7" />
-                                </div>
-                                <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">{feature.tag}</Badge>
-                            </div>
-                           <h3 className="font-semibold text-xl text-foreground font-headline">{feature.title}</h3>
-                           <p className="text-muted-foreground mt-2">{feature.description}</p>
-                        </Card>
-                    ))}
+                <div className="mt-12 relative">
+                    <div className="scroll-container w-full overflow-hidden">
+                        <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
+                            {[...features, ...features].map((feature, index) => (
+                                <Card key={index} className="w-[350px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <div className={cn("p-3 rounded-lg", feature.iconBg)}>
+                                            <feature.icon className={cn("w-7 h-7", feature.iconColor)} />
+                                        </div>
+                                        <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">{feature.tag}</Badge>
+                                    </div>
+                                    <h3 className="font-semibold text-xl text-foreground font-headline">{feature.title}</h3>
+                                    <p className="text-muted-foreground mt-2 text-sm">{feature.description}</p>
+                                </Card>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 <div className="mt-16 bg-blue-50/50 rounded-2xl p-8 text-center">
