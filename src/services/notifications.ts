@@ -10,7 +10,8 @@ import {
     type Timestamp,
     where,
     doc,
-    updateDoc
+    updateDoc,
+    limit
 } from "firebase/firestore";
 
 export interface Notification {
@@ -52,18 +53,23 @@ export const markNotificationAsRead = async (notificationId: string) => {
 
 export const listenToNotifications = (uid: string, callback: (notifications: Notification[]) => void) => {
     const notificationsCollection = collection(db, "notifications");
-    const q = query(notificationsCollection, where("uid", "==", uid), orderBy("timestamp", "desc"));
+    // Removed the compound query to avoid the index requirement.
+    // We will now fetch the latest notifications and filter them on the client.
+    const q = query(notificationsCollection, orderBy("timestamp", "desc"), limit(50));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const notifications = querySnapshot.docs.map(doc => ({
+        const allNotifications = querySnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
         } as Notification));
-        callback(notifications);
+        
+        // Filter for the current user on the client-side
+        const userNotifications = allNotifications.filter(n => n.uid === uid);
+        
+        callback(userNotifications);
     }, (error) => {
-        // The client SDK will automatically provide a link to create the index in the console.
-        // For this environment, we can't create the index automatically, so we'll just log the error.
-        console.error("Error listening to notifications (this may require a composite index in Firestore): ", error);
+        // This should no longer throw an index error.
+        console.error("Error listening to notifications: ", error);
     });
     
     return unsubscribe;
