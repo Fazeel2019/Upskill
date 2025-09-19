@@ -28,6 +28,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { useToast } from "@/hooks/use-toast";
 import { listenToComments, addComment, type Comment } from "@/services/comments";
@@ -209,7 +210,7 @@ function Post({ post }: { post: PostType }) {
             <Heart className={`h-4 w-4 ${isLiked ? 'text-red-500 fill-current' : ''}`} /> {post.likeCount || 0}
           </Button>
           <Button variant="ghost" size="sm" className="flex items-center gap-2" onClick={() => setShowComments(!showComments)}>
-            <MessageCircle className="h-4 w-4" /> {post.commentCount || 0}
+            <MessageCircleIcon className="h-4 w-4" /> {post.commentCount || 0}
           </Button>
         </div>
         <div
