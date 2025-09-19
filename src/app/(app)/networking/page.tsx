@@ -101,20 +101,13 @@ const StatCard = ({ title, value, icon, color }: { title: string, value: string,
     </Card>
 )
 
-const networkingUsers: Partial<UserProfile>[] = [
-    { uid: '1', displayName: 'Fazeel Butt', title: 'Senior Software Engineer', photoURL: 'https://picsum.photos/seed/fazeel/100/100', company: 'Tech Solutions' },
-    { uid: '2', displayName: 'sandaru sathsara', title: 'DevOps Engineer', photoURL: 'https://picsum.photos/seed/sandaru/100/100', company: 'Cloud Innovations' },
-    { uid: '3', displayName: 'Farrukh', title: 'Frontend Developer', photoURL: 'https://picsum.photos/seed/farrukh/100/100', company: 'WebCrafters' },
-    { uid: '4', displayName: 'Abdul Hannan', title: 'UX/UI Designer', photoURL: 'https://picsum.photos/seed/abdul/100/100', company: 'Creative Minds' },
-    { uid: '5', displayName: 'sadalu dev', title: 'Backend Developer', photoURL: 'https://picsum.photos/seed/sadalu/100/100', company: 'ServerSide Inc.' },
-    { uid: '6', displayName: 'Future Dr. DeAnna Wilson', title: 'MSc Student, Barry University', photoURL: 'https://picsum.photos/seed/deanna/100/100', company: 'Dental School' },
-];
+const networkingUsers: Partial<UserProfile>[] = [];
 
 
 export default function NetworkingPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<UserProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { user, profile, reloadProfile } = useAuth();
   
   const pageVariants = {
@@ -127,11 +120,6 @@ export default function NetworkingPage() {
     visible: { opacity: 1, y: 0 },
   };
 
-  // Using placeholder data for now as per design
-  useEffect(() => {
-    setResults(networkingUsers as UserProfile[]);
-    setLoading(false);
-  }, []);
 
   return (
     <motion.div 
@@ -185,11 +173,19 @@ export default function NetworkingPage() {
                              <div className="flex justify-center items-center py-16 col-span-3">
                                 <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
                             </div>
-                        ) : results.map((u, index) => (
+                        ) : results.length > 0 ? results.map((u, index) => (
                              <motion.div key={u.uid} variants={itemVariants}>
                                 <UserCard user={u} currentUserProfile={profile} onFriendRequestSent={reloadProfile}/>
                             </motion.div>
-                        ))}
+                        )) : (
+                            <div className="col-span-3">
+                                <Card>
+                                    <CardContent className="p-8 text-center text-muted-foreground">
+                                        No new members to discover right now.
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        )}
                     </motion.div>
                 </TabsContent>
                  <TabsContent value="my-network">
@@ -211,3 +207,5 @@ export default function NetworkingPage() {
     </motion.div>
   );
 }
+
+    

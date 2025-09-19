@@ -1,8 +1,9 @@
+
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Calendar, User, Play, ListFilter } from "lucide-react";
+import { Search, Calendar, User, Play, ListFilter, MicVocal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -15,40 +16,9 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const podcastEpisodes = [
-  {
-    category: "AI & Technology",
-    title: "The Future of AI in Healthcare",
-    description: "An in-depth discussion on how artificial intelligence is revolutionizing healthcare,...",
-    author: "Dr. Evelyn Reed",
-    date: "20/07/2024",
-    duration: "45:30",
-    image: "https://picsum.photos/seed/podcast-ai/400/225",
-    imageHint: "abstract ai"
-  },
-  {
-    category: "Biotechnology",
-    title: "Navigating Biotech Startups: From Lab to Market",
-    description: "Insights into the challenges and successes of launching and scaling biotech startups...",
-    author: "Marcus Thorne",
-    date: "15/07/2024",
-    duration: "38:15",
-    image: "https://picsum.photos/seed/podcast-biotech/400/225",
-    imageHint: "science lab"
-  },
-  {
-    category: "Leadership",
-    title: "Leadership in STEM: Building High-Performing Teams",
-    description: "Strategies for effective leadership in science, technology, engineering, and...",
-    author: "Prof. David Kim",
-    date: "10/07/2024",
-    duration: "52:00",
-    image: "https://picsum.photos/seed/podcast-leadership/400/225",
-    imageHint: "team meeting"
-  }
-];
+const podcastEpisodes: any[] = [];
 
-function PodcastCard({ episode }: { episode: typeof podcastEpisodes[0] }) {
+function PodcastCard({ episode }: { episode: any }) {
   return (
     <Card className="overflow-hidden group transition-shadow hover:shadow-lg rounded-xl">
       <div className="relative">
@@ -98,6 +68,20 @@ export default function PodcastsPage() {
     visible: { opacity: 1, y: 0 },
   };
 
+  const EmptyState = () => (
+    <motion.div variants={itemVariants} className="text-center py-16 md:col-span-3">
+        <Card className="max-w-md mx-auto">
+            <CardContent className="p-8 text-center">
+                <MicVocal className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <h3 className="font-semibold text-lg">No Podcasts Yet</h3>
+                <p className="text-muted-foreground mt-2">
+                    Check back soon for new episodes and insights from industry leaders.
+                </p>
+            </CardContent>
+        </Card>
+    </motion.div>
+  );
+
   return (
     <motion.div
       className="space-y-6"
@@ -135,12 +119,16 @@ export default function PodcastsPage() {
         className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
         variants={pageVariants}
       >
-        {podcastEpisodes.map((episode, index) => (
+        {podcastEpisodes.length > 0 ? podcastEpisodes.map((episode, index) => (
           <motion.div key={index} variants={itemVariants}>
             <PodcastCard episode={episode} />
           </motion.div>
-        ))}
+        )) : (
+            <EmptyState />
+        )}
       </motion.div>
     </motion.div>
   );
 }
+
+    

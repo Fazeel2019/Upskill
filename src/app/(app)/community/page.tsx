@@ -239,12 +239,6 @@ const StatCard = ({ title, value, icon, color }: { title: string, value: string,
 const CategoriesWidget = ({ posts }: { posts: PostType[] }) => {
     const categories = useMemo(() => {
         const counts: {[key: string]: number} = {
-            'AI & Technology': 0,
-            'Career Development': 0,
-            'Biotechnology': 0,
-            'Leadership': 0,
-            'Research': 0,
-            'Innovation': 0,
             'STEM': 0,
             'Healthcare': 0,
             'Public Health': 0,
@@ -252,15 +246,9 @@ const CategoriesWidget = ({ posts }: { posts: PostType[] }) => {
         posts.forEach(post => {
             if (counts[post.category] !== undefined) {
                 counts[post.category]++;
-            } else if (post.category === "AI & Technology") {
-                 counts['AI & Technology']++;
             }
         });
         
-        // Example static data to match image
-        counts['AI & Technology'] = 1;
-        counts['Leadership'] = 2;
-
         return Object.entries(counts);
     }, [posts]);
 
@@ -291,14 +279,7 @@ const ActiveMembersWidget = () => (
             </div>
         </CardHeader>
         <CardContent className="space-y-4">
-            <div className="flex items-center gap-3">
-                <div>
-                    <p className="font-semibold text-sm">Dr. Jennifer Walsh</p>
-                    <p className="text-xs text-muted-foreground">VP of Research</p>
-                    <p className="text-xs text-muted-foreground">45 posts • 892 rep</p>
-                </div>
-            </div>
-             {/* Add more members as needed */}
+             <p className="text-sm text-center text-muted-foreground p-4">No active members to show right now.</p>
         </CardContent>
     </Card>
 );
@@ -359,14 +340,16 @@ export default function CommunityPage() {
                         <Input placeholder="Search discussions..." className="pl-9"/>
                     </div>
                     <Button variant="outline"><Filter className="mr-2 h-4 w-4"/>Filter</Button>
-                    <Button><Plus className="mr-2 h-4 w-4"/>New Post</Button>
+                    <CreatePost onPostCreated={handlePostCreated}>
+                      <Button><Plus className="mr-2 h-4 w-4"/>New Post</Button>
+                    </CreatePost>
                 </motion.div>
 
                  <motion.div className="grid md:grid-cols-4 gap-4" variants={itemVariants}>
-                    <StatCard title="Total Discussions" value="3" icon={<MessageCircleIcon className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
-                    <StatCard title="Active Members" value="892" icon={<UsersIcon className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
+                    <StatCard title="Total Discussions" value={String(posts.length)} icon={<MessageCircleIcon className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
+                    <StatCard title="Active Members" value="0" icon={<UsersIcon className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
                     <StatCard title="Your Posts" value="0" icon={<GitCommitHorizontal className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
-                    <StatCard title="Reputation" value="100" icon={<Award className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
+                    <StatCard title="Reputation" value="0" icon={<Award className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
                 </motion.div>
 
             </motion.div>
@@ -409,3 +392,5 @@ export default function CommunityPage() {
     </div>
   );
 }
+
+    

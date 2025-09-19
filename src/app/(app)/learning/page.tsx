@@ -1,3 +1,4 @@
+
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,38 +13,13 @@ import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
 const stats = [
-    { title: "Courses Enrolled", value: "8", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
-    { title: "Completed", value: "3", icon: CheckCircle, color: "bg-green-100 dark:bg-green-900/50", iconColor: "text-green-500" },
-    { title: "Certificates", value: "5", icon: CertificateIcon, color: "bg-purple-100 dark:bg-purple-900/50", iconColor: "text-purple-500" },
-    { title: "Study Hours", value: "127", icon: Clock, color: "bg-orange-100 dark:bg-orange-900/50", iconColor: "text-orange-500" }
+    { title: "Courses Enrolled", value: "0", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
+    { title: "Completed", value: "0", icon: CheckCircle, color: "bg-green-100 dark:bg-green-900/50", iconColor: "text-green-500" },
+    { title: "Certificates", value: "0", icon: CertificateIcon, color: "bg-purple-100 dark:bg-purple-900/50", iconColor: "text-purple-500" },
+    { title: "Study Hours", value: "0", icon: Clock, color: "bg-orange-100 dark:bg-orange-900/50", iconColor: "text-orange-500" }
 ];
 
-const courses = [
-    {
-        title: "AI in Healthcare Leadership",
-        category: "AI & Technology",
-        instructor: "Dr. Sarah Mitchell",
-        duration: "8 weeks",
-        rating: 4.9,
-        progress: 65,
-        status: "In Progress",
-        image: "https://picsum.photos/seed/course1/400/225",
-        imageHint: "abstract ai",
-        description: "Master the integration of artificial intelligence in healthcare management an...",
-    },
-    {
-        title: "Data Science for Healthcare",
-        category: "Data Science",
-        instructor: "Dr. Lisa Park",
-        duration: "10 weeks",
-        rating: 4.9,
-        progress: 100,
-        status: "Completed",
-        image: "https://picsum.photos/seed/course2/400/225",
-        imageHint: "team working",
-        description: "Apply advanced data science techniques to solve complex healthcare challenges.",
-    },
-]
+const courses: any[] = [];
 
 function StatCard({ title, value, icon: Icon, color, iconColor }: { title: string, value: string, icon: React.ElementType, color: string, iconColor: string }) {
     return (
@@ -63,7 +39,7 @@ function StatCard({ title, value, icon: Icon, color, iconColor }: { title: strin
     )
 }
 
-function CourseCard({ course }: { course: typeof courses[0] }) {
+function CourseCard({ course }: { course: any }) {
     return (
         <Card className="overflow-hidden group transition-shadow hover:shadow-lg">
             <div className="relative">
@@ -174,16 +150,24 @@ export default function LearningPage() {
                         <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
                     <TabsContent value="my-learning">
-                        <motion.div 
-                            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
-                            variants={pageVariants}
-                        >
-                            {courses.map((course, index) => (
-                                 <motion.div key={index} variants={itemVariants}>
-                                    <CourseCard course={course} />
-                                </motion.div>
-                            ))}
-                        </motion.div>
+                         {courses.length > 0 ? (
+                            <motion.div 
+                                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
+                                variants={pageVariants}
+                            >
+                                {courses.map((course, index) => (
+                                     <motion.div key={index} variants={itemVariants}>
+                                        <CourseCard course={course} />
+                                    </motion.div>
+                                ))}
+                            </motion.div>
+                         ) : (
+                             <Card className="mt-6">
+                                <CardContent className="p-8 text-center text-muted-foreground">
+                                    You are not enrolled in any courses yet.
+                                </CardContent>
+                            </Card>
+                         )}
                     </TabsContent>
                     <TabsContent value="course-catalog">
                         <Card>
@@ -192,8 +176,24 @@ export default function LearningPage() {
                             </CardContent>
                         </Card>
                     </TabsContent>
+                    <TabsContent value="resources">
+                        <Card>
+                            <CardContent className="p-8 text-center text-muted-foreground">
+                                Resources coming soon!
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
+                    <TabsContent value="achievements">
+                        <Card>
+                            <CardContent className="p-8 text-center text-muted-foreground">
+                                Achievements coming soon!
+                            </CardContent>
+                        </Card>
+                    </TabsContent>
                 </Tabs>
             </motion.div>
         </motion.div>
     )
 }
+
+    

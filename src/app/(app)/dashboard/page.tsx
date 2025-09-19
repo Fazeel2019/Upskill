@@ -62,18 +62,9 @@ const QuickActionCard = ({ title, description, buttonText, icon: Icon, href, pro
     </Card>
 )
 
-const activityItems = [
-  { icon: CheckCircle, text: 'Completed "Data Science Fundamentals" module', time: "2 hours ago", color: "text-green-500" },
-  { icon: CalendarIcon, text: "Scheduled mentorship session with Dr. Lisa Park", time: "5 hours ago", color: "text-blue-500" },
-  { icon: MessageSquareIcon, text: 'Posted in "AI Ethics in Healthcare" discussion', time: "1 day ago", color: "text-purple-500" },
-  { icon: Star, text: 'Earned "Leadership Foundations" certificate', time: "2 days ago", color: "text-yellow-500" },
-];
+const activityItems: any[] = [];
 
-const recommendationItems = [
-    { type: 'Course', title: 'Advanced Machine Learning for Healthcare', match: 95, duration: '6 weeks', image: 'https://picsum.photos/seed/rec1/50/50', imageHint: 'abstract tech' },
-    { type: 'Mentor', title: 'Dr. Jennifer Walsh - Biotech Executive', match: 92, duration: '15+ years', image: 'https://picsum.photos/seed/rec2/50/50', imageHint: 'woman portrait' },
-    { type: 'Event', title: 'Digital Health Innovation Summit', match: 88, duration: 'March 15, 2025', image: 'https://picsum.photos/seed/rec3/50/50', imageHint: 'people conference' }
-];
+const recommendationItems: any[] = [];
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -96,19 +87,19 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard title="Career Progress" value="75%" subValue="Last updated: today" icon={TrendingUp} progress={75} colorClass="bg-blue-500" link="/profile"/>
-                <StatCard title="Courses Completed" value="12" subValue="+3 this month" icon={BookOpen} colorClass="bg-green-500" link="/learning" />
-                <StatCard title="Network Connections" value="248" subValue="+15 this week" icon={UsersIcon} colorClass="bg-purple-500" link="/community/find" />
-                <StatCard title="Mentorship Hours" value="24" subValue="Next session: Tomorrow" icon={Clock} colorClass="bg-orange-500" link="/mentors" />
+                <StatCard title="Career Progress" value="0%" subValue="Last updated: today" icon={TrendingUp} progress={0} colorClass="bg-blue-500" link="/profile"/>
+                <StatCard title="Courses Completed" value="0" subValue="+0 this month" icon={BookOpen} colorClass="bg-green-500" link="/learning" />
+                <StatCard title="Network Connections" value="0" subValue="+0 this week" icon={UsersIcon} colorClass="bg-purple-500" link="/networking" />
+                <StatCard title="Mentorship Hours" value="0" subValue="No sessions upcoming" icon={Clock} colorClass="bg-orange-500" link="/mentors" />
             </div>
 
             <div>
                 <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    <QuickActionCard title="Continue Learning" description='Resume "AI in Healthcare Leadership"' buttonText="Continue" icon={BookOpen} href="/learning/ai-leadership" progress progressValue={65} />
-                    <QuickActionCard title="Message Mentor" description="Dr. Michael Torres is available" buttonText="Message" icon={MessageSquareIcon} href="/messaging/michael-torres" />
-                    <QuickActionCard title="Join Discussion" description='12 new posts in "Biotech Innovation"' buttonText="View" icon={UsersIcon} href="/community/biotech-innovation" />
-                    <QuickActionCard title="Upcoming Event" description="Leadership Summit in 3 days" buttonText="RSVP" icon={CalendarIcon} href="/events/leadership-summit" />
+                    <QuickActionCard title="Continue Learning" description='Resume your last course' buttonText="Continue" icon={BookOpen} href="/learning" progress progressValue={0} />
+                    <QuickActionCard title="Message Mentor" description="Connect with mentors" buttonText="Message" icon={MessageSquareIcon} href="/messaging" />
+                    <QuickActionCard title="Join Discussion" description='Hot topics await you' buttonText="View" icon={UsersIcon} href="/community" />
+                    <QuickActionCard title="Upcoming Event" description="See upcoming events" buttonText="RSVP" icon={CalendarIcon} href="/events" />
                 </div>
             </div>
 
@@ -118,6 +109,7 @@ export default function DashboardPage() {
                         <CardTitle className="flex items-center gap-2"><Zap className="w-5 h-5 text-primary" />Recent Activity</CardTitle>
                     </CardHeader>
                     <CardContent>
+                       {activityItems.length > 0 ? (
                         <div className="space-y-6">
                             {activityItems.map((item, index) => (
                                 <div key={index} className="flex items-center gap-4">
@@ -131,6 +123,11 @@ export default function DashboardPage() {
                                 </div>
                             ))}
                         </div>
+                        ) : (
+                            <div className="text-center py-12 text-muted-foreground">
+                                <p>No recent activity to show.</p>
+                            </div>
+                        )}
                         <Button variant="outline" className="w-full mt-6">View All Activity</Button>
                     </CardContent>
                 </Card>
@@ -140,7 +137,7 @@ export default function DashboardPage() {
                         <CardTitle className="flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-primary"/>AI Recommendations</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                        {recommendationItems.map((item, index) => (
+                        {recommendationItems.length > 0 ? recommendationItems.map((item, index) => (
                             <Link href="#" key={index} className="flex items-center gap-4 group p-2 rounded-lg hover:bg-muted">
                                 <Image src={item.image} alt={item.title} width={50} height={50} className="rounded-lg" data-ai-hint={item.imageHint}/>
                                 <div className="flex-grow">
@@ -153,7 +150,11 @@ export default function DashboardPage() {
                                     <p className="text-xs text-muted-foreground">match</p>
                                 </div>
                             </Link>
-                        ))}
+                        )) : (
+                             <div className="text-center py-8 text-muted-foreground">
+                                <p>No recommendations at this time.</p>
+                            </div>
+                        )}
                          <Button variant="outline" className="w-full mt-2">View All Recommendations</Button>
                     </CardContent>
                 </Card>
@@ -161,3 +162,5 @@ export default function DashboardPage() {
         </motion.div>
     )
 }
+
+    

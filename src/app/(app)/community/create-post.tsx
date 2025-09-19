@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -15,12 +14,13 @@ import {
 } from "@/components/ui/select";
 import { useAuth } from "@/hooks/use-auth";
 import { addPost } from "@/services/posts";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
-
-export default function CreatePost({ onPostCreated }: { onPostCreated?: () => void }) {
+export default function CreatePost({ onPostCreated, children }: { onPostCreated?: () => void, children: React.ReactNode }) {
   const [postContent, setPostContent] = useState("");
   const [isPosting, setIsPosting] = useState(false);
-  const [category, setCategory] = useState<string | null>("STEM");
+  const [category, setCategory] = useState<string>("STEM");
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
@@ -31,10 +31,6 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
     }
     if (postContent.trim().length === 0) {
         toast({ title: "Post cannot be empty", variant: "destructive" });
-        return;
-    }
-    if (!category) {
-        toast({ title: "Please select a category", variant: "destructive" });
         return;
     }
     
@@ -59,6 +55,7 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
         setPostContent("");
         setCategory("STEM");
         if (onPostCreated) onPostCreated();
+        setOpen(false);
 
     } catch (error) {
          toast({
@@ -72,36 +69,47 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
   };
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex gap-4">
-          <div className="w-full">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent className="sm:max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Create a New Post</DialogTitle>
+          <DialogDescription>
+            Share your thoughts, ask questions, and engage with the community.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
             <Textarea
               placeholder="What's on your mind?"
-              className="w-full border-none focus-visible:ring-0 shadow-none p-0"
+              className="w-full min-h-[120px]"
               value={postContent}
               onChange={(e) => setPostContent(e.target.value)}
+              disabled={isPosting}
             />
-          </div>
+            <Select value={category} onValueChange={(value) => setCategory(value)} disabled={isPosting}>
+                <SelectTrigger className="w-full h-11">
+                    <SelectValue placeholder="Select a category..." />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="STEM">STEM</SelectItem>
+                    <SelectItem value="Healthcare">Healthcare</SelectItem>
+                    <SelectItem value="Public Health">Public Health</SelectItem>
+                </SelectContent>
+            </Select>
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-between items-center p-4 border-t">
-        <div className="flex items-center gap-2">
-          <Select value={category || ""} onValueChange={(value) => setCategory(value)} disabled={isPosting}>
-            <SelectTrigger className="w-[180px] h-9">
-              <SelectValue placeholder="Select category..." />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="STEM">STEM</SelectItem>
-              <SelectItem value="Healthcare">Healthcare</SelectItem>
-              <SelectItem value="Public Health">Public Health</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <Button onClick={handlePost} disabled={!postContent || !category || isPosting}>
-            {isPosting ? "Posting..." : "Post"}
-        </Button>
-      </CardFooter>
-    </Card>
+        <DialogFooter>
+            <DialogClose asChild>
+                <Button type="button" variant="secondary" disabled={isPosting}>
+                    Cancel
+                </Button>
+            </DialogClose>
+            <Button onClick={handlePost} disabled={!postContent || !category || isPosting}>
+                {isPosting ? "Posting..." : "Post"}
+            </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
+
+    
