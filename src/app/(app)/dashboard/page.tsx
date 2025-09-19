@@ -3,11 +3,10 @@
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar, CheckCircle, Edit, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen, Briefcase } from "lucide-react"
+import { Calendar, CheckCircle, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen, Briefcase } from "lucide-react"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { useEffect, useState } from "react"
-import { listenToPosts, type Post } from "@/services/posts"
 import { listenToEvents, type Event } from "@/services/events"
 import { isToday } from "date-fns"
 import { cn } from "@/lib/utils"
@@ -121,23 +120,13 @@ const itemVariants = {
 };
 
 export default function DashboardPage() {
-  const [postsTodayCount, setPostsTodayCount] = useState(0);
   const [upcomingEventsCount, setUpcomingEventsCount] = useState(0);
 
   useEffect(() => {
-    const unsubscribePosts = listenToPosts((posts: Post[]) => {
-      const todayPosts = posts.filter(post => {
-          if (!post.timestamp) return false;
-          const postDate = post.timestamp.toDate();
-          return isToday(postDate);
-      });
-      setPostsTodayCount(todayPosts.length);
-    });
-
     const unsubscribeEvents = listenToEvents((events: Event[]) => {
       const futureEvents = events.filter(event => {
         if (!event.date) return false;
-        const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date.toDate();
+        const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date;
         const today = new Date();
         today.setHours(0,0,0,0); // Set to start of today
         return eventDate >= today;
@@ -146,7 +135,6 @@ export default function DashboardPage() {
     });
 
     return () => {
-      unsubscribePosts();
       unsubscribeEvents();
     };
   }, []);
@@ -250,3 +238,5 @@ export default function DashboardPage() {
     </motion.div>
   )
 }
+
+    
