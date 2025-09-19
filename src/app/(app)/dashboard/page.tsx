@@ -1,242 +1,163 @@
 
 "use client"
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Calendar, CheckCircle, MessageSquare, Plus, Users, Newspaper, Sparkles, Trophy, ArrowRight, BookOpen, Briefcase } from "lucide-react"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { useEffect, useState } from "react"
-import { listenToEvents, type Event } from "@/services/events"
-import { isToday } from "date-fns"
-import { cn } from "@/lib/utils"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useAuth } from "@/hooks/use-auth"
-import { addNotification } from "@/services/notifications"
-import { useToast } from "@/hooks/use-toast"
+import { cn } from "@/lib/utils"
+import { ArrowRight, BookOpen, Calendar, CheckCircle, Clock, FileText, MessageSquare, Star, TrendingUp, Users, Zap, BrainCircuit, Users as UsersIcon, MessageSquare as MessageSquareIcon, Calendar as CalendarIcon, Briefcase } from "lucide-react"
+import { motion } from "framer-motion"
+import Link from "next/link"
+import Image from "next/image"
 
-const StatCard = ({ title, value, description, icon: Icon, href, className }: { title: string, value: string, description: string, icon: React.ElementType, href?: string, className?: string }) => (
-    <motion.div variants={itemVariants}>
-        <Card className={cn("rounded-2xl hover:bg-card/95 transition-colors duration-300 h-full", className)}>
-             <Link href={href || "#"} className={!href ? "pointer-events-none" : ""}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{title}</CardTitle>
-                  <Icon className="h-5 w-5" />
+const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, link }: { title: string, value: string, subValue: string, icon: React.ElementType, progress?: number, colorClass: string, link: string }) => {
+    return (
+        <Link href={link}>
+            <Card className={cn("text-white rounded-xl hover:shadow-lg transition-shadow", colorClass)}>
+                <CardHeader className="pb-2">
+                    <CardTitle className="text-sm font-medium flex justify-between items-center">
+                        <span>{title}</span>
+                        {progress === undefined && <Icon className="w-5 h-5 opacity-70" />}
+                    </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{value}</div>
-                  <p className="text-xs">{description}</p>
-                </CardContent>
-            </Link>
-        </Card>
-    </motion.div>
-);
-
-
-const QuickActionCard = ({ href, icon: Icon, title, description, children, bgClass, iconClass }: { href: string, icon: React.ElementType, title: string, description: string, children?: React.ReactNode, bgClass: string, iconClass: string }) => (
-     <motion.div variants={itemVariants}>
-        <Card className="group relative overflow-hidden rounded-2xl h-full hover:shadow-lg transition-shadow duration-300">
-             <CardContent className="p-6 flex flex-col items-start justify-between h-full">
-                <div>
-                    <div className={cn("mb-4 rounded-lg p-3 w-fit", bgClass)}>
-                        <Icon className={cn("h-6 w-6", iconClass)} />
+                    <div className="flex items-end gap-2">
+                        <p className="text-4xl font-bold">{value}</p>
+                        {progress !== undefined && <TrendingUp className="w-8 h-8 mb-1" />}
                     </div>
-                    <h3 className="font-semibold mb-1 text-card-foreground">{title}</h3>
-                    <p className="text-sm text-muted-foreground">{description}</p>
-                </div>
-                {children}
-                <Button asChild size="sm" className="mt-4 bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 text-white">
-                    <Link href={href}>Go <ArrowRight className="ml-2 h-4 w-4"/></Link>
-                </Button>
-            </CardContent>
-        </Card>
-     </motion.div>
-);
-
-function LearningCard() {
-    const [progress, setProgress] = useState(60);
-    const { user } = useAuth();
-    const { toast } = useToast();
-
-    const handleStudy = async () => {
-        const newProgress = Math.min(progress + 15, 100);
-        setProgress(newProgress);
-
-        if (user) {
-            await addNotification(user.uid, {
-                type: 'course_progress',
-                message: `You've completed another 15% of your course! Keep going!`,
-                link: '/resources',
-            });
-            toast({
-                title: "Progress Saved!",
-                description: "Your learning progress has been updated.",
-            });
-        }
-    };
-    
-    return (
-         <motion.div variants={itemVariants}>
-            <Card className="group relative overflow-hidden rounded-2xl h-full hover:shadow-lg transition-shadow duration-300">
-                 <CardContent className="p-6 flex flex-col items-start justify-between h-full">
-                    <div>
-                        <div className={cn("mb-4 rounded-lg p-3 w-fit", "bg-green-100")}>
-                            <BookOpen className={cn("h-6 w-6", "text-green-600")} />
-                        </div>
-                        <h3 className="font-semibold mb-1 text-card-foreground">Continue Learning</h3>
-                        <p className="text-sm text-muted-foreground">Finish your course on modern healthcare.</p>
-                    </div>
-                     <div className="w-full mt-2">
-                        <Progress value={progress} className="h-2" />
-                        <p className="text-xs text-muted-foreground mt-1">{progress}% complete</p>
-                    </div>
-                    <Button size="sm" className="mt-4" onClick={handleStudy}>
-                        Study for 15 mins
-                    </Button>
+                    {progress !== undefined && <Progress value={progress} className="h-2 bg-white/30 mt-2" indicatorClassName="bg-white" />}
+                    <p className="text-sm opacity-80 mt-2">{subValue}</p>
                 </CardContent>
             </Card>
-         </motion.div>
-    );
+        </Link>
+    )
 }
 
-const containerVariants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.1
-      }
-    }
-};
+const QuickActionCard = ({ title, description, buttonText, icon: Icon, href, progress, progressValue }: { title: string, description: string, buttonText: string, icon: React.ElementType, href: string, progress?: boolean, progressValue?: number }) => (
+    <Card className="group rounded-xl hover:shadow-md transition-shadow">
+        <CardContent className="p-4">
+            <div className="flex justify-between items-start">
+                <div className="p-2 bg-muted rounded-lg">
+                    <Icon className="w-5 h-5 text-muted-foreground" />
+                </div>
+                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+            </div>
+            <h3 className="font-semibold mt-4">{title}</h3>
+            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+            {progress && (
+                <div className="mt-4">
+                    <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
+                        <span>Progress</span>
+                        <span>{progressValue}%</span>
+                    </div>
+                    <Progress value={progressValue} className="h-2" />
+                </div>
+            )}
+            <Button variant="outline" className="w-full mt-4">
+                {buttonText}
+            </Button>
+        </CardContent>
+    </Card>
+)
 
-const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.5, ease: "easeOut" }
-    }
-};
+const activityItems = [
+  { icon: CheckCircle, text: 'Completed "Data Science Fundamentals" module', time: "2 hours ago", color: "text-green-500" },
+  { icon: CalendarIcon, text: "Scheduled mentorship session with Dr. Lisa Park", time: "5 hours ago", color: "text-blue-500" },
+  { icon: MessageSquareIcon, text: 'Posted in "AI Ethics in Healthcare" discussion', time: "1 day ago", color: "text-purple-500" },
+  { icon: Star, text: 'Earned "Leadership Foundations" certificate', time: "2 days ago", color: "text-yellow-500" },
+];
+
+const recommendationItems = [
+    { type: 'Course', title: 'Advanced Machine Learning for Healthcare', match: 95, duration: '6 weeks', image: 'https://picsum.photos/seed/rec1/50/50', imageHint: 'abstract tech' },
+    { type: 'Mentor', title: 'Dr. Jennifer Walsh - Biotech Executive', match: 92, duration: '15+ years', image: 'https://picsum.photos/seed/rec2/50/50', imageHint: 'woman portrait' },
+    { type: 'Event', title: 'Digital Health Innovation Summit', match: 88, duration: 'March 15, 2025', image: 'https://picsum.photos/seed/rec3/50/50', imageHint: 'people conference' }
+];
 
 export default function DashboardPage() {
-  const [upcomingEventsCount, setUpcomingEventsCount] = useState(0);
+    const { user } = useAuth();
 
-  useEffect(() => {
-    const unsubscribeEvents = listenToEvents((events: Event[]) => {
-      const futureEvents = events.filter(event => {
-        if (!event.date) return false;
-        const eventDate = typeof event.date === 'string' ? new Date(event.date) : event.date;
-        const today = new Date();
-        today.setHours(0,0,0,0); // Set to start of today
-        return eventDate >= today;
-      });
-      setUpcomingEventsCount(futureEvents.length);
-    });
+    return (
+        <motion.div 
+          className="space-y-6"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+            <div className="flex justify-between items-center bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight">Welcome back, {user?.displayName?.split(' ')[0] || 'User'}! 👋</h1>
+                    <p className="text-muted-foreground">You're making great progress on your career journey. Here's what's happening today.</p>
+                </div>
+                <div className="p-4 bg-blue-500 rounded-lg hidden sm:block">
+                    <BrainCircuit className="w-8 h-8 text-white" />
+                </div>
+            </div>
 
-    return () => {
-      unsubscribeEvents();
-    };
-  }, []);
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <StatCard title="Career Progress" value="75%" subValue="Last updated: today" icon={TrendingUp} progress={75} colorClass="bg-blue-500" link="/profile"/>
+                <StatCard title="Courses Completed" value="12" subValue="+3 this month" icon={BookOpen} colorClass="bg-green-500" link="/learning" />
+                <StatCard title="Network Connections" value="248" subValue="+15 this week" icon={UsersIcon} colorClass="bg-purple-500" link="/community/find" />
+                <StatCard title="Mentorship Hours" value="24" subValue="Next session: Tomorrow" icon={Clock} colorClass="bg-orange-500" link="/mentors" />
+            </div>
 
-  return (
-    <motion.div 
-      className="space-y-8"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-    >
-      <motion.div variants={itemVariants}>
-        <Card className="rounded-2xl bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-lg border shadow-lg text-foreground">
-            <CardContent className="p-6">
-                <h1 className="text-3xl font-bold tracking-tight">Welcome back!</h1>
-                <p className="opacity-90">Here's a snapshot of your community activity.</p>
-            </CardContent>
-        </Card>
-      </motion.div>
-      
-      <motion.div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" variants={containerVariants}>
-        <StatCard 
-            title="Career Progress" 
-            value="75%" 
-            description="Profile Completion"
-            icon={Briefcase}
-            href="/profile"
-            className="bg-purple-600 text-white hover:bg-purple-700 [&_p]:text-purple-100 [&_svg]:text-white"
-        />
-        <StatCard 
-            title="Upcoming Events" 
-            value={String(upcomingEventsCount)} 
-            description={`${upcomingEventsCount} events scheduled`}
-            icon={Calendar}
-            href="/events"
-            className="bg-red-600 text-white hover:bg-red-700 [&_p]:text-red-100 [&_svg]:text-white"
-        />
-        <StatCard 
-            title="Courses Completed" 
-            value="0" 
-            description="Keep up the great work!" 
-            icon={Trophy}
-            href="#"
-             className="bg-blue-600 text-white hover:bg-blue-700 [&_p]:text-blue-100 [&_svg]:text-white"
-        />
-         <StatCard 
-            title="Go to Messages" 
-            value=">" 
-            description="View your conversations" 
-            icon={MessageSquare}
-            href="/messaging"
-             className="bg-green-600 text-white hover:bg-green-700 [&_p]:text-green-100 [&_svg]:text-white"
-        />
-      </motion.div>
+            <div>
+                <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    <QuickActionCard title="Continue Learning" description='Resume "AI in Healthcare Leadership"' buttonText="Continue" icon={BookOpen} href="/learning/ai-leadership" progress progressValue={65} />
+                    <QuickActionCard title="Message Mentor" description="Dr. Michael Torres is available" buttonText="Message" icon={MessageSquareIcon} href="/messaging/michael-torres" />
+                    <QuickActionCard title="Join Discussion" description='12 new posts in "Biotech Innovation"' buttonText="View" icon={UsersIcon} href="/community/biotech-innovation" />
+                    <QuickActionCard title="Upcoming Event" description="Leadership Summit in 3 days" buttonText="RSVP" icon={CalendarIcon} href="/events/leadership-summit" />
+                </div>
+            </div>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <motion.div className="lg:col-span-2 space-y-8" variants={containerVariants}>
-            <motion.div variants={itemVariants}>
-             <Card className="rounded-2xl">
-                <CardHeader>
-                    <CardTitle className="font-headline">Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                    <QuickActionCard href="/community" icon={Plus} title="Create a Post" description="Share your thoughts." bgClass="bg-purple-100" iconClass="text-purple-600"/>
-                    <QuickActionCard href="/events" icon={Calendar} title="Find an Event" description="Join a workshop." bgClass="bg-orange-100" iconClass="text-orange-600"/>
-                    <QuickActionCard href="/messaging" icon={MessageSquare} title="Message a Mentor" description="Get guidance." bgClass="bg-blue-100" iconClass="text-blue-600" />
-                    <LearningCard />
-                </CardContent>
-             </Card>
-            </motion.div>
+            <div className="grid gap-6 lg:grid-cols-3">
+                <Card className="lg:col-span-2 rounded-xl">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><Zap className="w-5 h-5 text-primary" />Recent Activity</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-6">
+                            {activityItems.map((item, index) => (
+                                <div key={index} className="flex items-center gap-4">
+                                    <div className="p-2 bg-muted rounded-full">
+                                        <item.icon className={cn("w-5 h-5", item.color)} />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <p className="font-medium">{item.text}</p>
+                                    </div>
+                                    <p className="text-sm text-muted-foreground">{item.time}</p>
+                                </div>
+                            ))}
+                        </div>
+                        <Button variant="outline" className="w-full mt-6">View All Activity</Button>
+                    </CardContent>
+                </Card>
 
-            <motion.div variants={itemVariants}>
-            <Card className="rounded-2xl">
-                <CardHeader>
-                    <CardTitle className="font-headline">Community Engagement</CardTitle>
-                </CardHeader>
-                <CardContent className="text-center text-muted-foreground p-8">
-                     <Sparkles className="h-16 w-16 mx-auto mb-4 opacity-50 text-primary"/>
-                    <h3 className="font-semibold text-lg text-card-foreground">Your engagement activity will appear here.</h3>
-                    <p className="mt-1">No data to display</p>
-                </CardContent>
-            </Card>
-            </motion.div>
+                <Card className="lg:col-span-1 rounded-xl">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-primary"/>AI Recommendations</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {recommendationItems.map((item, index) => (
+                            <Link href="#" key={index} className="flex items-center gap-4 group p-2 rounded-lg hover:bg-muted">
+                                <Image src={item.image} alt={item.title} width={50} height={50} className="rounded-lg" data-ai-hint={item.imageHint}/>
+                                <div className="flex-grow">
+                                    <p className="text-xs text-muted-foreground">{item.type}</p>
+                                    <p className="font-semibold leading-tight">{item.title}</p>
+                                    <p className="text-xs text-muted-foreground">{item.duration}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-bold text-green-500">{item.match}%</p>
+                                    <p className="text-xs text-muted-foreground">match</p>
+                                </div>
+                            </Link>
+                        ))}
+                         <Button variant="outline" className="w-full mt-2">View All Recommendations</Button>
+                    </CardContent>
+                </Card>
+            </div>
         </motion.div>
-
-        <motion.div variants={itemVariants} className="lg:col-span-1">
-          <Card className="rounded-2xl">
-              <CardHeader>
-                  <CardTitle className="font-headline">Notifications</CardTitle>
-              </CardHeader>
-              <CardContent>
-                  <div className="space-y-4 text-center text-muted-foreground py-10">
-                     <CheckCircle className="h-12 w-12 mx-auto text-green-500" />
-                     <p className="font-semibold text-lg text-card-foreground">You're all caught up!</p>
-                     <p>Recent updates and reminders will show up here.</p>
-                  </div>
-              </CardContent>
-          </Card>
-        </motion.div>
-      </div>
-    </motion.div>
-  )
+    )
 }
-
-    

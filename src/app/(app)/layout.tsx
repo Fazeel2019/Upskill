@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import {
@@ -25,6 +24,14 @@ import {
   User,
   PanelLeft,
   Shield,
+  GraduationCap,
+  MicVocal,
+  Network,
+  Rocket,
+  Search,
+  HelpCircle,
+  Bell,
+  ChevronLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -33,19 +40,26 @@ import { useAuth } from "@/hooks/use-auth";
 import { Skeleton } from "@/components/ui/skeleton";
 import { NotificationBell } from "@/components/notification-bell";
 import { Logo } from "@/components/logo";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/community", label: "Community", icon: Users },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/resources", label: "Resources", icon: BookOpen },
+  { href: "/learning", label: "Learning", icon: GraduationCap, badge: 3 },
+  { href: "/podcast", label: "Podcasts", icon: MicVocal },
+  { href: "/community", label: "Community", icon: Users, badge: 12 },
+  { href: "/networking", label: "Networking", icon: Network },
+  { href: "/messaging", label: "Messages", icon: MessageSquare, badge: 5 },
   { href: "/profile", label: "Profile", icon: User },
-  { href: "/messaging", label: "Messaging", icon: MessageSquare },
 ];
 
-const adminNavItems = [
-  { href: "/admin", label: "Admin", icon: Shield },
+const bottomNavItems = [
+    { href: "/build-course", label: "Build Course", icon: Rocket, new: true },
 ]
+
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
@@ -55,7 +69,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (loading) {
     return (
        <div className="flex h-screen w-full">
-        <div className="hidden md:flex flex-col gap-4 p-4 border-r">
+        <div className="hidden md:flex flex-col gap-4 p-4 border-r w-64">
             <Skeleton className="h-10 w-48" />
             <div className="space-y-2 mt-4">
                 <Skeleton className="h-8 w-full" />
@@ -64,9 +78,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <Skeleton className="h-8 w-full" />
             </div>
         </div>
-        <div className="flex-1 p-8">
-            <Skeleton className="h-16 w-full mb-8" />
-            <Skeleton className="h-96 w-full" />
+        <div className="flex-1">
+            <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm sm:px-8">
+                 <Skeleton className="h-8 w-8" />
+                <div className="flex items-center gap-4">
+                    <Skeleton className="h-8 w-48" />
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+            </header>
+            <main className="p-8">
+                <Skeleton className="h-96 w-full" />
+            </main>
         </div>
       </div>
     );
@@ -78,8 +100,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider defaultOpen={!isMobile}>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center gap-2 p-2">
-            <Logo className="w-auto h-10 text-primary" />
+          <div className="flex items-center justify-between p-2">
+            <div className="flex items-center gap-2">
+                <Logo className="w-auto h-8 text-primary" />
+                <span className="font-headline font-bold text-xl group-data-[collapsible=icon]:hidden">Upskill</span>
+            </div>
+            <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
+                <ChevronLeft />
+            </SidebarTrigger>
           </div>
         </SidebarHeader>
         <SidebarContent>
@@ -88,17 +116,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname === item.href}
+                  isActive={pathname.startsWith(item.href)}
                   tooltip={item.label}
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    <span>{item.label}</span>
+                    <span className="flex-grow">{item.label}</span>
+                    {item.badge && <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
-            {profile?.role === 'admin' && adminNavItems.map((item) => (
+          </SidebarMenu>
+           <SidebarMenu>
+            {bottomNavItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
@@ -107,7 +138,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    <span>{item.label}</span>
+                    <span className="flex-grow">{item.label}</span>
+                    {item.new && <Badge className="bg-green-500 text-white">New</Badge>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -115,28 +147,42 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <div className="flex items-center gap-2 p-2 group-data-[collapsible=icon]:justify-center">
-            <UserNav />
-            <div className="group-data-[collapsible=icon]:hidden">
-              <p className="text-sm font-medium">{user.displayName || 'User'}</p>
-              <p className="text-xs text-muted-foreground">
-                {user.email}
-              </p>
-            </div>
-          </div>
+          <Card className="m-2 bg-green-500/10 border-green-500/20 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none">
+            <CardContent className="p-3 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
+                <div className="flex items-center gap-2">
+                    <div className="p-1 bg-green-500 rounded-md">
+                        <Shield className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="group-data-[collapsible=icon]:hidden">
+                        <p className="text-sm font-semibold">Premium Member</p>
+                        <p className="text-xs text-muted-foreground">All features unlocked</p>
+                    </div>
+                </div>
+                <div className="mt-2 group-data-[collapsible=icon]:hidden">
+                    <p className="text-xs text-muted-foreground mb-1">Career Progress: 75%</p>
+                    <Progress value={75} className="h-1" />
+                </div>
+            </CardContent>
+          </Card>
         </SidebarFooter>
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm sm:px-8">
-          <SidebarTrigger>
+          <SidebarTrigger className="md:hidden">
             <PanelLeft />
           </SidebarTrigger>
+          <div className="relative w-full max-w-sm hidden md:block">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
+            <Input placeholder="Search courses, mentors, discussions..." className="pl-9 bg-muted/50"/>
+          </div>
           <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" className="hidden md:flex"><HelpCircle className="mr-2"/>Help</Button>
+            <Button variant="ghost" size="sm" className="hidden md:flex"><Calendar className="mr-2"/>Events</Button>
             <NotificationBell />
             <UserNav />
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-8">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
