@@ -138,7 +138,7 @@ export default function Home() {
         <section id="features" className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
-                <h2 className="font-headline text-5xl md:text-6xl font-bold tracking-tight text-foreground">
+                <h2 className="font-headline text-6xl font-bold tracking-tight text-foreground">
                  ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
@@ -199,7 +199,7 @@ export default function Home() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
-            <h2 className="font-headline text-5xl md:text-6xl font-bold tracking-tight mb-4 text-foreground">
+            <h2 className="font-headline text-6xl font-bold tracking-tight mb-4 text-foreground">
              Trusted by Leading<br />
              <span className="gradient-text">Healthcare & STEM</span><br />
              Professionals
@@ -272,7 +272,7 @@ export default function Home() {
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-700 bg-blue-900/50">Limited Time Offer</Badge>
-                    <h2 className="font-headline text-5xl md:text-6xl font-bold tracking-tight">
+                    <h2 className="font-headline text-6xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
                     <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
@@ -428,6 +428,7 @@ export default function Home() {
     </div>
   );
 }
+
 
 
 
