@@ -73,10 +73,6 @@ function CommentSection({ post }: { post: PostType }) {
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.id} className="flex items-start gap-3">
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={comment.author.avatarUrl} alt={comment.author.name} />
-              <AvatarFallback>{comment.author.name.charAt(0)}</AvatarFallback>
-            </Avatar>
             <div className="flex-1 bg-muted/50 rounded-lg p-3">
               <div className="flex items-center justify-between">
                 <p className="font-semibold text-sm">{comment.author.name}</p>
@@ -91,10 +87,6 @@ function CommentSection({ post }: { post: PostType }) {
       </div>
       {user && (
         <div className="mt-4 flex gap-2">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={user.photoURL || undefined} alt={user.displayName || ""} />
-            <AvatarFallback>{user.displayName?.charAt(0)}</AvatarFallback>
-          </Avatar>
           <form onSubmit={(e) => { e.preventDefault(); handleSubmitComment(); }} className="flex-1 flex gap-2">
             <Input
               placeholder="Write a comment..."
@@ -164,17 +156,6 @@ function Post({ post }: { post: PostType }) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href={profileLink}>
-              <Avatar>
-                <AvatarImage src={post.author.avatarUrl} alt={post.author.name} data-ai-hint="people portrait" />
-                <AvatarFallback>
-                  {post.author.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </AvatarFallback>
-              </Avatar>
-            </Link>
             <div>
                <Link href={profileLink}>
                   <p className="font-semibold hover:underline">{post.author.name}</p>
@@ -310,10 +291,6 @@ const ActiveMembersWidget = () => (
         </CardHeader>
         <CardContent className="space-y-4">
             <div className="flex items-center gap-3">
-                <Avatar>
-                    <AvatarImage src="https://picsum.photos/seed/member1/40/40" data-ai-hint="woman portrait"/>
-                    <AvatarFallback>JW</AvatarFallback>
-                </Avatar>
                 <div>
                     <p className="font-semibold text-sm">Dr. Jennifer Walsh</p>
                     <p className="text-xs text-muted-foreground">VP of Research</p>
@@ -431,5 +408,3 @@ export default function CommunityPage() {
     </div>
   );
 }
-
-    

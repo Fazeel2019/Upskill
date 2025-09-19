@@ -2,7 +2,6 @@
 "use client";
 
 import { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -76,14 +75,6 @@ export default function CreatePost({ onPostCreated }: { onPostCreated?: () => vo
     <Card>
       <CardContent className="p-4">
         <div className="flex gap-4">
-          <Avatar>
-            <AvatarImage
-              src={user?.photoURL || "https://picsum.photos/seed/user-avatar/40/40"}
-              alt={user?.displayName || "User"}
-              data-ai-hint="person portrait"
-            />
-            <AvatarFallback>{user?.displayName?.split(" ").map(n => n[0]).join("") || user?.email?.[0].toUpperCase()}</AvatarFallback>
-          </Avatar>
           <div className="w-full">
             <Textarea
               placeholder="What's on your mind?"
