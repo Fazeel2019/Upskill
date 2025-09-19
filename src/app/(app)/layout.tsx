@@ -56,11 +56,6 @@ const navItems = [
   { href: "/profile", label: "Profile", icon: User },
 ];
 
-const bottomNavItems = [
-    { href: "/build-course", label: "Build Course", icon: Rocket, new: true },
-]
-
-
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
@@ -128,23 +123,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-           <SidebarMenu>
-            {bottomNavItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith(item.href)}
-                  tooltip={item.label}
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span className="flex-grow">{item.label}</span>
-                    {item.new && <Badge className="bg-green-500 text-white">New</Badge>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
           <Card className="m-2 bg-green-500/10 border-green-500/20 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none">
@@ -187,5 +165,3 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
-
-    
