@@ -177,7 +177,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" className="hidden md:flex"><HelpCircle className="mr-2"/>Help</Button>
-            <Button variant="ghost" size="sm" className="hidden md:flex"><Calendar className="mr-2"/>Events</Button>
+            <Button variant="ghost" size="sm" asChild className="hidden md:flex"><Link href="/events"><Calendar className="mr-2"/>Events</Link></Button>
             <NotificationBell />
             <UserNav />
           </div>
@@ -187,3 +187,5 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     </SidebarProvider>
   );
 }
+
+    
