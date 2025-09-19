@@ -138,7 +138,7 @@ export default function Home() {
         <section id="features" className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
-                <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">
                  ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
@@ -199,7 +199,7 @@ export default function Home() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
-            <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
+            <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
              Trusted by Leading<br />
              <span className="gradient-text">Healthcare & STEM</span><br />
              Professionals
@@ -268,11 +268,11 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="bg-gray-900 text-white py-16 md:py-24">
+        <section id="pricing" className="py-16 md:py-24 bg-gray-900 text-white">
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-700 bg-blue-900/50">Limited Time Offer</Badge>
-                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
+                    <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
                     <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
@@ -388,36 +388,36 @@ export default function Home() {
         </section>
 
         {/* Final CTA Section */}
-        <section className="py-20 md:py-32 text-center relative overflow-hidden bg-background">
-            <div className="container mx-auto px-4 relative">
-                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+        <section className="relative overflow-hidden bg-background py-20 text-center md:py-32">
+            <div className="container relative mx-auto px-4">
+                <h2 className="font-headline text-4xl font-bold tracking-tight text-foreground md:text-5xl">
                   Ready to Transform <br/>
                   <span className="text-yellow-500">Your Career?</span>
                 </h2>
-                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                <p className="mx-auto mt-4 max-w-3xl text-lg text-muted-foreground">
                     Join thousands of healthcare and STEM professionals who are already accelerating their careers with AI-powered insights, expert mentorship, and exclusive networking opportunities.
                 </p>
-                <p className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
+                <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Timer className="w-4 h-4" /> Limited time offer - Save $200/month
                 </p>
                 <div className="mt-8 flex justify-center gap-4">
-                  <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold text-base shadow-lg">
+                  <Button asChild size="lg" className="rounded-full bg-blue-600 font-semibold text-white shadow-lg hover:bg-blue-700">
                       <Link href="/signup">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
-                   <Button asChild size="lg" variant="outline" className="rounded-full font-semibold text-base">
+                   <Button asChild size="lg" variant="outline" className="rounded-full font-semibold">
                       <Link href="/login">Schedule a Demo</Link>
                   </Button>
                 </div>
-                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><TrendingUp className="w-8 h-8 text-green-500" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold text-muted-foreground">Success Rate</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Star className="w-8 h-8 text-yellow-500" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold text-muted-foreground">User Rating</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Award className="w-8 h-8 text-purple-500" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold text-muted-foreground">Expert Mentors</p></div>
+                 <div className="mt-12 grid grid-cols-2 gap-4 text-foreground md:grid-cols-4">
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><TrendingUp className="w-8 h-8 text-green-500" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold text-muted-foreground">Success Rate</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Star className="w-8 h-8 text-yellow-500" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold text-muted-foreground">User Rating</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Award className="w-8 h-8 text-purple-500" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold text-muted-foreground">Expert Mentors</p></div>
                 </div>
                  <div className="mt-8 text-xs text-muted-foreground">
                     30-day money-back guarantee • No setup fees • Cancel anytime
                  </div>
-                 <div className="mt-12 p-6 rounded-lg bg-primary/10 border border-primary/20 text-primary-foreground max-w-3xl mx-auto">
+                 <div className="mx-auto mt-12 max-w-3xl rounded-lg border border-primary/20 bg-primary/10 p-6 text-primary-foreground">
                     <p className="font-semibold text-foreground"><span className="text-primary">✨ Success Guarantee:</span> 94% of our members achieve their career goals within 6 months. If you don't see measurable progress, we'll work with you personally until you do.</p>
                  </div>
             </div>
@@ -428,6 +428,7 @@ export default function Home() {
     </div>
   );
 }
+
 
 
 
