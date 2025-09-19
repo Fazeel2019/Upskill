@@ -118,7 +118,7 @@ export default function Home() {
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10">
-                    <Image src="https://picsum.photos/seed/professionals/1200/800" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
+                    <Image src="https://picsum.photos/seed/professionals-community/1200/800" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
                 </div>
               </motion.div>
            </div>
@@ -268,20 +268,20 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="bg-gray-900 text-white py-16 md:py-24 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]">
+        <section id="pricing" className="bg-background text-foreground py-16 md:py-24">
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
-                    <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-500 bg-blue-500/10">Limited Time Offer</Badge>
+                    <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Limited Time Offer</Badge>
                     <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
-                    <p className="mt-4 text-lg text-blue-200/80 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
+                    <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
                 </div>
                 
-                <div className="relative bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-px shadow-2xl shadow-blue-500/20">
-                  <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-500/50 to-transparent rounded-t-2xl"></div>
-                   <div className="relative bg-gray-900 rounded-2xl">
-                     <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center">
+                <div className="relative bg-white/10 backdrop-blur-sm border rounded-2xl p-px shadow-2xl shadow-blue-500/20">
+                  <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-500/20 to-transparent rounded-t-2xl"></div>
+                   <div className="relative bg-muted/20 rounded-2xl">
+                     <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center text-white">
                         <p className="font-semibold">🚀 Most Popular Choice - Join 10,000+ Professionals</p>
                      </div>
                      <div className="grid lg:grid-cols-2 gap-8 p-8">
@@ -289,54 +289,54 @@ export default function Home() {
                        <div className="flex flex-col gap-6">
                           <div className="flex items-center gap-4">
                              <div className="bg-blue-600/10 border-2 border-blue-500/50 rounded-lg p-3">
-                               <Sparkles className="w-8 h-8 text-blue-300"/>
+                               <Sparkles className="w-8 h-8 text-blue-400"/>
                              </div>
                              <div>
                                 <h3 className="text-2xl font-bold font-headline">Executive Membership</h3>
-                                <Badge className="bg-green-500/20 border-green-500 text-green-300 mt-1">Premium Access</Badge>
+                                <Badge className="bg-green-500/20 border-green-500 text-green-400 mt-1">Premium Access</Badge>
                              </div>
                           </div>
 
                           <div>
-                             <p className="text-5xl font-bold"><span className="line-through text-gray-500 text-3xl">$297</span> $97<span className="text-lg font-normal text-gray-400">/month</span></p>
-                             <p className="text-green-400 font-semibold mt-2">Save $200/month - Limited Time</p>
-                             <p className="text-gray-400 text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
+                             <p className="text-5xl font-bold"><span className="line-through text-muted-foreground text-3xl">$297</span> $97<span className="text-lg font-normal text-muted-foreground">/month</span></p>
+                             <p className="text-green-500 font-semibold mt-2">Save $200/month - Limited Time</p>
+                             <p className="text-muted-foreground text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
                           </div>
                           
-                          <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+                          <div className="bg-background/50 border rounded-lg p-6">
                             <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Exclusive Bonuses (Worth $2,800)</h4>
                             <Accordion type="single" collapsible className="w-full mt-4">
                               <AccordionItem value="item-1">
                                 <AccordionTrigger>
                                   <div className="flex justify-between w-full pr-4">
                                     <span>Executive Masterclass Series</span>
-                                    <span className="text-green-400 font-bold">$2,000</span>
+                                    <span className="text-green-500 font-bold">$2,000</span>
                                   </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                  <p className="text-sm text-gray-400 pl-2">Monthly sessions with Fortune 500 leaders.</p>
+                                  <p className="text-sm text-muted-foreground pl-2">Monthly sessions with Fortune 500 leaders.</p>
                                 </AccordionContent>
                               </AccordionItem>
                               <AccordionItem value="item-2">
                                 <AccordionTrigger>
                                    <div className="flex justify-between w-full pr-4">
                                       <span>Personal Branding Toolkit</span>
-                                      <span className="text-green-400 font-bold">$500</span>
+                                      <span className="text-green-500 font-bold">$500</span>
                                   </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                  <p className="text-sm text-gray-400 pl-2">Professional templates & LinkedIn optimization.</p>
+                                  <p className="text-sm text-muted-foreground pl-2">Professional templates & LinkedIn optimization.</p>
                                 </AccordionContent>
                               </AccordionItem>
                               <AccordionItem value="item-3">
                                 <AccordionTrigger>
                                    <div className="flex justify-between w-full pr-4">
                                     <span>Career Acceleration Workbook</span>
-                                    <span className="text-green-400 font-bold">$300</span>
+                                    <span className="text-green-500 font-bold">$300</span>
                                   </div>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                  <p className="text-sm text-gray-400 pl-2">Step-by-step guide to leadership roles.</p>
+                                  <p className="text-sm text-muted-foreground pl-2">Step-by-step guide to leadership roles.</p>
                                 </AccordionContent>
                               </AccordionItem>
                             </Accordion>
@@ -345,13 +345,13 @@ export default function Home() {
                            <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
                             Start Your Transformation Today <ArrowRight className="ml-2"/>
                            </Button>
-                           <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
+                           <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
                        </div>
 
                        {/* Right Column */}
-                       <div className="bg-white/5 border border-white/10 rounded-lg p-6">
+                       <div className="bg-background/50 border rounded-lg p-6">
                            <h4 className="font-bold text-xl mb-4">Everything You Need to Succeed</h4>
-                           <ul className="space-y-3 text-gray-300">
+                           <ul className="space-y-3 text-muted-foreground">
                             {[
                                 "AI-powered career insights & recommendations",
                                 "Unlimited Group sessions with C-suite executives",
@@ -365,21 +365,21 @@ export default function Home() {
                                 "White-glove onboarding & dedicated success manager"
                             ].map(item => (
                                <li key={item} className="flex items-start gap-3">
-                                <CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-0.5"/>
+                                <CheckCircle className="w-5 h-5 text-green-500 shrink-0 mt-0.5"/>
                                 <span>{item}</span>
                                </li>
                             ))}
                            </ul>
 
-                            <div className="mt-6 bg-yellow-400/10 border border-yellow-500/30 text-yellow-200 rounded-lg p-4">
-                              <p className="font-bold flex items-center gap-2"><Sparkles className="text-yellow-300"/>Success Guarantee</p>
+                            <div className="mt-6 bg-yellow-500/10 border border-yellow-500/30 text-yellow-600 rounded-lg p-4">
+                              <p className="font-bold flex items-center gap-2 text-yellow-700"><Sparkles className="text-yellow-500"/>Success Guarantee</p>
                               <p className="text-sm mt-1">94% of our members achieve their career goals within 6 months, or we'll work with you until you do.</p>
                             </div>
                        </div>
                      </div>
                    </div>
                 </div>
-                 <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-blue-200/80">
+                 <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-muted-foreground">
                     <p>• 10,000+ Active Members</p>
                     <p>• 500+ Expert Mentors</p>
                     <p>• 4.9/5 Average Rating</p>
@@ -407,10 +407,10 @@ export default function Home() {
                   </Button>
                 </div>
                  <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Users className="w-8 h-8 text-blue-400" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold">Active Members</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><TrendingUp className="w-8 h-8 text-green-400" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold">Success Rate</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Star className="w-8 h-8 text-yellow-400" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold">User Rating</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg"><Award className="w-8 h-8 text-purple-400" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold">Expert Mentors</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><TrendingUp className="w-8 h-8 text-green-500" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold text-muted-foreground">Success Rate</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Star className="w-8 h-8 text-yellow-500" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold text-muted-foreground">User Rating</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 p-4 bg-background/5 backdrop-blur-sm border rounded-lg"><Award className="w-8 h-8 text-purple-500" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold text-muted-foreground">Expert Mentors</p></div>
                 </div>
                  <div className="mt-8 text-xs text-muted-foreground">
                     30-day money-back guarantee • No setup fees • Cancel anytime
@@ -426,5 +426,6 @@ export default function Home() {
     </div>
   );
 }
+
 
 
