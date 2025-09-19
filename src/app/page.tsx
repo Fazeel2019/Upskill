@@ -268,17 +268,17 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="pricing" className="bg-background text-foreground py-16 md:py-24">
+        <section id="pricing" className="bg-gray-900 text-white py-16 md:py-24">
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
-                    <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Limited Time Offer</Badge>
+                    <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-700 bg-blue-900/50">Limited Time Offer</Badge>
                     <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
-                    <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
+                    <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
                 </div>
                 
-                <div className="relative bg-white/10 backdrop-blur-sm border rounded-2xl p-px shadow-2xl shadow-blue-500/20">
+                <div className="relative bg-background text-foreground border rounded-2xl p-px shadow-2xl shadow-blue-500/20">
                   <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-purple-500/20 to-transparent rounded-t-2xl"></div>
                    <div className="relative bg-muted/20 rounded-2xl">
                      <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center text-white">
@@ -379,7 +379,7 @@ export default function Home() {
                      </div>
                    </div>
                 </div>
-                 <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-muted-foreground">
+                 <div className="mt-12 flex flex-wrap justify-center gap-x-8 gap-y-4 text-center text-gray-400">
                     <p>• 10,000+ Active Members</p>
                     <p>• 500+ Expert Mentors</p>
                     <p>• 4.9/5 Average Rating</p>
@@ -394,7 +394,9 @@ export default function Home() {
                   Ready to Transform <br/>
                   <span className="text-yellow-500">Your Career?</span>
                 </h2>
-                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Join thousands of healthcare and STEM professionals who are already accelerating their careers with AI-powered insights, expert mentorship, and exclusive networking opportunities.</p>
+                <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                    Join thousands of healthcare and STEM professionals who are already accelerating their careers with AI-powered insights, expert mentorship, and exclusive networking opportunities.
+                </p>
                 <p className="mt-4 text-sm text-muted-foreground flex items-center justify-center gap-2">
                     <Timer className="w-4 h-4" /> Limited time offer - Save $200/month
                 </p>
@@ -426,6 +428,7 @@ export default function Home() {
     </div>
   );
 }
+
 
 
 
