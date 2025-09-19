@@ -8,13 +8,27 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, UserPlus, Check, Clock } from "lucide-react";
+import { Award, Briefcase, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, UserPlus, Check, Clock, Users, MessageSquare, Eye, Settings, Activity } from "lucide-react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { getUserProfile, sendFriendRequest, type UserProfile, type Experience, type Education, type Achievement } from "@/services/profile";
 import { Skeleton } from "@/components/ui/skeleton";
+
+function StatCard({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) {
+    return (
+        <Card className={`p-4 ${color}`}>
+            <div className="flex justify-between items-center">
+                <div>
+                    <p className="text-sm text-muted-foreground">{title}</p>
+                    <p className="text-2xl font-bold">{value}</p>
+                </div>
+                {icon}
+            </div>
+        </Card>
+    )
+}
 
 function ExperienceItem({ experience }: { experience: Experience }) {
     const formatDate = (dateString: string) => {
@@ -94,27 +108,39 @@ function ProfileSkeleton() {
     return (
         <div className="space-y-8">
             <Card className="overflow-hidden">
-                <Skeleton className="h-48 md:h-64 w-full" />
-                <div className="p-6 bg-card">
-                    <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-24 sm:-mt-20">
-                        <Skeleton className="relative h-32 w-32 sm:h-36 sm:w-36 rounded-full border-4 border-card ring-2 ring-border shrink-0" />
-                        <div className="flex-grow space-y-2">
+                <div className="h-40 md:h-48 w-full bg-muted flex items-center justify-center">
+                   <p className="text-muted-foreground">No Cover Image</p>
+                </div>
+                <div className="p-6 bg-card relative">
+                    <div className="flex flex-col sm:flex-row items-start gap-6">
+                         <div className="relative -mt-20">
+                            <Skeleton className="h-32 w-32 rounded-full border-4 border-card" />
+                         </div>
+                        <div className="flex-grow space-y-2 pt-4">
                            <Skeleton className="h-8 w-48" />
-                           <Skeleton className="h-5 w-64" />
-                           <Skeleton className="h-5 w-80" />
+                           <Skeleton className="h-5 w-32" />
                         </div>
-                        <Skeleton className="h-10 w-32" />
+                        <div className="absolute top-6 right-6 flex gap-2">
+                             <Skeleton className="h-10 w-32" />
+                             <Skeleton className="h-10 w-10" />
+                        </div>
                     </div>
                 </div>
             </Card>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+                <Skeleton className="h-24 w-full" />
+            </div>
             <div className="grid md:grid-cols-3 gap-8">
                 <div className="md:col-span-2 space-y-4">
-                    <Skeleton className="h-10 w-48" />
+                    <Skeleton className="h-10 w-full rounded-full" />
                     <Skeleton className="h-64 w-full" />
                 </div>
                 <div className="space-y-8">
-                    <Skeleton className="h-48 w-full" />
-                    <Skeleton className="h-48 w-full" />
+                    <Skeleton className="h-32 w-full" />
+                    <Skeleton className="h-32 w-full" />
                 </div>
             </div>
         </div>
@@ -150,7 +176,7 @@ export default function UserProfilePage({ params }: { params: { userId: string }
             title: "Friend Request Sent",
             description: `Your friend request to ${profile.displayName} has been sent.`,
         });
-        reloadProfile(); // This will update the connection status on the current user's profile object
+        reloadProfile(); 
     } catch (error) {
         toast({
             title: "Error",
@@ -163,12 +189,14 @@ export default function UserProfilePage({ params }: { params: { userId: string }
   const connectionStatus = currentUserProfile?.connections?.[params.userId];
   
   let FriendButton;
-  if (connectionStatus === 'connected') {
-    FriendButton = <Button disabled><Check className="mr-2 h-4 w-4"/>Friends</Button>;
-  } else if (connectionStatus === 'pending_sent') {
-    FriendButton = <Button disabled><Clock className="mr-2 h-4 w-4"/>Request Sent</Button>;
-  } else {
-    FriendButton = <Button onClick={handleAddFriend}><UserPlus className="mr-2 h-4 w-4" />Add Friend</Button>;
+  if (user?.uid !== params.userId) {
+    if (connectionStatus === 'connected') {
+        FriendButton = <Button disabled><Check className="mr-2 h-4 w-4"/>Friends</Button>;
+    } else if (connectionStatus === 'pending_sent') {
+        FriendButton = <Button disabled><Clock className="mr-2 h-4 w-4"/>Request Sent</Button>;
+    } else {
+        FriendButton = <Button onClick={handleAddFriend}><UserPlus className="mr-2 h-4 w-4" />Connect</Button>;
+    }
   }
 
 
@@ -191,48 +219,49 @@ export default function UserProfilePage({ params }: { params: { userId: string }
 
   if (loading || !profile) return <ProfileSkeleton />;
 
+  const connectionCount = Object.values(profile.connections || {}).filter(c => c === 'connected').length;
+
   return (
     <motion.div 
-      className="space-y-8"
+      className="space-y-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
         <Card className="overflow-hidden">
-          <div className="relative h-48 md:h-64">
-            <Image
-              src="https://picsum.photos/seed/cover/1200/400"
-              alt="Cover image"
-              fill
-              style={{objectFit: "cover"}}
-              sizes="(max-width: 768px) 100vw, 1200px"
-              data-ai-hint="abstract background"
-              priority
-            />
-          </div>
-          <div className="p-6 bg-card">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-24 sm:-mt-20">
-              <div className="relative h-32 w-32 sm:h-36 sm:w-36 rounded-full border-4 border-card ring-2 ring-border shrink-0">
-                 <Avatar className="h-full w-full">
-                      <AvatarImage src={profile.photoURL || `https://picsum.photos/seed/${profile.uid}/150/150`} alt={profile.displayName || 'User'} data-ai-hint="person portrait"/>
-                      <AvatarFallback>{profile.displayName?.split(" ").map(n => n[0]).join("") || profile.email?.[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
-              </div>
-              <div className="flex-grow">
-                <h1 className="text-2xl sm:text-3xl font-bold font-headline">{profile.displayName || "User Name"}</h1>
-                <p className="text-muted-foreground">{profile.title || "Professional title"}</p>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2">
-                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>{profile.location || "Location"}</div>
-                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>{profile.company || "Company"}</div>
-                </div>
-              </div>
-              <div className="shrink-0 flex gap-2">
-                  {FriendButton}
-              </div>
+             <div className="h-40 md:h-48 w-full bg-muted flex items-center justify-center">
+                <p className="text-muted-foreground">No Cover Image</p>
+             </div>
+            <div className="p-6 bg-card relative">
+                 <div className="flex flex-col sm:flex-row items-start gap-6">
+                    <div className="relative -mt-20">
+                        <Avatar className="h-32 w-32 rounded-full border-4 border-card">
+                            <AvatarImage src={profile.photoURL || `https://picsum.photos/seed/${profile.uid}/150/150`} alt={profile.displayName || 'User'} data-ai-hint="person portrait"/>
+                            <AvatarFallback className="text-4xl">{profile.displayName?.charAt(0) || 'U'}</AvatarFallback>
+                        </Avatar>
+                    </div>
+                    <div className="flex-grow pt-4">
+                        <h1 className="text-2xl sm:text-3xl font-bold font-headline">{profile.displayName || "User Name"}</h1>
+                        <div className="flex items-center gap-4 text-muted-foreground text-sm mt-1">
+                            <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {profile.location || 'Location not set'}</span>
+                            <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {connectionCount} connections</span>
+                        </div>
+                    </div>
+                    <div className="absolute top-6 right-6 flex gap-2">
+                        {FriendButton}
+                        <Button variant="ghost" size="icon"><Settings /></Button>
+                    </div>
+                 </div>
             </div>
-          </div>
         </Card>
+      </motion.div>
+
+       <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4" variants={itemVariants}>
+            <StatCard title="Connections" value={String(connectionCount)} icon={<Users className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
+            <StatCard title="Posts" value="0" icon={<MessageSquare className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
+            <StatCard title="Reputation" value="100" icon={<Award className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
+            <StatCard title="Profile Views" value="0" icon={<Eye className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
       </motion.div>
       
       <div className="grid md:grid-cols-3 gap-8">
@@ -241,17 +270,25 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                 <TabsList className="mb-4">
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="experience">Experience</TabsTrigger>
-                    <TabsTrigger value="education">Education</TabsTrigger>
+                    <TabsTrigger value="achievements">Achievements</TabsTrigger>
+                    <TabsTrigger value="activity">Activity</TabsTrigger>
+                    <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="font-headline">Bio</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-muted-foreground">
-                            <p className="whitespace-pre-wrap">{profile.bio || "This user hasn't written a bio yet."}</p>
-                        </CardContent>
-                    </Card>
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader><CardTitle>About</CardTitle></CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">{profile.bio || "No bio provided yet."}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader><CardTitle>Skills & Expertise</CardTitle></CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">No skills added yet.</p>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
                 <TabsContent value="experience">
                     <Card>
@@ -275,25 +312,44 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="education">
+                 <TabsContent value="achievements">
                     <Card>
-                         <CardHeader>
-                            <CardTitle className="font-headline">Education</CardTitle>
+                        <CardHeader>
+                            <CardTitle className="font-headline">Achievements</CardTitle>
                         </CardHeader>
-                         <CardContent>
-                            {profile.education && profile.education.length > 0 ? (
+                        <CardContent>
+                            {profile.achievements && profile.achievements.length > 0 ? (
                                 <div className="space-y-4">
-                                     {profile.education.sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map(edu => (
-                                        <EducationItem key={edu.id} education={edu} />
+                                    {profile.achievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
+                                        <AchievementItem key={ach.id} achievement={ach} />
                                     ))}
                                 </div>
                             ) : (
-                                 <div className="text-center text-muted-foreground py-12">
-                                     <GraduationCap className="w-12 h-12 mx-auto mb-4" />
-                                     <h3 className="font-semibold">No Education Listed</h3>
-                                     <p className="mt-2">This user hasn't added any education yet.</p>
+                                <div className="text-center text-muted-foreground py-12">
+                                    <Award className="w-12 h-12 mx-auto mb-4" />
+                                    <h3 className="font-semibold">No Achievements Listed</h3>
+                                    <p className="mt-2">This user hasn't added any achievements yet.</p>
                                 </div>
                             )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                 <TabsContent value="activity">
+                    <Card>
+                        <CardHeader><CardTitle>Activity</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="text-center text-muted-foreground py-12">
+                                <Activity className="w-12 h-12 mx-auto mb-4" />
+                                <h3 className="font-semibold">No recent activity.</h3>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                <TabsContent value="settings">
+                    <Card>
+                        <CardHeader><CardTitle>Settings</CardTitle></CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">Profile settings are not available on public profiles.</p>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -303,49 +359,38 @@ export default function UserProfilePage({ params }: { params: { userId: string }
             <motion.div variants={itemVariants}>
               <Card>
                   <CardHeader>
-                      <CardTitle className="font-headline">Contact & Links</CardTitle>
+                      <CardTitle className="font-headline">Contact Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
                       <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground"/>{profile.email}</div>
+                      <div className="flex items-center gap-2"><Briefcase className="w-4 h-4 text-muted-foreground"/><span>{profile.company || 'N/A'}</span></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground"/><span>{profile.location || 'N/A'}</span></div>
+                  </CardContent>
+              </Card>
+            </motion.div>
+             <motion.div variants={itemVariants}>
+              <Card>
+                  <CardHeader>
+                      <CardTitle className="font-headline">Social Links</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm">
                       <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/>
                         {profile.linkedin ? (
                             <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.linkedin}</a>
                         ) : (
-                            <span className="text-muted-foreground">Not available</span>
+                            <span className="text-muted-foreground">N/A</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2"><Link2 className="w-4 h-4 text-muted-foreground"/>
                         {profile.website ? (
                              <a href={profile.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.website}</a>
                         ) : (
-                             <span className="text-muted-foreground">Not available</span>
+                             <span className="text-muted-foreground">N/A</span>
                         )}
                       </div>
                   </CardContent>
               </Card>
             </motion.div>
-            <motion.div variants={itemVariants}>
-             <Card>
-                <CardHeader>
-                    <CardTitle className="font-headline">Achievements</CardTitle>
-                </CardHeader>
-                <CardContent>
-                     {profile.achievements && profile.achievements.length > 0 ? (
-                        <div className="space-y-4">
-                            {profile.achievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
-                                <AchievementItem key={ach.id} achievement={ach} />
-                            ))}
-                        </div>
-                     ) : (
-                        <div className="text-center text-muted-foreground py-12">
-                             <Award className="w-12 h-12 mx-auto mb-4" />
-                             <h3 className="font-semibold">No Achievements Listed</h3>
-                              <p className="mt-2">This user hasn't added any achievements yet.</p>
-                        </div>
-                     )}
-                </CardContent>
-            </Card>
-           </motion.div>
         </motion.div>
       </div>
     </motion.div>

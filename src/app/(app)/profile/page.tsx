@@ -6,9 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, FileText, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, UserPlus, Check, Clock } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { Award, Briefcase, Edit, Settings, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, Users, MessageSquare, Eye, Activity } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -22,7 +20,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -39,7 +36,7 @@ import { auth } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import React from "react";
 import { Textarea } from "@/components/ui/textarea";
-import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience, sendFriendRequest } from "@/services/profile";
+import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience } from "@/services/profile";
 
 
 const profileFormSchema = z.object({
@@ -271,7 +268,7 @@ function EditBioDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="link" className="p-0 h-auto">Edit Bio</Button>
+        <Button variant="outline" size="sm"><Edit className="mr-2 h-4 w-4" /> Edit Bio</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -367,7 +364,7 @@ function AddExperienceDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add Position</Button>
+                <Button variant="outline"><Plus className="mr-2 h-4 w-4" />Add Position</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
@@ -473,7 +470,7 @@ function AddEducationDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add School</Button>
+                <Button variant="outline"><Plus className="mr-2 h-4 w-4" />Add School</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader><DialogTitle>Add Education</DialogTitle><DialogDescription>Fill in your educational background.</DialogDescription></DialogHeader>
@@ -556,7 +553,7 @@ function AddAchievementDialog() {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" className="mt-4"><Plus className="mr-2 h-4 w-4" />Add Achievement</Button>
+                <Button variant="outline"><Plus className="mr-2 h-4 w-4" />Add Achievement</Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader><DialogTitle>Add Achievement</DialogTitle><DialogDescription>Showcase your awards, certifications, and publications.</DialogDescription></DialogHeader>
@@ -602,8 +599,21 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
     )
 }
 
-// This is the current user's own profile page.
-// We will later create a dynamic page for viewing other users' profiles.
+function StatCard({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) {
+    return (
+        <Card className={`p-4 ${color}`}>
+            <div className="flex justify-between items-center">
+                <div>
+                    <p className="text-sm text-muted-foreground">{title}</p>
+                    <p className="text-2xl font-bold">{value}</p>
+                </div>
+                {icon}
+            </div>
+        </Card>
+    )
+}
+
+
 export default function ProfilePage() {
   const { user, profile } = useAuth();
   const [isEditProfileOpen, setIsEditProfileOpen] = React.useState(false);
@@ -627,55 +637,51 @@ export default function ProfilePage() {
 
   if (!user || !profile) return null;
 
+  const connectionCount = Object.values(profile.connections || {}).filter(c => c === 'connected').length;
+
   return (
     <motion.div 
-      className="space-y-8"
+      className="space-y-6"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
         <Card className="overflow-hidden">
-          <div className="relative h-48 md:h-64">
-            <Image
-              src="https://picsum.photos/seed/cover/1200/400"
-              alt="Cover image"
-              fill
-              style={{objectFit: "cover"}}
-              sizes="(max-width: 768px) 100vw, 1200px"
-              data-ai-hint="abstract background"
-              priority
-            />
-            <div className="absolute top-4 right-4">
-              <Button variant="secondary" size="sm" disabled>
-                <Edit className="mr-2 h-4 w-4" /> Edit Cover
-              </Button>
+             <div className="h-40 md:h-48 w-full bg-muted flex items-center justify-center">
+                <p className="text-muted-foreground">No Cover Image</p>
+             </div>
+            <div className="p-6 bg-card relative">
+                 <div className="flex flex-col sm:flex-row items-start gap-6">
+                    <div className="relative -mt-20">
+                        <Avatar className="h-32 w-32 rounded-full border-4 border-card">
+                            <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.uid}/150/150`} alt={user.displayName || 'User'} data-ai-hint="person portrait"/>
+                            <AvatarFallback className="text-4xl">{user.displayName?.charAt(0) || 'U'}</AvatarFallback>
+                        </Avatar>
+                    </div>
+                    <div className="flex-grow pt-4">
+                        <h1 className="text-2xl sm:text-3xl font-bold font-headline">{profile.displayName || "Your Name"}</h1>
+                        <div className="flex items-center gap-4 text-muted-foreground text-sm mt-1">
+                            <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {profile.location || 'Location not set'}</span>
+                            <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {connectionCount} connections</span>
+                        </div>
+                    </div>
+                    <div className="absolute top-6 right-6 flex gap-2">
+                        <EditProfileDialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
+                            <Button onClick={() => setIsEditProfileOpen(true)}><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
+                        </EditProfileDialog>
+                        <Button variant="ghost" size="icon"><Settings /></Button>
+                    </div>
+                 </div>
             </div>
-          </div>
-          <div className="p-6 bg-card">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-6 -mt-24 sm:-mt-20">
-              <div className="relative h-32 w-32 sm:h-36 sm:w-36 rounded-full border-4 border-card ring-2 ring-border shrink-0">
-                 <Avatar className="h-full w-full">
-                      <AvatarImage src={user.photoURL || `https://picsum.photos/seed/${user.uid}/150/150`} alt={user.displayName || 'User'} data-ai-hint="person portrait"/>
-                      <AvatarFallback>{user.displayName?.split(" ").map(n => n[0]).join("") || user.email?.[0].toUpperCase()}</AvatarFallback>
-                  </Avatar>
-              </div>
-              <div className="flex-grow">
-                <h1 className="text-2xl sm:text-3xl font-bold font-headline">{profile.displayName || "Your Name"}</h1>
-                <p className="text-muted-foreground">{profile.title || "Your professional title will appear here."}</p>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground mt-2">
-                  <div className="flex items-center gap-1"><MapPin className="w-4 h-4"/>{profile.location || "Your Location"}</div>
-                  <div className="flex items-center gap-1"><Briefcase className="w-4 h-4"/>{profile.company || "Your Company"}</div>
-                </div>
-              </div>
-              <div className="shrink-0 flex gap-2">
-                  <EditProfileDialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
-                    <Button onClick={() => setIsEditProfileOpen(true)}><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
-                  </EditProfileDialog>
-              </div>
-            </div>
-          </div>
         </Card>
+      </motion.div>
+
+       <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4" variants={itemVariants}>
+            <StatCard title="Connections" value={String(connectionCount)} icon={<Users className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
+            <StatCard title="Posts" value="0" icon={<MessageSquare className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
+            <StatCard title="Reputation" value="100" icon={<Award className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
+            <StatCard title="Profile Views" value="0" icon={<Eye className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
       </motion.div>
       
       <div className="grid md:grid-cols-3 gap-8">
@@ -684,24 +690,37 @@ export default function ProfilePage() {
                 <TabsList className="mb-4">
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="experience">Experience</TabsTrigger>
-                    <TabsTrigger value="education">Education</TabsTrigger>
+                    <TabsTrigger value="achievements">Achievements</TabsTrigger>
+                    <TabsTrigger value="activity">Activity</TabsTrigger>
+                    <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="font-headline">Bio</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4 text-muted-foreground">
-                            <p className="whitespace-pre-wrap">{profile.bio || "Share a bit about your professional background, interests, and expertise. This is a great place to introduce yourself to the community."}</p>
-                             <EditBioDialog />
-                        </CardContent>
-                    </Card>
+                    <div className="space-y-6">
+                        <Card>
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <CardTitle>About</CardTitle>
+                                <EditBioDialog />
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">{profile.bio || "No bio provided yet."}</p>
+                            </CardContent>
+                        </Card>
+                         <Card>
+                            <CardHeader className="flex flex-row items-center justify-between">
+                                <CardTitle>Skills & Expertise</CardTitle>
+                                <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4" /> Add Skills</Button>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground">No skills added yet.</p>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </TabsContent>
                 <TabsContent value="experience">
                     <Card>
                          <CardHeader className="flex flex-row items-center justify-between">
                             <CardTitle className="font-headline">Work Experience</CardTitle>
-                             {profile.experience && profile.experience.length > 0 && <AddExperienceDialog />}
+                             <AddExperienceDialog />
                         </CardHeader>
                          <CardContent>
                              {profile.experience && profile.experience.length > 0 ? (
@@ -715,33 +734,50 @@ export default function ProfilePage() {
                                      <Briefcase className="w-12 h-12 mx-auto mb-4" />
                                      <h3 className="font-semibold">Add Your Experience</h3>
                                      <p className="mt-2">Showcase your professional history.</p>
-                                     <AddExperienceDialog />
                                 </div>
                              )}
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="education">
+                 <TabsContent value="achievements">
                     <Card>
-                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle className="font-headline">Education</CardTitle>
-                            {profile.education && profile.education.length > 0 && <AddEducationDialog />}
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="font-headline">Achievements</CardTitle>
+                            <AddAchievementDialog />
                         </CardHeader>
-                         <CardContent>
-                            {profile.education && profile.education.length > 0 ? (
+                        <CardContent>
+                            {profile.achievements && profile.achievements.length > 0 ? (
                                 <div className="space-y-4">
-                                     {profile.education.sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map(edu => (
-                                        <EducationItem key={edu.id} education={edu} />
+                                    {profile.achievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
+                                        <AchievementItem key={ach.id} achievement={ach} />
                                     ))}
                                 </div>
                             ) : (
-                                 <div className="text-center text-muted-foreground py-12">
-                                     <GraduationCap className="w-12 h-12 mx-auto mb-4" />
-                                     <h3 className="font-semibold">Add Your Education</h3>
-                                     <p className="mt-2">List your degrees and qualifications.</p>
-                                     <AddEducationDialog />
+                                <div className="text-center text-muted-foreground py-12">
+                                    <Award className="w-12 h-12 mx-auto mb-4" />
+                                    <h3 className="font-semibold">No Achievements Listed</h3>
+                                    <p className="mt-2">This user hasn't added any achievements yet.</p>
                                 </div>
                             )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                 <TabsContent value="activity">
+                    <Card>
+                        <CardHeader><CardTitle>Activity</CardTitle></CardHeader>
+                        <CardContent>
+                            <div className="text-center text-muted-foreground py-12">
+                                <Activity className="w-12 h-12 mx-auto mb-4" />
+                                <h3 className="font-semibold">No recent activity.</h3>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+                 <TabsContent value="settings">
+                    <Card>
+                        <CardHeader><CardTitle>Settings</CardTitle></CardHeader>
+                        <CardContent>
+                            <p className="text-muted-foreground">Manage your account and notification settings here.</p>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -751,48 +787,35 @@ export default function ProfilePage() {
             <motion.div variants={itemVariants}>
               <Card>
                   <CardHeader>
-                      <CardTitle className="font-headline">Contact & Links</CardTitle>
+                      <CardTitle className="font-headline">Contact Information</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
                       <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-muted-foreground"/>{user.email}</div>
+                      <div className="flex items-center gap-2"><Briefcase className="w-4 h-4 text-muted-foreground"/><span>{profile.company || 'N/A'}</span></div>
+                      <div className="flex items-center gap-2"><MapPin className="w-4 h-4 text-muted-foreground"/><span>{profile.location || 'N/A'}</span></div>
+                  </CardContent>
+              </Card>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+             <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline">Social Links</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm">
                       <div className="flex items-center gap-2"><Linkedin className="w-4 h-4 text-muted-foreground"/>
                         {profile.linkedin ? (
                             <a href={profile.linkedin} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.linkedin}</a>
                         ) : (
-                            <button onClick={() => setIsEditProfileOpen(true)} className="text-primary hover:underline">Add LinkedIn profile</button>
+                            <span className="text-muted-foreground">N/A</span>
                         )}
                       </div>
                       <div className="flex items-center gap-2"><Link2 className="w-4 h-4 text-muted-foreground"/>
                         {profile.website ? (
                              <a href={profile.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{profile.website}</a>
                         ) : (
-                             <button onClick={() => setIsEditProfileOpen(true)} className="text-primary hover:underline">Add personal website</button>
+                             <span className="text-muted-foreground">N/A</span>
                         )}
                       </div>
-                  </CardContent>
-              </Card>
-            </motion.div>
-            <motion.div variants={itemVariants}>
-             <Card>
-                <CardHeader  className="flex flex-row items-center justify-between">
-                    <CardTitle className="font-headline">Achievements</CardTitle>
-                    {profile.achievements && profile.achievements.length > 0 && <AddAchievementDialog />}
-                </CardHeader>
-                <CardContent>
-                     {profile.achievements && profile.achievements.length > 0 ? (
-                        <div className="space-y-4">
-                            {profile.achievements.sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map(ach => (
-                                <AchievementItem key={ach.id} achievement={ach} />
-                            ))}
-                        </div>
-                     ) : (
-                        <div className="text-center text-muted-foreground py-12">
-                             <Award className="w-12 h-12 mx-auto mb-4" />
-                             <h3 className="font-semibold">Add Achievements</h3>
-                             <p className="mt-2">Highlight your awards and recognitions.</p>
-                             <AddAchievementDialog />
-                        </div>
-                     )}
                 </CardContent>
             </Card>
            </motion.div>
