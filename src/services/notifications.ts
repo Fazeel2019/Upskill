@@ -61,7 +61,9 @@ export const listenToNotifications = (uid: string, callback: (notifications: Not
         } as Notification));
         callback(notifications);
     }, (error) => {
-        console.error("Error listening to notifications: ", error);
+        // The client SDK will automatically provide a link to create the index in the console.
+        // For this environment, we can't create the index automatically, so we'll just log the error.
+        console.error("Error listening to notifications (this may require a composite index in Firestore): ", error);
     });
     
     return unsubscribe;
