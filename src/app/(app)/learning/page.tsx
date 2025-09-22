@@ -86,7 +86,7 @@ function ResourceCard({
     
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category] || 'border-gray-500'}`}>
-            <div className="relative h-48 cursor-pointer" onClick={() => onPlay && onPlay(resource)}>
+            <div className="relative h-48 cursor-pointer" onClick={() => isEnrolled && onPlay && onPlay(resource)}>
                 <Image 
                     src={getYouTubeThumbnail(resource.youtubeUrl)}
                     alt={resource.title} 
@@ -99,7 +99,7 @@ function ResourceCard({
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
                     <h3 className="text-white font-bold text-lg leading-tight">{resource.title}</h3>
                 </div>
-                {onPlay && (
+                {isEnrolled && onPlay && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Play className="w-16 h-16 text-white/80" />
                   </div>
@@ -115,7 +115,7 @@ function ResourceCard({
                         {isEnrolled ? 'Enrolled' : 'Enroll'}
                     </Button>
                  )}
-                 {onPlay && (
+                 {onPlay && isEnrolled && (
                      <Button size="sm" onClick={() => onPlay(resource)}>
                         Start Learning
                     </Button>
@@ -205,6 +205,7 @@ function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: 
                         <ResourceCard 
                             resource={resource} 
                             onEnroll={handleEnroll}
+                            onPlay={onResourceSelected}
                             isEnrolled={enrolledResourceIds.includes(resource.id)}
                             showEnrollButton={true}
                         />
@@ -272,13 +273,7 @@ export default function LearningPage() {
         setSelectedResource(resource);
         if (user) {
             updateUserProgress(user.uid, {
-                lastResourceId: resource.id,
-                courses: {
-                    [resource.id]: {
-                        resource,
-                        progress: 5, // Mark as started
-                    }
-                }
+                lastResourceId: resource.id
             });
         }
     }
@@ -294,10 +289,16 @@ export default function LearningPage() {
     };
     
     const enrolledCount = userProgress?.courses ? Object.keys(userProgress.courses).length : 0;
+    const completedCount = useMemo(() => {
+        if (!userProgress?.courses) return 0;
+        return Object.values(userProgress.courses).filter(c => c.progress === 100).length;
+    }, [userProgress]);
+
     const statsWithValues = useMemo(() => [
         { ...stats[0], value: String(enrolledCount) },
-        ...stats.slice(1)
-    ], [enrolledCount]);
+        { ...stats[1], value: String(completedCount) },
+        ...stats.slice(2)
+    ], [enrolledCount, completedCount]);
 
     return (
         <motion.div 
@@ -387,3 +388,5 @@ export default function LearningPage() {
         </motion.div>
     )
 }
+
+    

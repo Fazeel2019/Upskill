@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/hooks/use-toast";
 import { getUserProfile, sendFriendRequest, type UserProfile, type Experience, type Education, type Achievement } from "@/services/profile";
 import { Skeleton } from "@/components/ui/skeleton";
+import { listenToPosts, Post } from "@/services/posts";
 
 function StatCard({ title, value, icon, color }: { title: string, value: string, icon: React.ReactNode, color: string }) {
     return (
@@ -151,6 +152,7 @@ function ProfileSkeleton() {
 export default function UserProfilePage({ params }: { params: { userId: string } }) {
   const { user, profile: currentUserProfile, reloadProfile } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -168,6 +170,13 @@ export default function UserProfilePage({ params }: { params: { userId: string }
     fetchProfile();
   }, [params.userId]);
   
+  useEffect(() => {
+    const unsubscribe = listenToPosts(allPosts => {
+        setPosts(allPosts.filter(p => p.author.uid === params.userId));
+    });
+    return () => unsubscribe();
+  }, [params.userId]);
+
   const handleAddFriend = async () => {
     if (!user || !profile) return;
     try {
@@ -259,8 +268,8 @@ export default function UserProfilePage({ params }: { params: { userId: string }
 
        <motion.div className="grid grid-cols-2 md:grid-cols-4 gap-4" variants={itemVariants}>
             <StatCard title="Connections" value={String(connectionCount)} icon={<Users className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
-            <StatCard title="Posts" value="0" icon={<MessageSquare className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
-            <StatCard title="Reputation" value="100" icon={<Award className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
+            <StatCard title="Posts" value={String(posts.length)} icon={<MessageSquare className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
+            <StatCard title="Reputation" value="0" icon={<Award className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
             <StatCard title="Profile Views" value="0" icon={<Eye className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
       </motion.div>
       
@@ -396,3 +405,5 @@ export default function UserProfilePage({ params }: { params: { userId: string }
     </motion.div>
   );
 }
+
+    

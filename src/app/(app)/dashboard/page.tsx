@@ -18,7 +18,7 @@ import { getYouTubeEmbedUrl } from "@/app/(app)/learning/page"
 import { listenToEvents, type Event } from "@/services/events"
 import { listenToResources, type Resource } from "@/services/resources"
 import { recommendContent, type Recommendation } from "@/ai/flows/recommend-content"
-
+import { listenToFriends } from "@/services/profile"
 
 const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, link }: { title: string, value: string, subValue: string, icon: React.ElementType, progress?: number, colorClass: string, link: string }) => {
     return (
@@ -136,6 +136,7 @@ export default function DashboardPage() {
     const [activityItems, setActivityItems] = useState<any[]>([]);
     const [recommendationItems, setRecommendationItems] = useState<Recommendation[]>([]);
     const [resources, setResources] = useState<Resource[]>([]);
+    const [connectionCount, setConnectionCount] = useState(0);
 
     useEffect(() => {
         if (user) {
@@ -144,28 +145,43 @@ export default function DashboardPage() {
                 if (events.length > 0) setLastEvent(events[0]);
             });
              const unsubResources = listenToResources(setResources);
+             const unsubFriends = listenToFriends(user.uid, (friends) => {
+                setConnectionCount(friends.length);
+             });
 
             return () => {
                 unsubProgress();
                 unsubEvents();
                 unsubResources();
+                unsubFriends();
             };
         }
     }, [user]);
     
-    const lastProgress = useMemo(() => {
-        if (!userProgress || !userProgress.lastResourceId || !userProgress.courses) return null;
-        return userProgress.courses[userProgress.lastResourceId];
+    const { overallProgress, completedCourses } = useMemo(() => {
+        if (!userProgress || !userProgress.courses) return { overallProgress: 0, completedCourses: 0 };
+        
+        const courses = Object.values(userProgress.courses);
+        if (courses.length === 0) return { overallProgress: 0, completedCourses: 0 };
+        
+        const totalProgress = courses.reduce((acc, course) => acc + (course.progress || 0), 0);
+        const completed = courses.filter(course => course.progress === 100).length;
+        
+        return {
+            overallProgress: Math.round(totalProgress / courses.length),
+            completedCourses: completed
+        };
     }, [userProgress]);
 
     useEffect(() => {
         const newActivityItems = [];
-        if (lastProgress) {
-            newActivityItems.push({
+        if (userProgress?.lastResourceId && userProgress.courses?.[userProgress.lastResourceId]) {
+            const lastCourse = userProgress.courses[userProgress.lastResourceId];
+             newActivityItems.push({
                 icon: BookOpen,
                 color: "text-blue-500",
-                text: `You started the course "${lastProgress.resource.title}".`,
-                time: "Just now"
+                text: `You started the course "${lastCourse.resource.title}".`,
+                time: "Recently"
             })
         }
         if (lastEvent) {
@@ -177,20 +193,26 @@ export default function DashboardPage() {
             })
         }
         setActivityItems(newActivityItems);
-    }, [lastProgress, lastEvent])
+    }, [userProgress, lastEvent])
 
     useEffect(() => {
         const getRecommendations = async () => {
-            if (profile && resources.length > 0) {
-                const recs = await recommendContent({ 
-                    userTitle: profile.title || "Professional", 
-                    availableResources: resources 
-                });
-                setRecommendationItems(recs.recommendations);
+            if (profile && resources.length > 0 && recommendationItems.length === 0) {
+                try {
+                    const recs = await recommendContent({ 
+                        userTitle: profile.title || "Professional", 
+                        availableResources: resources 
+                    });
+                    if (recs && recs.recommendations) {
+                        setRecommendationItems(recs.recommendations);
+                    }
+                } catch (error) {
+                    console.error("Failed to get recommendations:", error);
+                }
             }
         };
         getRecommendations();
-    }, [profile, resources])
+    }, [profile, resources, recommendationItems.length])
 
     return (
         <motion.div 
@@ -210,9 +232,9 @@ export default function DashboardPage() {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                <StatCard title="Career Progress" value="0%" subValue="Last updated: today" icon={TrendingUp} progress={0} colorClass="bg-blue-500" link="/profile"/>
-                <StatCard title="Courses Completed" value="0" subValue="+0 this month" icon={BookOpen} colorClass="bg-green-500" link="/learning" />
-                <StatCard title="Network Connections" value="0" subValue="+0 this week" icon={UsersIcon} colorClass="bg-purple-500" link="/networking" />
+                <StatCard title="Career Progress" value={`${overallProgress}%`} subValue="Last updated: today" icon={TrendingUp} progress={overallProgress} colorClass="bg-blue-500" link="/profile"/>
+                <StatCard title="Courses Completed" value={String(completedCourses)} subValue="+0 this month" icon={BookOpen} colorClass="bg-green-500" link="/learning" />
+                <StatCard title="Network Connections" value={String(connectionCount)} subValue="+0 this week" icon={UsersIcon} colorClass="bg-purple-500" link="/networking" />
                 <StatCard title="Mentorship Hours" value="0" subValue="No sessions upcoming" icon={Clock} colorClass="bg-orange-500" link="/mentors" />
             </div>
 
@@ -280,3 +302,5 @@ export default function DashboardPage() {
         </motion.div>
     )
 }
+
+    

@@ -271,23 +271,51 @@ const CategoriesWidget = ({ posts }: { posts: PostType[] }) => {
     );
 };
 
-const ActiveMembersWidget = () => (
-    <Card>
-        <CardHeader>
-            <div className="flex items-center gap-2 font-semibold">
-                <Users className="w-5 h-5"/> Active Members
-            </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-             <p className="text-sm text-center text-muted-foreground p-4">No active members to show right now.</p>
-        </CardContent>
-    </Card>
-);
+const ActiveMembersWidget = ({ posts }: { posts: PostType[] }) => {
+    const activeMembers = useMemo(() => {
+        const memberMap = new Map<string, {name: string, avatarUrl: string, uid: string}>();
+        posts.slice(0, 5).forEach(post => {
+            if (!memberMap.has(post.author.uid)) {
+                memberMap.set(post.author.uid, post.author);
+            }
+        });
+        return Array.from(memberMap.values());
+    }, [posts]);
+
+    return (
+        <Card>
+            <CardHeader>
+                <div className="flex items-center gap-2 font-semibold">
+                    <Users className="w-5 h-5"/> Active Members
+                </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+                 {activeMembers.length > 0 ? (
+                    activeMembers.map(member => (
+                        <div key={member.uid} className="flex items-center gap-3">
+                            <Avatar className="h-9 w-9">
+                                <AvatarImage src={member.avatarUrl} alt={member.name} />
+                                <AvatarFallback>{member.name[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <Link href={`/profile/${member.uid}`} className="font-semibold text-sm hover:underline">{member.name}</Link>
+                                <p className="text-xs text-muted-foreground">Active recently</p>
+                            </div>
+                        </div>
+                    ))
+                 ) : (
+                    <p className="text-sm text-center text-muted-foreground p-4">No active members to show right now.</p>
+                 )}
+            </CardContent>
+        </Card>
+    );
+};
 
 
 export default function CommunityPage() {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     setLoading(true);
@@ -302,6 +330,11 @@ export default function CommunityPage() {
   const handlePostCreated = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  const yourPostsCount = useMemo(() => {
+    if (!user) return 0;
+    return posts.filter(p => p.author.uid === user.uid).length;
+  }, [posts, user]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -347,8 +380,8 @@ export default function CommunityPage() {
 
                  <motion.div className="grid md:grid-cols-4 gap-4" variants={itemVariants}>
                     <StatCard title="Total Discussions" value={String(posts.length)} icon={<MessageCircleIcon className="text-blue-500"/>} color="bg-blue-50 dark:bg-blue-900/20"/>
-                    <StatCard title="Active Members" value="0" icon={<UsersIcon className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
-                    <StatCard title="Your Posts" value="0" icon={<GitCommitHorizontal className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
+                    <StatCard title="Active Members" value={String(new Set(posts.map(p => p.author.uid)).size)} icon={<UsersIcon className="text-green-500"/>} color="bg-green-50 dark:bg-green-900/20"/>
+                    <StatCard title="Your Posts" value={String(yourPostsCount)} icon={<GitCommitHorizontal className="text-purple-500"/>} color="bg-purple-50 dark:bg-purple-900/20"/>
                     <StatCard title="Reputation" value="0" icon={<Award className="text-orange-500"/>} color="bg-orange-50 dark:bg-orange-900/20"/>
                 </motion.div>
 
@@ -387,10 +420,12 @@ export default function CommunityPage() {
         {/* Right Sidebar */}
         <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-20">
             <CategoriesWidget posts={posts} />
-            <ActiveMembersWidget />
+            <ActiveMembersWidget posts={posts} />
         </div>
     </div>
   );
 }
+
+    
 
     

@@ -57,16 +57,15 @@ export const toggleLike = async (postId: string, userId: string) => {
 
             const post = postDoc.data() as Post;
             const isLiked = post.likedBy?.includes(userId);
-            const newLikeCount = (post.likeCount || 0) + (isLiked ? -1 : 1);
-
+            
             if (isLiked) {
                 transaction.update(postRef, {
-                    likeCount: newLikeCount,
+                    likeCount: increment(-1),
                     likedBy: arrayRemove(userId)
                 });
             } else {
                  transaction.update(postRef, {
-                    likeCount: newLikeCount,
+                    likeCount: increment(1),
                     likedBy: arrayUnion(userId)
                 });
             }
@@ -113,3 +112,4 @@ export const listenToPosts = (callback: (posts: Post[]) => void) => {
   return unsubscribe;
 };
 
+    
