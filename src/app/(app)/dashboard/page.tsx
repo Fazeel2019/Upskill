@@ -15,6 +15,9 @@ import React, { useEffect, useState } from "react"
 import { listenToLastProgress, UserProgress } from "@/services/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { getYouTubeEmbedUrl } from "@/app/(app)/learning/page"
+import { listenToEvents, type Event } from "@/services/events"
+import { listenToResources, type Resource } from "@/services/resources"
+import { recommendContent, type Recommendation } from "@/ai/flows/recommend-content"
 
 
 const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, link }: { title: string, value: string, subValue: string, icon: React.ElementType, progress?: number, colorClass: string, link: string }) => {
@@ -123,12 +126,63 @@ function ContinueLearningCard() {
     )
 }
 
-const activityItems: any[] = [];
-
-const recommendationItems: any[] = [];
-
 export default function DashboardPage() {
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
+    const [lastProgress, setLastProgress] = useState<UserProgress | null>(null);
+    const [lastEvent, setLastEvent] = useState<Event | null>(null);
+    const [activityItems, setActivityItems] = useState<any[]>([]);
+    const [recommendationItems, setRecommendationItems] = useState<Recommendation[]>([]);
+    const [resources, setResources] = useState<Resource[]>([]);
+
+    useEffect(() => {
+        if (user) {
+            const unsubProgress = listenToLastProgress(user.uid, setLastProgress);
+            const unsubEvents = listenToEvents(events => {
+                if (events.length > 0) setLastEvent(events[0]);
+            });
+             const unsubResources = listenToResources(setResources);
+
+            return () => {
+                unsubProgress();
+                unsubEvents();
+                unsubResources();
+            };
+        }
+    }, [user]);
+
+    useEffect(() => {
+        const newActivityItems = [];
+        if (lastProgress) {
+            newActivityItems.push({
+                icon: BookOpen,
+                color: "text-blue-500",
+                text: `You started the course "${lastProgress.resourceTitle}".`,
+                time: "Just now"
+            })
+        }
+        if (lastEvent) {
+             newActivityItems.push({
+                icon: CalendarIcon,
+                color: "text-purple-500",
+                text: `New event added: "${lastEvent.title}"`,
+                time: "Recently"
+            })
+        }
+        setActivityItems(newActivityItems);
+    }, [lastProgress, lastEvent])
+
+    useEffect(() => {
+        const getRecommendations = async () => {
+            if (profile && resources.length > 0) {
+                const recs = await recommendContent({ 
+                    userTitle: profile.title || "Professional", 
+                    availableResources: resources 
+                });
+                setRecommendationItems(recs.recommendations);
+            }
+        };
+        getRecommendations();
+    }, [profile, resources])
 
     return (
         <motion.div 
@@ -199,16 +253,11 @@ export default function DashboardPage() {
                     </CardHeader>
                     <CardContent className="space-y-4">
                         {recommendationItems.length > 0 ? recommendationItems.map((item, index) => (
-                            <Link href="#" key={index} className="flex items-center gap-4 group p-2 rounded-lg hover:bg-muted">
-                                <Image src={item.image} alt={item.title} width={50} height={50} className="rounded-lg" data-ai-hint={item.imageHint}/>
+                            <Link href={item.link || '#'} key={index} className="flex items-center gap-4 group p-2 rounded-lg hover:bg-muted">
                                 <div className="flex-grow">
                                     <p className="text-xs text-muted-foreground">{item.type}</p>
                                     <p className="font-semibold leading-tight">{item.title}</p>
-                                    <p className="text-xs text-muted-foreground">{item.duration}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="font-bold text-green-500">{item.match}%</p>
-                                    <p className="text-xs text-muted-foreground">match</p>
+                                    <p className="text-xs text-muted-foreground">{item.reason}</p>
                                 </div>
                             </Link>
                         )) : (
