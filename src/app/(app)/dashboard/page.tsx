@@ -11,6 +11,11 @@ import { ArrowRight, BookOpen, Calendar, CheckCircle, Clock, FileText, MessageSq
 import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
+import React, { useEffect, useState } from "react"
+import { listenToLastProgress, UserProgress } from "@/services/progress"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { getYouTubeEmbedUrl } from "@/app/(app)/learning/page"
+
 
 const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, link }: { title: string, value: string, subValue: string, icon: React.ElementType, progress?: number, colorClass: string, link: string }) => {
     return (
@@ -35,32 +40,88 @@ const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, li
     )
 }
 
-const QuickActionCard = ({ title, description, buttonText, icon: Icon, href, progress, progressValue }: { title: string, description: string, buttonText: string, icon: React.ElementType, href: string, progress?: boolean, progressValue?: number }) => (
-    <Card className="group rounded-xl hover:shadow-md transition-shadow">
-        <CardContent className="p-4">
-            <div className="flex justify-between items-start">
-                <div className="p-2 bg-muted rounded-lg">
-                    <Icon className="w-5 h-5 text-muted-foreground" />
-                </div>
-                <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
-            </div>
-            <h3 className="font-semibold mt-4">{title}</h3>
-            <p className="text-sm text-muted-foreground mt-1">{description}</p>
-            {progress && (
-                <div className="mt-4">
-                    <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
-                        <span>Progress</span>
-                        <span>{progressValue}%</span>
-                    </div>
-                    <Progress value={progressValue} className="h-2" />
-                </div>
+function ContinueLearningCard() {
+    const { user } = useAuth();
+    const [lastProgress, setLastProgress] = useState<UserProgress | null>(null);
+    const [isPlayerOpen, setIsPlayerOpen] = useState(false);
+
+    useEffect(() => {
+        if (user) {
+            const unsubscribe = listenToLastProgress(user.uid, setLastProgress);
+            return () => unsubscribe();
+        }
+    }, [user]);
+
+    const progressValue = lastProgress?.progress || 0;
+    const title = lastProgress?.resourceTitle || "Start a Course";
+    const description = lastProgress ? "Resume your last course" : "Explore our catalog";
+    const buttonText = lastProgress ? "Continue" : "Browse Courses";
+    const href = lastProgress ? "#" : "/learning";
+    
+    const handleClick = () => {
+        if (lastProgress) {
+            setIsPlayerOpen(true);
+        } else {
+            // using a standard link for navigation
+        }
+    }
+
+    const QuickActionCard = (
+      <Card className="group rounded-xl hover:shadow-md transition-shadow">
+          <CardContent className="p-4">
+              <div className="flex justify-between items-start">
+                  <div className="p-2 bg-muted rounded-lg">
+                      <BookOpen className="w-5 h-5 text-muted-foreground" />
+                  </div>
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+              </div>
+              <h3 className="font-semibold mt-4">{title}</h3>
+              <p className="text-sm text-muted-foreground mt-1">{description}</p>
+              
+              <div className="mt-4">
+                  <div className="flex justify-between items-center text-xs text-muted-foreground mb-1">
+                      <span>Progress</span>
+                      <span>{progressValue}%</span>
+                  </div>
+                  <Progress value={progressValue} className="h-2" />
+              </div>
+            
+              <Button asChild={!lastProgress} onClick={handleClick} variant="outline" className="w-full mt-4">
+                  {lastProgress ? <span>{buttonText}</span> : <Link href={href}>{buttonText}</Link>}
+              </Button>
+          </CardContent>
+      </Card>
+    );
+
+    return (
+        <>
+            {QuickActionCard}
+             {lastProgress && (
+                <Dialog open={isPlayerOpen} onOpenChange={setIsPlayerOpen}>
+                    <DialogContent className="max-w-3xl p-0">
+                        <DialogHeader>
+                            <DialogTitle className="sr-only">{lastProgress.resourceTitle}</DialogTitle>
+                        </DialogHeader>
+                        <div className="aspect-video">
+                            {getYouTubeEmbedUrl(lastProgress.resourceYoutubeUrl) && (
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={getYouTubeEmbedUrl(lastProgress.resourceYoutubeUrl)}
+                                    title={lastProgress.resourceTitle}
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="rounded-t-lg"
+                                ></iframe>
+                            )}
+                        </div>
+                    </DialogContent>
+                </Dialog>
             )}
-            <Button variant="outline" className="w-full mt-4">
-                {buttonText}
-            </Button>
-        </CardContent>
-    </Card>
-)
+        </>
+    )
+}
 
 const activityItems: any[] = [];
 
@@ -96,10 +157,10 @@ export default function DashboardPage() {
             <div>
                 <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    <QuickActionCard title="Continue Learning" description='Resume your last course' buttonText="Continue" icon={BookOpen} href="/learning" progress progressValue={0} />
-                    <QuickActionCard title="Message Mentor" description="Connect with mentors" buttonText="Message" icon={MessageSquareIcon} href="/messaging" />
-                    <QuickActionCard title="Join Discussion" description='Hot topics await you' buttonText="View" icon={UsersIcon} href="/community" />
-                    <QuickActionCard title="Upcoming Event" description="See upcoming events" buttonText="RSVP" icon={CalendarIcon} href="/events" />
+                    <ContinueLearningCard />
+                    <Card className="group rounded-xl hover:shadow-md transition-shadow"><CardContent className="p-4"><div className="flex justify-between items-start"><div className="p-2 bg-muted rounded-lg"><MessageSquareIcon className="w-5 h-5 text-muted-foreground" /></div><ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" /></div><h3 className="font-semibold mt-4">Message Mentor</h3><p className="text-sm text-muted-foreground mt-1">Connect with mentors</p><Button variant="outline" className="w-full mt-4">Message</Button></CardContent></Card>
+                    <Card className="group rounded-xl hover:shadow-md transition-shadow"><CardContent className="p-4"><div className="flex justify-between items-start"><div className="p-2 bg-muted rounded-lg"><UsersIcon className="w-5 h-5 text-muted-foreground" /></div><ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" /></div><h3 className="font-semibold mt-4">Join Discussion</h3><p className="text-sm text-muted-foreground mt-1">Hot topics await you</p><Button variant="outline" className="w-full mt-4">View</Button></CardContent></Card>
+                    <Card className="group rounded-xl hover:shadow-md transition-shadow"><CardContent className="p-4"><div className="flex justify-between items-start"><div className="p-2 bg-muted rounded-lg"><CalendarIcon className="w-5 h-5 text-muted-foreground" /></div><ArrowRight className="w-5 h-5 text-muted-foreground group-hover:translate-x-1 transition-transform" /></div><h3 className="font-semibold mt-4">Upcoming Event</h3><p className="text-sm text-muted-foreground mt-1">See upcoming events</p><Button variant="outline" className="w-full mt-4">RSVP</Button></CardContent></Card>
                 </div>
             </div>
 

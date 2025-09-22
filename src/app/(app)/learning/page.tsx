@@ -15,6 +15,8 @@ import React, { useEffect, useState } from "react"
 import { listenToResources } from "@/services/resources"
 import type { Resource } from "@/lib/data"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { useAuth } from "@/hooks/use-auth"
+import { updateUserProgress } from "@/services/progress"
 
 const stats = [
     { title: "Courses Enrolled", value: "0", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
@@ -43,60 +45,6 @@ function StatCard({ title, value, icon: Icon, color, iconColor }: { title: strin
     )
 }
 
-function CourseCard({ course }: { course: any }) {
-    return (
-        <Card className="overflow-hidden group transition-shadow hover:shadow-lg">
-            <div className="relative">
-                <Image 
-                    src={course.image}
-                    alt={course.title}
-                    width={400}
-                    height={225}
-                    className="w-full h-auto object-cover"
-                    data-ai-hint={course.imageHint}
-                />
-                <Badge className={cn(
-                    "absolute top-3 right-3", 
-                    course.status === 'Completed' ? 'bg-green-500/80 border-green-400' : 'bg-blue-500/80 border-blue-400',
-                    'text-white'
-                )}>
-                    {course.status}
-                </Badge>
-                {course.status === 'In Progress' && (
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/60 to-transparent">
-                        <div className="flex items-center justify-between text-white text-xs font-semibold mb-1">
-                            <span>Progress</span>
-                            <span>{course.progress}%</span>
-                        </div>
-                        <Progress value={course.progress} className="h-2" />
-                    </div>
-                )}
-            </div>
-            <CardContent className="p-4">
-                 <div className="flex justify-between items-center mb-2">
-                    <p className="text-xs font-semibold text-primary">{course.category}</p>
-                    <div className="flex items-center gap-1 text-sm">
-                        <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                        <span className="font-bold">{course.rating}</span>
-                    </div>
-                </div>
-                <h3 className="font-bold text-lg font-headline">{course.title}</h3>
-                <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{course.description}</p>
-                <div className="flex justify-between items-center text-xs text-muted-foreground mt-4 pt-4 border-t">
-                    <span>Dr. {course.instructor.split(" ").slice(-1)}</span>
-                    <span>{course.duration}</span>
-                </div>
-            </CardContent>
-            <div className="p-4 pt-0">
-                <Button className="w-full" variant={course.status === 'Completed' ? 'outline' : 'default'}>
-                    {course.status === 'Completed' ? <CheckCircle className="mr-2" /> : <Play className="mr-2" />}
-                    {course.status === 'Completed' ? 'Completed' : 'Continue'}
-                </Button>
-            </div>
-        </Card>
-    )
-}
-
 function getYouTubeThumbnail(url: string) {
     if (!url) return 'https://picsum.photos/seed/placeholder-thumb/400/225';
     const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
@@ -107,7 +55,7 @@ function getYouTubeThumbnail(url: string) {
     return 'https://picsum.photos/seed/placeholder-thumb/400/225'; // Fallback
 }
 
-function getYouTubeEmbedUrl(url: string): string {
+export function getYouTubeEmbedUrl(url: string): string {
     if (!url) return '';
     const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
     const videoId = videoIdMatch ? videoIdMatch[1] : null;
@@ -159,6 +107,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resou
 }
 
 function CourseCatalogTab() {
+    const { user } = useAuth();
     const [resources, setResources] = useState<Resource[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
@@ -172,6 +121,20 @@ function CourseCatalogTab() {
         });
         return () => unsubscribe();
     }, []);
+
+    const handlePlay = (resource: Resource) => {
+        setSelectedResource(resource);
+        if (user) {
+            // This is a simplified progress tracking.
+            // For real progress, we'd need to use the YouTube IFrame API.
+            updateUserProgress(user.uid, {
+                resourceId: resource.id,
+                resourceTitle: resource.title,
+                resourceYoutubeUrl: resource.youtubeUrl,
+                progress: 5, // Mark as started
+            });
+        }
+    }
 
     const containerVariants = {
       hidden: { opacity: 0 },
@@ -228,7 +191,7 @@ function CourseCatalogTab() {
                 >
                     {filteredResources.length > 0 ? filteredResources.map((resource) => (
                     <motion.div key={resource.id} variants={itemVariants}>
-                        <ResourceCard resource={resource} onPlay={setSelectedResource} />
+                        <ResourceCard resource={resource} onPlay={handlePlay} />
                     </motion.div>
                     )) : (
                         <EmptyState />
@@ -326,11 +289,7 @@ export default function LearningPage() {
                                 className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
                                 variants={pageVariants}
                             >
-                                {courses.map((course, index) => (
-                                     <motion.div key={index} variants={itemVariants}>
-                                        <CourseCard course={course} />
-                                    </motion.div>
-                                ))}
+                                {/* Content for My Learning */}
                             </motion.div>
                          ) : (
                              <Card className="mt-6">
@@ -355,5 +314,3 @@ export default function LearningPage() {
         </motion.div>
     )
 }
-
-    
