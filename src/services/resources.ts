@@ -53,5 +53,3 @@ export const listenToResources = (callback: (resources: Resource[]) => void) => 
 
   return unsubscribe;
 };
-
-    

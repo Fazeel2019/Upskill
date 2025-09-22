@@ -129,8 +129,7 @@ function EditEventDialog({ event, onEventUpdated }: { event: EventType, onEventU
                         </div>
                         <div><Label>Category</Label><Controller name="category" control={form.control} render={({ field }) => (
                             <Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue/></SelectTrigger><SelectContent>
-                                <SelectItem value="STEM">STEM</SelectItem><SelectItem value="Healthcare">Healthcare</SelectItem>
-                                <SelectItem value="Public Health">Public Health</SelectItem>
+                                <SelectItem value="STEM">STEM</SelectItem><SelectItem value="Healthcare">Healthcare</SelectItem><SelectItem value="Public Health">Public Health</SelectItem>
                             </SelectContent></Select>)} />
                         </div>
                     </div>
