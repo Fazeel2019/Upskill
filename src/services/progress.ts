@@ -1,22 +1,50 @@
 
 import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
+import type { Resource } from "@/lib/data";
+
+export interface CourseProgress {
+    resource: Resource;
+    progress: number; // Percentage
+}
 
 export interface UserProgress {
-  lastResourceId: string;
-  resourceId: string;
-  resourceTitle: string;
-  resourceYoutubeUrl: string;
-  progress: number; // Percentage
+  lastResourceId?: string;
+  courses?: { [resourceId: string]: CourseProgress };
   updatedAt: Timestamp;
 }
 
-export const updateUserProgress = async (uid: string, data: Partial<Omit<UserProgress, 'updatedAt' | 'lastResourceId'>> & { resourceId: string }) => {
+export const enrollInCourse = async (uid: string, resource: Resource) => {
+    const progressRef = doc(db, "userProgress", uid);
+    const progressDoc = await getDoc(progressRef);
+    
+    const newCourseData: CourseProgress = {
+        resource,
+        progress: 0
+    };
+
+    if (progressDoc.exists()) {
+        await setDoc(progressRef, {
+            courses: {
+                [resource.id]: newCourseData
+            },
+            updatedAt: serverTimestamp(),
+        }, { merge: true });
+    } else {
+         await setDoc(progressRef, {
+            courses: {
+                [resource.id]: newCourseData
+            },
+            updatedAt: serverTimestamp(),
+        });
+    }
+};
+
+export const updateUserProgress = async (uid: string, data: Partial<Omit<UserProgress, 'updatedAt'>> & { lastResourceId: string }) => {
   const progressRef = doc(db, "userProgress", uid);
   try {
     await setDoc(progressRef, {
       ...data,
-      lastResourceId: data.resourceId, // Keep track of the last resource
       updatedAt: serverTimestamp(),
     }, { merge: true });
   } catch (error) {
@@ -25,7 +53,7 @@ export const updateUserProgress = async (uid: string, data: Partial<Omit<UserPro
   }
 };
 
-export const listenToLastProgress = (uid: string, callback: (progress: UserProgress | null) => void) => {
+export const listenToUserProgress = (uid: string, callback: (progress: UserProgress | null) => void) => {
   const progressRef = doc(db, "userProgress", uid);
 
   const unsubscribe = onSnapshot(progressRef, (docSnap) => {

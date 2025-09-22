@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -11,12 +12,12 @@ import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { listenToResources } from "@/services/resources"
 import type { Resource } from "@/lib/data"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useAuth } from "@/hooks/use-auth"
-import { updateUserProgress } from "@/services/progress"
+import { updateUserProgress, listenToUserProgress, enrollInCourse, UserProgress } from "@/services/progress"
 
 const stats = [
     { title: "Courses Enrolled", value: "0", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
@@ -24,8 +25,6 @@ const stats = [
     { title: "Certificates", value: "0", icon: CertificateIcon, color: "bg-purple-100 dark:bg-purple-900/50", iconColor: "text-purple-500" },
     { title: "Study Hours", value: "0", icon: Clock, color: "bg-orange-100 dark:bg-orange-900/50", iconColor: "text-orange-500" }
 ];
-
-const courses: any[] = [];
 
 function StatCard({ title, value, icon: Icon, color, iconColor }: { title: string, value: string, icon: React.ElementType, color: string, iconColor: string }) {
     return (
@@ -65,8 +64,19 @@ export function getYouTubeEmbedUrl(url: string): string {
     return '';
 }
 
-
-function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resource: Resource) => void }) {
+function ResourceCard({ 
+    resource, 
+    onEnroll, 
+    onPlay, 
+    isEnrolled,
+    showEnrollButton = false 
+} : { 
+    resource: Resource, 
+    onEnroll?: (resource: Resource) => void, 
+    onPlay?: (resource: Resource) => void,
+    isEnrolled: boolean,
+    showEnrollButton?: boolean
+}) {
     const categoryColors: Record<string, string> = {
         Career: "border-purple-500",
         STEM: "border-blue-500",
@@ -76,7 +86,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resou
     
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category] || 'border-gray-500'}`}>
-            <div className="relative h-48 cursor-pointer" onClick={() => onPlay(resource)}>
+            <div className="relative h-48 cursor-pointer" onClick={() => onPlay && onPlay(resource)}>
                 <Image 
                     src={getYouTubeThumbnail(resource.youtubeUrl)}
                     alt={resource.title} 
@@ -89,29 +99,37 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resou
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
                     <h3 className="text-white font-bold text-lg leading-tight">{resource.title}</h3>
                 </div>
-                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Play className="w-16 h-16 text-white/80" />
-                </div>
+                {onPlay && (
+                  <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <Play className="w-16 h-16 text-white/80" />
+                  </div>
+                )}
             </div>
             <CardContent className="pt-4 flex-grow">
                 <p className="text-sm text-muted-foreground line-clamp-3">{resource.description}</p>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
                  <Badge variant="outline">{resource.category}</Badge>
-                <Button size="sm" onClick={() => onPlay(resource)}>
-                    Start Learning
-                </Button>
+                 {showEnrollButton && onEnroll && (
+                    <Button size="sm" onClick={() => onEnroll(resource)} disabled={isEnrolled}>
+                        {isEnrolled ? 'Enrolled' : 'Enroll'}
+                    </Button>
+                 )}
+                 {onPlay && (
+                     <Button size="sm" onClick={() => onPlay(resource)}>
+                        Start Learning
+                    </Button>
+                 )}
             </CardFooter>
         </Card>
     )
 }
 
-function CourseCatalogTab() {
+function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: UserProgress | null, onResourceSelected: (resource: Resource) => void }) {
     const { user } = useAuth();
     const [resources, setResources] = useState<Resource[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
-    const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -122,20 +140,12 @@ function CourseCatalogTab() {
         return () => unsubscribe();
     }, []);
 
-    const handlePlay = (resource: Resource) => {
-        setSelectedResource(resource);
+    const handleEnroll = async (resource: Resource) => {
         if (user) {
-            // This is a simplified progress tracking.
-            // For real progress, we'd need to use the YouTube IFrame API.
-            updateUserProgress(user.uid, {
-                resourceId: resource.id,
-                resourceTitle: resource.title,
-                resourceYoutubeUrl: resource.youtubeUrl,
-                progress: 5, // Mark as started
-            });
+            await enrollInCourse(user.uid, resource);
         }
     }
-
+    
     const containerVariants = {
       hidden: { opacity: 0 },
       visible: { 
@@ -169,6 +179,7 @@ function CourseCatalogTab() {
 
     const filters = ["All", "Career", "STEM", "Healthcare", "Public Health"];
     const filteredResources = resources.filter(r => activeFilter === "All" || r.category === activeFilter);
+    const enrolledResourceIds = userProgress?.courses ? Object.keys(userProgress.courses) : [];
 
     return (
         <div className="space-y-6 mt-6">
@@ -191,44 +202,87 @@ function CourseCatalogTab() {
                 >
                     {filteredResources.length > 0 ? filteredResources.map((resource) => (
                     <motion.div key={resource.id} variants={itemVariants}>
-                        <ResourceCard resource={resource} onPlay={handlePlay} />
+                        <ResourceCard 
+                            resource={resource} 
+                            onEnroll={handleEnroll}
+                            isEnrolled={enrolledResourceIds.includes(resource.id)}
+                            showEnrollButton={true}
+                        />
                     </motion.div>
                     )) : (
                         <EmptyState />
                     )}
                 </motion.div>
             )}
-
-            <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
-                <DialogContent className="max-w-3xl p-0">
-                {selectedResource && (
-                    <>
-                    <DialogHeader>
-                        <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
-                    </DialogHeader>
-                    <div className="aspect-video">
-                        {getYouTubeEmbedUrl(selectedResource.youtubeUrl) && (
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
-                                title={selectedResource.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded-t-lg"
-                            ></iframe>
-                        )}
-                        </div>
-                    </>
-                )}
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
 
+function MyLearningTab({ userProgress, onResourceSelected }: { userProgress: UserProgress | null, onResourceSelected: (resource: Resource) => void }) {
+    if (!userProgress || !userProgress.courses || Object.keys(userProgress.courses).length === 0) {
+        return (
+            <Card className="mt-6">
+                <CardContent className="p-8 text-center text-muted-foreground">
+                    You are not enrolled in any courses yet. Enroll from the Course Catalog.
+                </CardContent>
+            </Card>
+        );
+    }
+    
+    const enrolledCourses = Object.values(userProgress.courses);
+
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
+    };
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+    };
+
+    return (
+        <motion.div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6" variants={containerVariants}>
+            {enrolledCourses.map(courseData => (
+                <motion.div key={courseData.resource.id} variants={itemVariants}>
+                    <ResourceCard 
+                        resource={courseData.resource} 
+                        onPlay={onResourceSelected}
+                        isEnrolled={true}
+                    />
+                </motion.div>
+            ))}
+        </motion.div>
+    );
+}
+
+
 export default function LearningPage() {
+    const { user } = useAuth();
+    const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
+    const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
+
+    useEffect(() => {
+        if (user) {
+            const unsubscribe = listenToUserProgress(user.uid, setUserProgress);
+            return () => unsubscribe();
+        }
+    }, [user]);
+    
+    const handlePlay = (resource: Resource) => {
+        setSelectedResource(resource);
+        if (user) {
+            updateUserProgress(user.uid, {
+                lastResourceId: resource.id,
+                courses: {
+                    [resource.id]: {
+                        resource,
+                        progress: 5, // Mark as started
+                    }
+                }
+            });
+        }
+    }
+
     const pageVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.5, staggerChildren: 0.1 } },
@@ -238,6 +292,12 @@ export default function LearningPage() {
         hidden: { opacity: 0, y: 15 },
         visible: { opacity: 1, y: 0 },
     };
+    
+    const enrolledCount = userProgress?.courses ? Object.keys(userProgress.courses).length : 0;
+    const statsWithValues = useMemo(() => [
+        { ...stats[0], value: String(enrolledCount) },
+        ...stats.slice(1)
+    ], [enrolledCount]);
 
     return (
         <motion.div 
@@ -269,7 +329,7 @@ export default function LearningPage() {
                 className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
                 variants={pageVariants}
             >
-                {stats.map((stat, index) => (
+                {statsWithValues.map((stat, index) => (
                     <motion.div key={index} variants={itemVariants}>
                         <StatCard {...stat} />
                     </motion.div>
@@ -284,23 +344,10 @@ export default function LearningPage() {
                         <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
                     <TabsContent value="my-learning">
-                         {courses.length > 0 ? (
-                            <motion.div 
-                                className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"
-                                variants={pageVariants}
-                            >
-                                {/* Content for My Learning */}
-                            </motion.div>
-                         ) : (
-                             <Card className="mt-6">
-                                <CardContent className="p-8 text-center text-muted-foreground">
-                                    You are not enrolled in any courses yet.
-                                </CardContent>
-                            </Card>
-                         )}
+                        <MyLearningTab userProgress={userProgress} onResourceSelected={handlePlay} />
                     </TabsContent>
                     <TabsContent value="course-catalog">
-                        <CourseCatalogTab />
+                        <CourseCatalogTab userProgress={userProgress} onResourceSelected={handlePlay} />
                     </TabsContent>
                     <TabsContent value="achievements">
                         <Card>
@@ -311,6 +358,32 @@ export default function LearningPage() {
                     </TabsContent>
                 </Tabs>
             </motion.div>
+
+             <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
+                <DialogContent className="max-w-3xl p-0">
+                {selectedResource && (
+                    <>
+                    <DialogHeader>
+                        <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
+                    </DialogHeader>
+                    <div className="aspect-video">
+                        {getYouTubeEmbedUrl(selectedResource.youtubeUrl) && (
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
+                                title={selectedResource.title}
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded-t-lg"
+                            ></iframe>
+                        )}
+                        </div>
+                    </>
+                )}
+                </DialogContent>
+            </Dialog>
         </motion.div>
     )
 }

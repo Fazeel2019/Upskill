@@ -11,8 +11,8 @@ import { ArrowRight, BookOpen, Calendar, CheckCircle, Clock, FileText, MessageSq
 import { motion } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import React, { useEffect, useState } from "react"
-import { listenToLastProgress, UserProgress } from "@/services/progress"
+import React, { useEffect, useState, useMemo } from "react"
+import { listenToUserProgress, UserProgress } from "@/services/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { getYouTubeEmbedUrl } from "@/app/(app)/learning/page"
 import { listenToEvents, type Event } from "@/services/events"
@@ -45,18 +45,23 @@ const StatCard = ({ title, value, subValue, icon: Icon, progress, colorClass, li
 
 function ContinueLearningCard() {
     const { user } = useAuth();
-    const [lastProgress, setLastProgress] = useState<UserProgress | null>(null);
+    const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
     const [isPlayerOpen, setIsPlayerOpen] = useState(false);
 
     useEffect(() => {
         if (user) {
-            const unsubscribe = listenToLastProgress(user.uid, setLastProgress);
+            const unsubscribe = listenToUserProgress(user.uid, setUserProgress);
             return () => unsubscribe();
         }
     }, [user]);
 
+    const lastProgress = useMemo(() => {
+        if (!userProgress || !userProgress.lastResourceId || !userProgress.courses) return null;
+        return userProgress.courses[userProgress.lastResourceId];
+    }, [userProgress]);
+
     const progressValue = lastProgress?.progress || 0;
-    const title = lastProgress?.resourceTitle || "Start a Course";
+    const title = lastProgress?.resource.title || "Start a Course";
     const description = lastProgress ? "Resume your last course" : "Explore our catalog";
     const buttonText = lastProgress ? "Continue" : "Browse Courses";
     const href = lastProgress ? "#" : "/learning";
@@ -64,8 +69,6 @@ function ContinueLearningCard() {
     const handleClick = () => {
         if (lastProgress) {
             setIsPlayerOpen(true);
-        } else {
-            // using a standard link for navigation
         }
     }
 
@@ -103,15 +106,15 @@ function ContinueLearningCard() {
                 <Dialog open={isPlayerOpen} onOpenChange={setIsPlayerOpen}>
                     <DialogContent className="max-w-3xl p-0">
                         <DialogHeader>
-                            <DialogTitle className="sr-only">{lastProgress.resourceTitle}</DialogTitle>
+                            <DialogTitle className="sr-only">{lastProgress.resource.title}</DialogTitle>
                         </DialogHeader>
                         <div className="aspect-video">
-                            {getYouTubeEmbedUrl(lastProgress.resourceYoutubeUrl) && (
+                            {getYouTubeEmbedUrl(lastProgress.resource.youtubeUrl) && (
                                 <iframe
                                     width="100%"
                                     height="100%"
-                                    src={getYouTubeEmbedUrl(lastProgress.resourceYoutubeUrl)}
-                                    title={lastProgress.resourceTitle}
+                                    src={getYouTubeEmbedUrl(lastProgress.resource.youtubeUrl)}
+                                    title={lastProgress.resource.title}
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
@@ -128,7 +131,7 @@ function ContinueLearningCard() {
 
 export default function DashboardPage() {
     const { user, profile } = useAuth();
-    const [lastProgress, setLastProgress] = useState<UserProgress | null>(null);
+    const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
     const [lastEvent, setLastEvent] = useState<Event | null>(null);
     const [activityItems, setActivityItems] = useState<any[]>([]);
     const [recommendationItems, setRecommendationItems] = useState<Recommendation[]>([]);
@@ -136,7 +139,7 @@ export default function DashboardPage() {
 
     useEffect(() => {
         if (user) {
-            const unsubProgress = listenToLastProgress(user.uid, setLastProgress);
+            const unsubProgress = listenToUserProgress(user.uid, setUserProgress);
             const unsubEvents = listenToEvents(events => {
                 if (events.length > 0) setLastEvent(events[0]);
             });
@@ -149,6 +152,11 @@ export default function DashboardPage() {
             };
         }
     }, [user]);
+    
+    const lastProgress = useMemo(() => {
+        if (!userProgress || !userProgress.lastResourceId || !userProgress.courses) return null;
+        return userProgress.courses[userProgress.lastResourceId];
+    }, [userProgress]);
 
     useEffect(() => {
         const newActivityItems = [];
@@ -156,7 +164,7 @@ export default function DashboardPage() {
             newActivityItems.push({
                 icon: BookOpen,
                 color: "text-blue-500",
-                text: `You started the course "${lastProgress.resourceTitle}".`,
+                text: `You started the course "${lastProgress.resource.title}".`,
                 time: "Just now"
             })
         }
