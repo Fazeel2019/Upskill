@@ -3,7 +3,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Search, Calendar, User, Play, ListFilter, MicVocal } from "lucide-react";
+import { Search, Calendar, User, Play, ListFilter, MicVocal, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
@@ -15,15 +15,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useState, useEffect } from "react";
+import { listenToPodcasts } from "@/services/podcasts";
+import { Podcast } from "@/lib/data";
+import { format } from "date-fns";
 
-const podcastEpisodes: any[] = [];
-
-function PodcastCard({ episode }: { episode: any }) {
+function PodcastCard({ episode }: { episode: Podcast }) {
   return (
     <Card className="overflow-hidden group transition-shadow hover:shadow-lg rounded-xl">
       <div className="relative">
         <Image
-          src={episode.image}
+          src={episode.imageUrl}
           alt={episode.title}
           width={400}
           height={225}
@@ -45,12 +47,14 @@ function PodcastCard({ episode }: { episode: any }) {
           </div>
           <div className="flex items-center gap-2">
             <Calendar className="w-3.5 h-3.5" />
-            <span>{episode.date}</span>
+            <span>{format(new Date(episode.date), "MMM d, yyyy")}</span>
           </div>
         </div>
-        <Button className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90 transition-opacity">
-          <Play className="mr-2" />
-          Listen Now
+        <Button asChild className="w-full mt-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:opacity-90 transition-opacity">
+            <a href={episode.episodeUrl} target="_blank" rel="noopener noreferrer">
+                <Play className="mr-2" />
+                Listen Now
+            </a>
         </Button>
       </CardContent>
     </Card>
@@ -58,6 +62,18 @@ function PodcastCard({ episode }: { episode: any }) {
 }
 
 export default function PodcastsPage() {
+  const [podcasts, setPodcasts] = useState<Podcast[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    const unsubscribe = listenToPodcasts((newPodcasts) => {
+        setPodcasts(newPodcasts);
+        setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const pageVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5, staggerChildren: 0.1 } },
@@ -115,20 +131,24 @@ export default function PodcastsPage() {
         </div>
       </motion.div>
 
-      <motion.div
-        className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
-        variants={pageVariants}
-      >
-        {podcastEpisodes.length > 0 ? podcastEpisodes.map((episode, index) => (
-          <motion.div key={index} variants={itemVariants}>
-            <PodcastCard episode={episode} />
-          </motion.div>
-        )) : (
-            <EmptyState />
-        )}
-      </motion.div>
+      {loading ? (
+        <div className="flex justify-center py-16">
+            <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+        ) : (
+        <motion.div
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            variants={pageVariants}
+        >
+            {podcasts.length > 0 ? podcasts.map((episode) => (
+            <motion.div key={episode.id} variants={itemVariants}>
+                <PodcastCard episode={episode} />
+            </motion.div>
+            )) : (
+                <EmptyState />
+            )}
+        </motion.div>
+      )}
     </motion.div>
   );
 }
-
-    
