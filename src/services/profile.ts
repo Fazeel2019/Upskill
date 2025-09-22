@@ -129,6 +129,17 @@ export const declineFriendRequest = async (fromUid: string, toUid: string) => {
     await batch.commit();
 }
 
+export const removeFriend = async (uid1: string, uid2: string) => {
+  const batch = writeBatch(db);
+  const user1Ref = doc(db, "users", uid1);
+  const user2Ref = doc(db, "users", uid2);
+
+  batch.update(user1Ref, { [`connections.${uid2}`]: deleteField() });
+  batch.update(user2Ref, { [`connections.${uid1}`]: deleteField() });
+
+  await batch.commit();
+};
+
 export const listenToFriends = (uid: string, callback: (users: UserProfile[]) => void) => {
     const usersRef = collection(db, "users");
     const q = query(usersRef, where(`connections.${uid}`, "==", "connected"));
@@ -202,4 +213,3 @@ export const searchUsers = async (searchQuery: string, currentUserId: string): P
 
     return Array.from(usersMap.values());
 };
-
