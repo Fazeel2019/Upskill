@@ -97,9 +97,10 @@ function CourseCard({ course }: { course: any }) {
     )
 }
 
-// Re-using ResourceCard and logic from the old resources page
 function getYouTubeThumbnail(url: string) {
-    const videoId = url.split('v=')[1]?.split('&')[0];
+    if (!url) return 'https://picsum.photos/seed/placeholder-thumb/400/225';
+    const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
     if (videoId) {
         return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
     }
@@ -108,7 +109,8 @@ function getYouTubeThumbnail(url: string) {
 
 function getYouTubeEmbedUrl(url: string): string {
     if (!url) return '';
-    const videoId = url.split('v=')[1]?.split('&')[0];
+    const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
     if (videoId) {
         return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
     }
@@ -117,7 +119,7 @@ function getYouTubeEmbedUrl(url: string): string {
 
 
 function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resource: Resource) => void }) {
-    const categoryColors = {
+    const categoryColors: Record<string, string> = {
         Career: "border-purple-500",
         STEM: "border-blue-500",
         Healthcare: "border-green-500",
@@ -125,7 +127,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resou
     };
     
     return (
-        <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category]}`}>
+        <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category] || 'border-gray-500'}`}>
             <div className="relative h-48 cursor-pointer" onClick={() => onPlay(resource)}>
                 <Image 
                     src={getYouTubeThumbnail(resource.youtubeUrl)}
@@ -156,7 +158,7 @@ function ResourceCard({ resource, onPlay }: { resource: Resource, onPlay: (resou
     )
 }
 
-function ResourcesTab() {
+function CourseCatalogTab() {
     const [resources, setResources] = useState<Resource[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
@@ -192,10 +194,10 @@ function ResourcesTab() {
         <motion.div variants={itemVariants} className="text-center py-16 md:col-span-3">
             <Card className="max-w-md mx-auto">
                 <CardContent className="p-8 text-center">
-                    <BookOpen className="h-12 h-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="font-semibold text-lg">Resource Library Coming Soon</h3>
+                    <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <h3 className="font-semibold text-lg">Resource Library is Empty</h3>
                     <p className="text-muted-foreground mt-2">
-                        We're busy curating the best guides, templates, and materials. Check back shortly!
+                        No learning materials have been added yet. Check back shortly!
                     </p>
                 </CardContent>
             </Card>
@@ -312,11 +314,10 @@ export default function LearningPage() {
             </motion.div>
 
             <motion.div variants={itemVariants}>
-                <Tabs defaultValue="my-learning">
+                <Tabs defaultValue="course-catalog">
                     <TabsList>
                         <TabsTrigger value="my-learning">My Learning</TabsTrigger>
                         <TabsTrigger value="course-catalog">Course Catalog</TabsTrigger>
-                        <TabsTrigger value="resources">Resources</TabsTrigger>
                         <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
                     <TabsContent value="my-learning">
@@ -340,14 +341,7 @@ export default function LearningPage() {
                          )}
                     </TabsContent>
                     <TabsContent value="course-catalog">
-                        <Card>
-                            <CardContent className="p-8 text-center text-muted-foreground">
-                                Course Catalog coming soon!
-                            </CardContent>
-                        </Card>
-                    </TabsContent>
-                    <TabsContent value="resources">
-                        <ResourcesTab />
+                        <CourseCatalogTab />
                     </TabsContent>
                     <TabsContent value="achievements">
                         <Card>
