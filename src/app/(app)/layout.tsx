@@ -45,22 +45,44 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import React, { useEffect, useState } from "react";
+import { listenToFriendRequests } from "@/services/profile";
+import { listenToNotifications } from "@/services/notifications";
 
-const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/learning", label: "Learning", icon: GraduationCap },
-  { href: "/podcast", label: "Podcasts", icon: MicVocal },
-  { href: "/community", label: "Community", icon: Users, badge: 12 },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/networking", label: "Networking", icon: Network },
-  { href: "/messaging", label: "Messages", icon: MessageSquare, badge: 5 },
-  { href: "/profile", label: "Profile", icon: User },
-];
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
   const pathname = usePathname();
   const { user, profile, loading } = useAuth();
+  const [friendRequestCount, setFriendRequestCount] = useState(0);
+  const [notificationCount, setNotificationCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      const unsubscribeRequests = listenToFriendRequests(user.uid, (requests) => {
+        setFriendRequestCount(requests.length);
+      });
+      const unsubscribeNotifications = listenToNotifications(user.uid, (notifications) => {
+        setNotificationCount(notifications.filter(n => !n.read).length);
+      });
+
+      return () => {
+        unsubscribeRequests();
+        unsubscribeNotifications();
+      };
+    }
+  }, [user]);
+
+  const navItems = [
+    { href: "/dashboard", label: "Dashboard", icon: Home },
+    { href: "/learning", label: "Learning", icon: GraduationCap },
+    { href: "/podcast", label: "Podcasts", icon: MicVocal },
+    { href: "/community", label: "Community", icon: Users, badge: friendRequestCount },
+    { href: "/events", label: "Events", icon: Calendar },
+    { href: "/networking", label: "Networking", icon: Network },
+    { href: "/messaging", label: "Messages", icon: MessageSquare, badge: notificationCount },
+    { href: "/profile", label: "Profile", icon: User },
+  ];
 
   if (loading) {
     return (
@@ -118,7 +140,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <Link href={item.href}>
                     <item.icon />
                     <span className="flex-grow">{item.label}</span>
-                    {item.badge && <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge>}
+                    {item.badge && item.badge > 0 && <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
