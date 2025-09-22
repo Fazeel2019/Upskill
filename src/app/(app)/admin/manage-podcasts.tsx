@@ -185,9 +185,9 @@ export default function ManagePodcasts() {
               <div><Label>Category</Label><Input {...form.register("category")} />{form.formState.errors.category && <p className="text-red-500 text-xs mt-1">{form.formState.errors.category.message}</p>}</div>
               <div><Label>Author</Label><Input {...form.register("author")} />{form.formState.errors.author && <p className="text-red-500 text-xs mt-1">{form.formState.errors.author.message}</p>}</div>
               <div><Label>Date</Label><Input type="date" {...form.register("date")} />{form.formState.errors.date && <p className="text-red-500 text-xs mt-1">{form.formState.errors.date.message}</p>}</div>
-              <div><Label>Image URL</Label><Input {...form.register("imageUrl")} />{form.formState.errors.imageUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageUrl.message}</p>}</div>
+              <div><Label htmlFor="imageUrl">Image URL</Label><Input id="imageUrl" {...form.register("imageUrl")} />{form.formState.errors.imageUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageUrl.message}</p>}</div>
               <div><Label>Image AI Hint</Label><Input {...form.register("imageHint")} />{form.formState.errors.imageHint && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageHint.message}</p>}</div>
-              <div><Label>Episode URL</Label><Input {...form.register("episodeUrl")} />{form.formState.errors.episodeUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.episodeUrl.message}</p>}</div>
+              <div><Label htmlFor="episodeUrl">Episode URL</Label><Input id="episodeUrl" {...form.register("episodeUrl")} />{form.formState.errors.episodeUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.episodeUrl.message}</p>}</div>
               <div><Label>Duration</Label><Input {...form.register("duration")} placeholder="e.g. 30:15" />{form.formState.errors.duration && <p className="text-red-500 text-xs mt-1">{form.formState.errors.duration.message}</p>}</div>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Adding..." : "Add Podcast"}

@@ -84,7 +84,7 @@ function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resourc
                         </SelectContent></Select>
                         )} />
                     </div>
-                    <div><Label>YouTube URL</Label><Input {...form.register("youtubeUrl")} /></div>
+                    <div><Label htmlFor="youtubeUrl">YouTube URL</Label><Input id="youtubeUrl" {...form.register("youtubeUrl")} /></div>
                     <DialogFooter>
                         <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
                         <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
