@@ -48,9 +48,11 @@ import { cn } from "@/lib/utils";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
-  { href: "/learning", label: "Learning", icon: GraduationCap, badge: 3 },
+  { href: "/learning", label: "Learning", icon: GraduationCap },
+  { href: "/resources", label: "Resources", icon: BookOpen },
   { href: "/podcast", label: "Podcasts", icon: MicVocal },
   { href: "/community", label: "Community", icon: Users, badge: 12 },
+  { href: "/events", label: "Events", icon: Calendar },
   { href: "/networking", label: "Networking", icon: Network },
   { href: "/messaging", label: "Messages", icon: MessageSquare, badge: 5 },
   { href: "/profile", label: "Profile", icon: User },
@@ -122,6 +124,20 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+            {profile?.role === 'admin' && (
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith('/admin')}
+                  tooltip="Admin Panel"
+                >
+                  <Link href="/admin">
+                    <Shield />
+                    <span className="flex-grow">Admin Panel</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
