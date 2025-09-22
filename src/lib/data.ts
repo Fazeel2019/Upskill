@@ -1,5 +1,6 @@
 
 import { type Timestamp } from "firebase/firestore";
+import { z } from 'zod';
 
 export type Event = {
   id: string;
@@ -36,3 +37,10 @@ export type Podcast = {
   duration: string;
   createdAt: Timestamp;
 };
+
+export const RecommendationSchema = z.object({
+  type: z.enum(['Learning', 'Community', 'Event']).describe('The type of content being recommended.'),
+  title: z.string().describe('The title of the recommended item.'),
+  reason: z.string().describe('A brief explanation of why this is recommended for the user.'),
+  link: z.string().optional().describe('A direct link to the recommended content.'),
+});

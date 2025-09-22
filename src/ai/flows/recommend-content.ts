@@ -10,8 +10,8 @@
  */
 
 import { ai } from '@/ai/genkit';
-import { z } from 'genkit';
-import { Resource } from '@/lib/data';
+import { z } from 'zod';
+import { Resource, RecommendationSchema } from '@/lib/data';
 
 const RecommendContentInputSchema = z.object({
   userTitle: z.string().describe('The professional title of the user.'),
@@ -23,14 +23,8 @@ const RecommendContentInputSchema = z.object({
   })).describe("A list of available learning resources.")
 });
 export type RecommendContentInput = z.infer<typeof RecommendContentInputSchema>;
-
-export const RecommendationSchema = z.object({
-  type: z.enum(['Learning', 'Community', 'Event']).describe('The type of content being recommended.'),
-  title: z.string().describe('The title of the recommended item.'),
-  reason: z.string().describe('A brief explanation of why this is recommended for the user.'),
-  link: z.string().optional().describe('A direct link to the recommended content.'),
-});
 export type Recommendation = z.infer<typeof RecommendationSchema>;
+
 
 const RecommendContentOutputSchema = z.object({
   recommendations: z.array(RecommendationSchema),
@@ -74,3 +68,4 @@ const recommendContentFlow = ai.defineFlow(
     return output!;
   }
 );
+
