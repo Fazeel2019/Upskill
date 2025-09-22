@@ -55,7 +55,7 @@ function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resourc
 
     const onSubmit = async (data: ResourceFormValues) => {
         try {
-            await updateResource(resource.id, data as any);
+            await updateResource(resource.id, data);
             toast({ title: "Resource Updated", description: "The resource has been updated successfully." });
             onResourceUpdated();
             setOpen(false);
@@ -84,7 +84,7 @@ function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resourc
                         </SelectContent></Select>
                         )} />
                     </div>
-                    <div><Label>YouTube URL</Label><Input {...form.register("youtubeUrl")} /></div>
+                    <div><Label htmlFor="youtubeUrl">YouTube URL</Label><Input id="youtubeUrl" {...form.register("youtubeUrl")} /></div>
                     <DialogFooter>
                         <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
                         <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
@@ -121,7 +121,7 @@ function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
                         This action cannot be undone. This will permanently delete the resource.
-                    </-AlertDialogDescription>
+                    </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -249,5 +249,3 @@ export default function ManageResources() {
     </div>
   );
 }
-
-    
