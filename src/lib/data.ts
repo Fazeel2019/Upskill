@@ -22,3 +22,17 @@ export type Resource = {
   youtubeUrl: string;
   createdAt: Timestamp;
 };
+
+export type Podcast = {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  author: string;
+  date: string;
+  imageUrl: string;
+  imageHint: string;
+  episodeUrl: string;
+  duration: string;
+  createdAt: Timestamp;
+};

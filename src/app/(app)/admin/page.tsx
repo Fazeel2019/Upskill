@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -8,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageEvents from "./manage-events";
 import ManageResources from "./manage-resources";
 import ManageUsers from "./manage-users";
+import ManagePodcasts from "./manage-podcasts";
 
 function AdminAccessDenied() {
     return (
@@ -41,6 +43,7 @@ export default function AdminPage() {
                     <TabsTrigger value="events">Manage Events</TabsTrigger>
                     <TabsTrigger value="resources">Manage Resources</TabsTrigger>
                     <TabsTrigger value="users">Manage Users</TabsTrigger>
+                    <TabsTrigger value="podcasts">Manage Podcasts</TabsTrigger>
                 </TabsList>
                 <TabsContent value="events">
                     <ManageEvents />
@@ -50,6 +53,9 @@ export default function AdminPage() {
                 </TabsContent>
                 <TabsContent value="users">
                     <ManageUsers />
+                </TabsContent>
+                 <TabsContent value="podcasts">
+                    <ManagePodcasts />
                 </TabsContent>
             </Tabs>
         </div>
