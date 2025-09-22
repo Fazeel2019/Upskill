@@ -49,7 +49,6 @@ import { cn } from "@/lib/utils";
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: Home },
   { href: "/learning", label: "Learning", icon: GraduationCap },
-  { href: "/resources", label: "Resources", icon: BookOpen },
   { href: "/podcast", label: "Podcasts", icon: MicVocal },
   { href: "/community", label: "Community", icon: Users, badge: 12 },
   { href: "/events", label: "Events", icon: Calendar },
