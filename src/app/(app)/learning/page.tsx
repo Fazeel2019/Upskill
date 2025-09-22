@@ -1,7 +1,7 @@
 
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -192,7 +192,7 @@ function ResourcesTab() {
         <motion.div variants={itemVariants} className="text-center py-16 md:col-span-3">
             <Card className="max-w-md mx-auto">
                 <CardContent className="p-8 text-center">
-                    <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                    <BookOpen className="h-12 h-12 mx-auto text-muted-foreground mb-4" />
                     <h3 className="font-semibold text-lg">Resource Library Coming Soon</h3>
                     <p className="text-muted-foreground mt-2">
                         We're busy curating the best guides, templates, and materials. Check back shortly!
@@ -361,3 +361,5 @@ export default function LearningPage() {
         </motion.div>
     )
 }
+
+    
