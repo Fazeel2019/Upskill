@@ -121,7 +121,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-2">
                 <Logo className="w-auto h-8 text-primary" />
-                <span className="font-headline font-bold text-xl group-data-[collapsible=icon]:hidden">Upskill</span>
             </div>
             <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
                 <ChevronLeft />
