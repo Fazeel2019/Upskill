@@ -57,85 +57,75 @@ export default function BlogDetailPage({ params }: { params: { blogId: string } 
         }
     }, [blogId]);
 
-    if (loading) {
-        return (
-            <div className="flex flex-col min-h-screen">
-                <PublicHeader />
-                <main className="flex-grow pt-20">
-                    <BlogDetailSkeleton />
-                </main>
-                <Footer />
-            </div>
-        );
-    }
-
-    if (!blog) {
-        return notFound();
-    }
-
-    const blogDate = blog.createdAt?.toDate ? blog.createdAt.toDate() : new Date();
+    const blogDate = blog?.createdAt?.toDate ? blog.createdAt.toDate() : new Date();
 
     return (
         <div className="flex flex-col min-h-screen">
             <PublicHeader />
             <main className="flex-grow pt-20">
-                <motion.div 
-                    className="container mx-auto px-4 py-12 max-w-4xl"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                >
-                    <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
-                        <Button variant="ghost" asChild className="mb-8">
-                            <Link href="/blog">
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Blog
-                            </Link>
-                        </Button>
-                    </motion.div>
-
+                {loading ? (
+                    <BlogDetailSkeleton />
+                ) : !blog ? (
+                    notFound()
+                ) : (
                     <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
+                        className="container mx-auto px-4 py-12 max-w-4xl"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
                     >
-                        <Badge variant="secondary" className="mb-4">{blog.category}</Badge>
-                        <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4">
-                            {blog.title}
-                        </h1>
-                        <div className="flex items-center gap-6 text-muted-foreground text-sm mb-8">
-                             <div className="flex items-center gap-2">
-                                <User className="h-4 w-4" />
-                                <span>{blog.author}</span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4" />
-                                <span>{format(blogDate, "MMMM d, yyyy")}</span>
-                            </div>
-                        </div>
+                        <motion.div initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+                            <Button variant="ghost" asChild className="mb-8">
+                                <Link href="/blog">
+                                    <ArrowLeft className="mr-2 h-4 w-4" />
+                                    Back to Blog
+                                </Link>
+                            </Button>
+                        </motion.div>
 
-                         <div 
-                            className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg mb-8"
+                        <motion.div 
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
                         >
-                            <Image
-                                src={blog.imageUrl}
-                                alt={blog.title}
-                                fill
-                                style={{objectFit: "cover"}}
-                                sizes="100vw"
-                                data-ai-hint={blog.imageHint}
-                                priority
-                            />
-                        </div>
-
-                        <article className="prose dark:prose-invert max-w-none text-foreground/90 text-lg leading-relaxed">
-                            <p className="text-xl font-semibold italic">{blog.excerpt}</p>
-                            <div className="mt-8 whitespace-pre-wrap">
-                                {blog.content}
+                            <Badge variant="secondary" className="mb-4">{blog.category}</Badge>
+                            <h1 className="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4">
+                                {blog.title}
+                            </h1>
+                            <div className="flex items-center gap-6 text-muted-foreground text-sm mb-8">
+                                 <div className="flex items-center gap-2">
+                                    <User className="h-4 w-4" />
+                                    <span>{blog.author}</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-4 w-4" />
+                                    <span>{format(blogDate, "MMMM d, yyyy")}</span>
+                                </div>
                             </div>
-                        </article>
 
+                             <div 
+                                className="relative h-[400px] w-full rounded-lg overflow-hidden shadow-lg mb-8"
+                            >
+                                <Image
+                                    src={blog.imageUrl}
+                                    alt={blog.title}
+                                    fill
+                                    style={{objectFit: "cover"}}
+                                    sizes="100vw"
+                                    data-ai-hint={blog.imageHint}
+                                    priority
+                                />
+                            </div>
+
+                            <article className="prose dark:prose-invert max-w-none text-foreground/90 text-lg leading-relaxed">
+                                <p className="text-xl font-semibold italic">{blog.excerpt}</p>
+                                <div className="mt-8 whitespace-pre-wrap">
+                                    {blog.content}
+                                </div>
+                            </article>
+
+                        </motion.div>
                     </motion.div>
-                </motion.div>
+                )}
             </main>
             <Footer />
         </div>
