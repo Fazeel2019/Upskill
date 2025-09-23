@@ -73,7 +73,7 @@ export default function BlogDetailPage({ params }: { params: { blogId: string } 
         return notFound();
     }
 
-    const blogDate = blog.createdAt.toDate();
+    const blogDate = blog.createdAt?.toDate ? blog.createdAt.toDate() : new Date();
 
     return (
         <div className="flex flex-col min-h-screen">

@@ -100,7 +100,7 @@ export default function BlogPage() {
         >
           <div className="container mx-auto px-4">
             {loading ? <div className="flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div> : 
-            allPosts.length > 0 ? (
+            allPosts.length > 0 && featuredPost ? (
              <>
                 {/* Featured Post */}
                 <motion.div variants={cardVariants}>
@@ -130,7 +130,7 @@ export default function BlogPage() {
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center gap-2">
                                       <Calendar className="w-4 h-4" />
-                                      <span>{format(featuredPost.createdAt.toDate(), "MMMM d, yyyy")}</span>
+                                      <span>{featuredPost.createdAt ? format(featuredPost.createdAt.toDate(), "MMMM d, yyyy") : ''}</span>
                                     </div>
                                     <span>by {featuredPost.author}</span>
                                 </div>
@@ -182,7 +182,7 @@ export default function BlogPage() {
                           <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4" />
-                              <span>{format(post.createdAt.toDate(), "MMMM d, yyyy")}</span>
+                              <span>{post.createdAt ? format(post.createdAt.toDate(), "MMMM d, yyyy") : ''}</span>
                             </div>
                             <Link href={`/blog/${post.id}`} className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                               Read More <ArrowRight className="ml-1 w-4 h-4" />
