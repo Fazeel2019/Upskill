@@ -18,6 +18,7 @@ import type { Resource } from "@/lib/data"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { useAuth } from "@/hooks/use-auth"
 import { updateUserProgress, listenToUserProgress, enrollInCourse, UserProgress } from "@/services/progress"
+import { addAchievement } from "@/services/profile"
 
 const stats = [
     { title: "Courses Enrolled", value: "0", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
@@ -258,7 +259,7 @@ function MyLearningTab({ userProgress, onResourceSelected }: { userProgress: Use
 
 
 export default function LearningPage() {
-    const { user } = useAuth();
+    const { user, reloadProfile } = useAuth();
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
     const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
@@ -279,10 +280,18 @@ export default function LearningPage() {
     }
 
     const handleClosePlayer = () => {
-        if (user && selectedResource) {
+        if (user && selectedResource && userProgress?.courses?.[selectedResource.id]?.progress !== 100) {
             updateUserProgress(user.uid, {
-                [`courses.${selectedResource.id}.progress`]: 100
+                [`courses.${selectedResource.id}.progress`]: 100,
             });
+            // Add achievement for completing the course
+            addAchievement(user.uid, {
+                id: `cert-${selectedResource.id}`,
+                title: `Certificate of Completion: ${selectedResource.title}`,
+                date: new Date().toISOString().split('T')[0],
+                issuer: 'Upskill Community',
+            });
+            reloadProfile();
         }
         setSelectedResource(null);
     };
@@ -306,7 +315,8 @@ export default function LearningPage() {
     const statsWithValues = useMemo(() => [
         { ...stats[0], value: String(enrolledCount) },
         { ...stats[1], value: String(completedCount) },
-        ...stats.slice(2)
+        { ...stats[2], value: String(completedCount) }, // Certificates count is same as completed courses
+        ...stats.slice(3)
     ], [enrolledCount, completedCount]);
 
     return (
@@ -362,7 +372,7 @@ export default function LearningPage() {
                     <TabsContent value="achievements">
                         <Card>
                             <CardContent className="p-8 text-center text-muted-foreground">
-                                Achievements coming soon!
+                                Your certificates will appear here once you complete a course.
                             </CardContent>
                         </Card>
                     </TabsContent>

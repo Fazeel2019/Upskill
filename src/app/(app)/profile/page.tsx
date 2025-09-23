@@ -6,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Award, Briefcase, Edit, Settings, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, Users, MessageSquare, Eye, Activity } from "lucide-react";
+import { Award, Briefcase, Edit, Settings, Linkedin, Mail, MapPin, GraduationCap, Link2, Plus, Users, MessageSquare, Eye, Activity, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/hooks/use-auth";
 import {
@@ -582,6 +582,8 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
         return new Date(parseInt(year), parseInt(month) - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
     }
     
+    const isCertificate = achievement.id.startsWith('cert-');
+
     return (
         <div className="flex gap-4 relative pb-8 last:pb-0">
              <div className="absolute left-[18px] top-5 h-full w-px bg-border"></div>
@@ -591,9 +593,19 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
                 </div>
             </div>
             <div className="flex-grow">
-                <h4 className="font-semibold">{achievement.title}</h4>
-                {achievement.issuer && <p className="text-muted-foreground text-sm">{achievement.issuer}</p>}
-                <p className="text-muted-foreground text-xs mt-1">{formatDate(achievement.date)}</p>
+                <div className="flex justify-between items-start">
+                    <div>
+                        <h4 className="font-semibold">{achievement.title}</h4>
+                        {achievement.issuer && <p className="text-muted-foreground text-sm">{achievement.issuer}</p>}
+                        <p className="text-muted-foreground text-xs mt-1">{formatDate(achievement.date)}</p>
+                    </div>
+                    {isCertificate && (
+                        <Button variant="outline" size="sm" disabled>
+                            <Download className="mr-2 h-4 w-4" />
+                            Download Certificate
+                        </Button>
+                    )}
+                </div>
                 {achievement.description && <p className="text-sm mt-2 whitespace-pre-wrap">{achievement.description}</p>}
             </div>
         </div>

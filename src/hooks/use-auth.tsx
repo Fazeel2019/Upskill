@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -80,7 +81,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isAppRoute = pathname.startsWith("/dashboard") || pathname.startsWith("/community") || pathname.startsWith("/events") || pathname.startsWith("/resources") || pathname.startsWith("/profile") || pathname.startsWith("/messaging");
+    const isAppRoute = !["/", "/login", "/signup", "/about", "/blog"].includes(pathname);
 
     if (!user && isAppRoute) {
       router.push("/login");
