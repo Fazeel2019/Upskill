@@ -150,57 +150,61 @@ export default function BlogPage() {
                     </Card>
                 </motion.div>
 
-                <h2 className="font-headline text-3xl font-bold tracking-tight mt-16 mb-8">All Articles</h2>
-                <div className="flex flex-wrap justify-center gap-2 mb-12">
-                  {categories.map(category => (
-                    <Button 
-                      key={category} 
-                      variant={activeFilter === category ? "default" : "outline"}
-                      onClick={() => setActiveFilter(category)}
-                      className="rounded-full"
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-                {otherPosts.length > 0 && filteredPosts.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {filteredPosts.map((post, index) => (
-                      <motion.div key={post.id} variants={cardVariants}>
-                        <Card className="flex flex-col h-full group overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-primary/10">
-                          <div className="relative overflow-hidden h-48">
-                            <Image
-                              src={post.imageUrl}
-                              alt={post.title}
-                              fill
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              data-ai-hint={post.imageHint}
-                            />
-                          </div>
-                          <CardHeader>
-                            <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
-                            <CardTitle className="font-headline text-xl leading-tight text-foreground">
-                              <Link href={`/blog/${post.id}`} className="hover:text-primary transition-colors">{post.title}</Link>
-                            </CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex-grow">
-                            <p className="text-muted-foreground text-sm line-clamp-3">{post.excerpt}</p>
-                          </CardContent>
-                          <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
-                            <div className="flex items-center gap-2">
-                              <Calendar className="w-4 h-4" />
-                              <span>{formatDate(post.createdAt)}</span>
-                            </div>
-                            <Link href={`/blog/${post.id}`} className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
-                              Read More <ArrowRight className="ml-1 w-4 h-4" />
-                            </Link>
-                          </CardFooter>
-                        </Card>
-                      </motion.div>
-                    ))}
-                  </div>
-                ) : <p className="text-center text-muted-foreground">No posts found in this category.</p>}
+                {otherPosts.length > 0 && (
+                    <>
+                        <h2 className="font-headline text-3xl font-bold tracking-tight mt-16 mb-8">All Articles</h2>
+                        <div className="flex flex-wrap justify-center gap-2 mb-12">
+                        {categories.map(category => (
+                            <Button 
+                            key={category} 
+                            variant={activeFilter === category ? "default" : "outline"}
+                            onClick={() => setActiveFilter(category)}
+                            className="rounded-full"
+                            >
+                            {category}
+                            </Button>
+                        ))}
+                        </div>
+                        {filteredPosts.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {filteredPosts.map((post) => (
+                            <motion.div key={post.id} variants={cardVariants}>
+                                <Card className="flex flex-col h-full group overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-primary/10">
+                                <div className="relative overflow-hidden h-48">
+                                    <Image
+                                    src={post.imageUrl}
+                                    alt={post.title}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                    data-ai-hint={post.imageHint}
+                                    />
+                                </div>
+                                <CardHeader>
+                                    <Badge variant="secondary" className="w-fit mb-2">{post.category}</Badge>
+                                    <CardTitle className="font-headline text-xl leading-tight text-foreground">
+                                    <Link href={`/blog/${post.id}`} className="hover:text-primary transition-colors">{post.title}</Link>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="flex-grow">
+                                    <p className="text-muted-foreground text-sm line-clamp-3">{post.excerpt}</p>
+                                </CardContent>
+                                <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
+                                    <div className="flex items-center gap-2">
+                                    <Calendar className="w-4 h-4" />
+                                    <span>{formatDate(post.createdAt)}</span>
+                                    </div>
+                                    <Link href={`/blog/${post.id}`} className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                                    Read More <ArrowRight className="ml-1 w-4 h-4" />
+                                    </Link>
+                                </CardFooter>
+                                </Card>
+                            </motion.div>
+                            ))}
+                        </div>
+                        ) : <p className="text-center text-muted-foreground">No posts found in this category.</p>}
+                    </>
+                )}
              </>
             ) : (<div className="text-center py-16">
                     <Card className="max-w-md mx-auto">
@@ -233,3 +237,5 @@ export default function BlogPage() {
     </div>
   );
 }
+
+    
