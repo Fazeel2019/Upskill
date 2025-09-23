@@ -163,7 +163,7 @@ export default function ManageResources() {
 
   const onSubmit = async (data: ResourceFormValues) => {
     try {
-      await addResource(data as any);
+      await addResource(data);
       toast({ title: "Resource Created", description: "The new resource has been added successfully." });
       form.reset();
     } catch (error) {

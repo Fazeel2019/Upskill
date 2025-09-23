@@ -259,7 +259,6 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                     </div>
                     <div className="absolute top-6 right-6 flex gap-2">
                         {FriendButton}
-                        <Button variant="ghost" size="icon"><Settings /></Button>
                     </div>
                  </div>
             </div>
@@ -281,7 +280,6 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                     <TabsTrigger value="experience">Experience</TabsTrigger>
                     <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     <TabsTrigger value="activity">Activity</TabsTrigger>
-                    <TabsTrigger value="settings">Settings</TabsTrigger>
                 </TabsList>
                 <TabsContent value="about">
                     <div className="space-y-6">
@@ -354,14 +352,6 @@ export default function UserProfilePage({ params }: { params: { userId: string }
                         </CardContent>
                     </Card>
                 </TabsContent>
-                <TabsContent value="settings">
-                    <Card>
-                        <CardHeader><CardTitle>Settings</CardTitle></CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground">Profile settings are not available on public profiles.</p>
-                        </CardContent>
-                    </Card>
-                </TabsContent>
             </Tabs>
         </motion.div>
         <motion.div className="space-y-8" variants={containerVariants}>
@@ -405,5 +395,3 @@ export default function UserProfilePage({ params }: { params: { userId: string }
     </motion.div>
   );
 }
-
-    

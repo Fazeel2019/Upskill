@@ -700,6 +700,7 @@ export default function ProfilePage() {
                 <TabsList className="mb-4">
                     <TabsTrigger value="about">About</TabsTrigger>
                     <TabsTrigger value="experience">Experience</TabsTrigger>
+                    <TabsTrigger value="education">Education</TabsTrigger>
                     <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     <TabsTrigger value="activity">Activity</TabsTrigger>
                     <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -718,7 +719,6 @@ export default function ProfilePage() {
                          <Card>
                             <CardHeader className="flex flex-row items-center justify-between">
                                 <CardTitle>Skills & Expertise</CardTitle>
-                                <Button variant="outline" size="sm"><Plus className="mr-2 h-4 w-4" /> Add Skills</Button>
                             </CardHeader>
                             <CardContent>
                                 <p className="text-muted-foreground">No skills added yet.</p>
@@ -749,6 +749,29 @@ export default function ProfilePage() {
                         </CardContent>
                     </Card>
                 </TabsContent>
+                 <TabsContent value="education">
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="font-headline">Education</CardTitle>
+                            <AddEducationDialog />
+                        </CardHeader>
+                        <CardContent>
+                            {profile.education && profile.education.length > 0 ? (
+                                <div className="space-y-4">
+                                    {profile.education.sort((a,b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime()).map(edu => (
+                                        <EducationItem key={edu.id} education={edu} />
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center text-muted-foreground py-12">
+                                    <GraduationCap className="w-12 h-12 mx-auto mb-4" />
+                                    <h3 className="font-semibold">No Education Listed</h3>
+                                    <p className="mt-2">Add your educational background to complete your profile.</p>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </TabsContent>
                  <TabsContent value="achievements">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
@@ -766,7 +789,7 @@ export default function ProfilePage() {
                                 <div className="text-center text-muted-foreground py-12">
                                     <Award className="w-12 h-12 mx-auto mb-4" />
                                     <h3 className="font-semibold">No Achievements Listed</h3>
-                                    <p className="mt-2">This user hasn't added any achievements yet.</p>
+                                    <p className="mt-2">Add your awards, certifications, and other accomplishments.</p>
                                 </div>
                             )}
                         </CardContent>
@@ -834,5 +857,3 @@ export default function ProfilePage() {
     </motion.div>
   );
 }
-
-    

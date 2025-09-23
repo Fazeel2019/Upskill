@@ -273,7 +273,6 @@ export default function DashboardPage() {
                                 <p>No recent activity to show.</p>
                             </div>
                         )}
-                        <Button variant="outline" className="w-full mt-6">View All Activity</Button>
                     </CardContent>
                 </Card>
 
@@ -295,12 +294,9 @@ export default function DashboardPage() {
                                 <p>No recommendations at this time.</p>
                             </div>
                         )}
-                         <Button variant="outline" className="w-full mt-2">View All Recommendations</Button>
                     </CardContent>
                 </Card>
             </div>
         </motion.div>
     )
 }
-
-    
