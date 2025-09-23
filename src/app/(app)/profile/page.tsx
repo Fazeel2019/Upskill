@@ -680,7 +680,6 @@ export default function ProfilePage() {
                         <EditProfileDialog open={isEditProfileOpen} onOpenChange={setIsEditProfileOpen}>
                             <Button onClick={() => setIsEditProfileOpen(true)}><Edit className="mr-2 h-4 w-4" />Edit Profile</Button>
                         </EditProfileDialog>
-                        <Button variant="ghost" size="icon"><Settings /></Button>
                     </div>
                  </div>
             </div>
