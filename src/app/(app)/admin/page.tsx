@@ -10,6 +10,7 @@ import ManageEvents from "./manage-events";
 import ManageResources from "./manage-resources";
 import ManageUsers from "./manage-users";
 import ManagePodcasts from "./manage-podcasts";
+import ManageBlogs from "./manage-blogs";
 
 function AdminAccessDenied() {
     return (
@@ -44,6 +45,7 @@ export default function AdminPage() {
                     <TabsTrigger value="resources">Manage Resources</TabsTrigger>
                     <TabsTrigger value="users">Manage Users</TabsTrigger>
                     <TabsTrigger value="podcasts">Manage Podcasts</TabsTrigger>
+                    <TabsTrigger value="blogs">Manage Blogs</TabsTrigger>
                 </TabsList>
                 <TabsContent value="events">
                     <ManageEvents />
@@ -56,6 +58,9 @@ export default function AdminPage() {
                 </TabsContent>
                  <TabsContent value="podcasts">
                     <ManagePodcasts />
+                </TabsContent>
+                 <TabsContent value="blogs">
+                    <ManageBlogs />
                 </TabsContent>
             </Tabs>
         </div>

@@ -38,6 +38,18 @@ export type Podcast = {
   createdAt: Timestamp;
 };
 
+export type Blog = {
+  id: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  author: string;
+  category: "Career Development" | "Healthcare" | "STEM" | "Public Health";
+  imageUrl: string;
+  imageHint: string;
+  createdAt: Timestamp;
+};
+
 export const RecommendationSchema = z.object({
   type: z.enum(['Learning', 'Community', 'Event']).describe('The type of content being recommended.'),
   title: z.string().describe('The title of the recommended item.'),
