@@ -40,7 +40,7 @@ export const enrollInCourse = async (uid: string, resource: Resource) => {
     }
 };
 
-export const updateUserProgress = async (uid: string, data: Partial<Omit<UserProgress, 'updatedAt'>> & { lastResourceId: string }) => {
+export const updateUserProgress = async (uid: string, data: Partial<Omit<UserProgress, 'updatedAt'>>) => {
   const progressRef = doc(db, "userProgress", uid);
   try {
     await setDoc(progressRef, {

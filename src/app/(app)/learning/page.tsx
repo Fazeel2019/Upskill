@@ -278,6 +278,15 @@ export default function LearningPage() {
         }
     }
 
+    const handleClosePlayer = () => {
+        if (user && selectedResource) {
+            updateUserProgress(user.uid, {
+                [`courses.${selectedResource.id}.progress`]: 100
+            });
+        }
+        setSelectedResource(null);
+    };
+
     const pageVariants = {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.5, staggerChildren: 0.1 } },
@@ -360,7 +369,7 @@ export default function LearningPage() {
                 </Tabs>
             </motion.div>
 
-             <Dialog open={!!selectedResource} onOpenChange={(open) => !open && setSelectedResource(null)}>
+             <Dialog open={!!selectedResource} onOpenChange={(open) => !open && handleClosePlayer()}>
                 <DialogContent className="max-w-3xl p-0">
                 {selectedResource && (
                     <>
@@ -388,5 +397,3 @@ export default function LearningPage() {
         </motion.div>
     )
 }
-
-    
