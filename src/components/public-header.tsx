@@ -43,7 +43,7 @@ export default function PublicHeader() {
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
-          <Logo className={cn("h-8 w-auto text-foreground")} />
+          <Logo className={cn("h-10 w-auto text-foreground")} />
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           {navLinks.map((link) => (

@@ -119,9 +119,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar>
         <SidebarHeader>
           <div className="flex items-center justify-between p-2">
-            <div className="flex items-center gap-2">
-                <Logo className="w-auto h-8 text-primary" />
-            </div>
+            <Logo className="w-auto h-10 text-primary" />
             <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
                 <ChevronLeft />
             </SidebarTrigger>

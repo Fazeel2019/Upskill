@@ -22,7 +22,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
           <div className="col-span-2">
              <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-white">
-                <Logo className="h-8 w-auto bg-transparent border border-white/20" />
+                <Logo className="h-10 w-auto bg-transparent border border-white/20" />
             </Link>
              <p className="text-gray-400 text-sm mt-4 max-w-xs">
               Empowering healthcare and STEM professionals to accelerate their careers through AI-powered insights, expert mentorship, and exclusive networking.
