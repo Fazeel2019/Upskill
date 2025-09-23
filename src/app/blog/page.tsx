@@ -14,6 +14,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { listenToBlogs, type Blog } from "@/services/blogs";
 import { format } from "date-fns";
+import { Timestamp } from "firebase/firestore";
 
 const categories = ["All", "Career Development", "Healthcare", "STEM", "Public Health"];
 
@@ -33,6 +34,12 @@ export default function BlogPage() {
 
   const featuredPost = useMemo(() => allPosts.length > 0 ? allPosts[0] : null, [allPosts]);
   const otherPosts = useMemo(() => allPosts.length > 1 ? allPosts.slice(1) : [], [allPosts]);
+  
+  const formatDate = (date: Timestamp | Date | undefined) => {
+    if (!date) return '';
+    const dateObj = (date as Timestamp)?.toDate ? (date as Timestamp).toDate() : (date as Date);
+    return format(dateObj, "MMMM d, yyyy");
+  }
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -100,7 +107,7 @@ export default function BlogPage() {
         >
           <div className="container mx-auto px-4">
             {loading ? (
-                <div className="flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
+                <div className="flex justify-center py-16"><Loader2 className="w-8 h-8 animate-spin" /></div>
             ) : allPosts.length > 0 && featuredPost ? (
              <>
                 {/* Featured Post */}
@@ -131,7 +138,7 @@ export default function BlogPage() {
                                 <div className="flex items-center gap-4">
                                     <div className="flex items-center gap-2">
                                       <Calendar className="w-4 h-4" />
-                                      <span>{featuredPost.createdAt ? format(featuredPost.createdAt.toDate(), "MMMM d, yyyy") : ''}</span>
+                                      <span>{formatDate(featuredPost.createdAt)}</span>
                                     </div>
                                     <span>by {featuredPost.author}</span>
                                 </div>
@@ -183,7 +190,7 @@ export default function BlogPage() {
                           <CardFooter className="flex justify-between items-center text-sm text-muted-foreground">
                             <div className="flex items-center gap-2">
                               <Calendar className="w-4 h-4" />
-                              <span>{post.createdAt ? format(post.createdAt.toDate(), "MMMM d, yyyy") : ''}</span>
+                              <span>{formatDate(post.createdAt)}</span>
                             </div>
                             <Link href={`/blog/${post.id}`} className="flex items-center text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
                               Read More <ArrowRight className="ml-1 w-4 h-4" />
@@ -195,7 +202,16 @@ export default function BlogPage() {
                   </div>
                 ) : <p className="text-center text-muted-foreground">No posts found in this category.</p>}
              </>
-            ) : <p className="text-center text-muted-foreground py-16">No blog posts found. Check back later!</p>}
+            ) : (<div className="text-center py-16">
+                    <Card className="max-w-md mx-auto">
+                        <CardContent className="p-8 text-center">
+                            <h3 className="font-semibold text-lg">No Blog Posts Yet</h3>
+                            <p className="text-muted-foreground mt-2">
+                                Check back soon for new articles and insights!
+                            </p>
+                        </CardContent>
+                    </Card>
+                </div>)}
           </div>
         </motion.section>
 
