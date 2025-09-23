@@ -31,8 +31,8 @@ export default function BlogPage() {
     return () => unsubscribe();
   }, []);
 
-  const featuredPost = useMemo(() => allPosts?.[0], [allPosts]);
-  const otherPosts = useMemo(() => allPosts?.slice(1), [allPosts]);
+  const featuredPost = useMemo(() => allPosts.length > 0 ? allPosts[0] : null, [allPosts]);
+  const otherPosts = useMemo(() => allPosts.length > 1 ? allPosts.slice(1) : [], [allPosts]);
 
   const sectionVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -101,7 +101,7 @@ export default function BlogPage() {
           <div className="container mx-auto px-4">
             {loading ? (
                 <div className="flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
-            ) : allPosts.length > 0 ? (
+            ) : allPosts.length > 0 && featuredPost ? (
              <>
                 {/* Featured Post */}
                 <motion.div variants={cardVariants}>
@@ -156,7 +156,7 @@ export default function BlogPage() {
                     </Button>
                   ))}
                 </div>
-                {filteredPosts.length > 0 ? (
+                {otherPosts.length > 0 && filteredPosts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredPosts.map((post, index) => (
                       <motion.div key={post.id} variants={cardVariants}>
