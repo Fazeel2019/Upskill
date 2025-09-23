@@ -99,8 +99,9 @@ export default function BlogPage() {
           variants={sectionVariants}
         >
           <div className="container mx-auto px-4">
-            {loading ? <div className="flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div> : 
-            allPosts.length > 0 && featuredPost ? (
+            {loading ? (
+                <div className="flex justify-center"><Loader2 className="w-8 h-8 animate-spin" /></div>
+            ) : allPosts.length > 0 ? (
              <>
                 {/* Featured Post */}
                 <motion.div variants={cardVariants}>
@@ -155,10 +156,10 @@ export default function BlogPage() {
                     </Button>
                   ))}
                 </div>
-                {otherPosts.length > 0 ? (
+                {filteredPosts.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {filteredPosts.map((post, index) => (
-                      <motion.div key={index} variants={cardVariants}>
+                      <motion.div key={post.id} variants={cardVariants}>
                         <Card className="flex flex-col h-full group overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-primary/10">
                           <div className="relative overflow-hidden h-48">
                             <Image
@@ -192,9 +193,9 @@ export default function BlogPage() {
                       </motion.div>
                     ))}
                   </div>
-                ) : <p className="text-center text-muted-foreground">No more posts in this category.</p>}
+                ) : <p className="text-center text-muted-foreground">No posts found in this category.</p>}
              </>
-            ) : <p className="text-center text-muted-foreground">No blog posts found. Check back later!</p>}
+            ) : <p className="text-center text-muted-foreground py-16">No blog posts found. Check back later!</p>}
           </div>
         </motion.section>
 
