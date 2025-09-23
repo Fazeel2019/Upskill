@@ -43,7 +43,7 @@ export default function PublicHeader() {
     <header className={headerClasses}>
       <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
         <Link href="/" className="flex items-center gap-2 font-bold text-2xl">
-          <Logo className={cn("h-10 w-auto text-foreground")} />
+          <Logo className={cn("h-12 w-auto text-foreground")} />
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
           {navLinks.map((link) => (
@@ -62,7 +62,7 @@ export default function PublicHeader() {
             <Link href="/login">Log In</Link>
           </Button>
           <Button asChild className="bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 shadow-md">
-            <Link href="/signup">Start Free Trial</Link>
+            <Link href="/login">Start Free Trial</Link>
           </Button>
         </div>
         <Sheet>
@@ -90,7 +90,7 @@ export default function PublicHeader() {
               </nav>
               <div className="grid gap-4 mt-8">
                 <Button asChild className="bg-blue-600 text-white">
-                  <Link href="/signup">Start Free Trial</Link>
+                  <Link href="/login">Start Free Trial</Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="/login">Log In</Link>

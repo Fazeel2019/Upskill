@@ -99,7 +99,7 @@ export default function Home() {
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
                     <Button asChild size="lg" className="w-full sm:w-auto rounded-full bg-white text-blue-600 font-semibold hover:bg-blue-100 transition-transform transform hover:scale-105 shadow-lg">
-                      <Link href="/signup">Start Free Trial Today</Link>
+                      <Link href="/login">Start Free Trial Today</Link>
                     </Button>
                   </div>
                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center md:text-left">
@@ -185,7 +185,7 @@ export default function Home() {
                     <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
                      <div className="mt-6 flex justify-center gap-4">
                         <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
-                            <Link href="/signup">Become a Member</Link>
+                            <Link href="/login">Become a Member</Link>
                         </Button>
                         <Button asChild size="lg" variant="outline" className="rounded-full">
                             <Link href="/login">Book a Demo</Link>
@@ -262,7 +262,7 @@ export default function Home() {
                 <h3 className="font-headline text-3xl font-bold">Ready to Join Our Success Stories?</h3>
                 <p className="text-muted-foreground mt-2 text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
                 <Button asChild size="lg" className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
-                    <Link href="/signup">Join the Community</Link>
+                    <Link href="/login">Join the Community</Link>
                 </Button>
             </div>
           </div>
@@ -402,7 +402,7 @@ export default function Home() {
                 </p>
                 <div className="mt-8 flex justify-center gap-4">
                   <Button asChild size="lg" className="rounded-full bg-blue-600 font-semibold text-white shadow-lg hover:bg-blue-700">
-                      <Link href="/signup">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
+                      <Link href="/login">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="rounded-full font-semibold">
                       <Link href="/login">Schedule a Demo</Link>
@@ -428,6 +428,7 @@ export default function Home() {
     </div>
   );
 }
+
 
 
 
