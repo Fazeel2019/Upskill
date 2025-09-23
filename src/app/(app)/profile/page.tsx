@@ -595,7 +595,10 @@ function AchievementItem({ achievement }: { achievement: Achievement }) {
             <div className="flex-grow">
                 <div className="flex justify-between items-start">
                     <div>
-                        <h4 className="font-semibold">{achievement.title}</h4>
+                        <h4 className="font-semibold flex items-center gap-2">
+                           {isCertificate && <Award className="w-4 h-4 text-yellow-500" />}
+                           {achievement.title}
+                        </h4>
                         {achievement.issuer && <p className="text-muted-foreground text-sm">{achievement.issuer}</p>}
                         <p className="text-muted-foreground text-xs mt-1">{formatDate(achievement.date)}</p>
                     </div>
