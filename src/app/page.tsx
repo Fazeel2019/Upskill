@@ -29,49 +29,49 @@ const testimonials = [
     name: "Dr. Sarah Chen",
     title: "Chief Medical Officer, MedTech Innovations",
     quote: "The AI-powered insights helped me identify key leadership gaps and develop a strategic career plan. Within 6 months, I secured my dream CMO position at a Fortune 500 company.",
-    image: "https://picsum.photos/seed/testimonial1/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
   {
     name: "Marcus Rodriguez",
     title: "Senior Data Scientist, BioAnalytics Corp",
     quote: "The mentorship program connected me with industry leaders who provided invaluable guidance. The networking opportunities alone were worth the investment - I received 5 job offers.",
-    image: "https://picsum.photos/seed/testimonial2/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
   {
     name: "Dr. Emily Watson",
     title: "Research Director, Genomics Institute",
     quote: "The exclusive events and workshops provided cutting-edge insights into industry trends. I've expanded my network significantly and gained confidence in leadership roles.",
-    image: "https://picsum.photos/seed/testimonial3/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
    {
     name: "James Park",
     title: "VP of Engineering, HealthTech Solutions",
     quote: "The career tracking tools and goal-setting framework kept me focused and motivated. I achieved my promotion goals 8 months ahead of schedule and doubled my team size.",
-    image: "https://picsum.photos/seed/testimonial4/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
   {
     name: "Dr. Lisa Thompson",
     title: "Clinical Research Lead, Pharma Dynamics",
     quote: "The community aspect is incredible. Being able to discuss challenges and solutions with peers facing similar situations has been transformative for my career development.",
-    image: "https://picsum.photos/seed/testimonial5/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
   {
     name: "Alex Kumar",
     title: "Principal Scientist, Biotech Innovations",
     quote: "The skill acceleration programs are top-notch. I gained expertise in emerging technologies that directly contributed to my recent promotion to Principal Scientist level.",
-    image: "https://picsum.photos/seed/testimonial6/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
   {
     name: "Dr. Rachel Kim",
     title: "Head of Innovation, Digital Health Corp",
     quote: "The platform's comprehensive approach to career development is unmatched. From AI insights to personal mentorship, every tool contributed to my success as Head of Innovation.",
-    image: "https://picsum.photos/seed/testimonial7/100/100",
+    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   }
 ];
@@ -301,7 +301,7 @@ export default function Home() {
                         </div>
                         <div className="flex items-center justify-between gap-3 mt-4">
                           <div className="flex items-center gap-3">
-                            <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" />
+                            <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" unoptimized/>
                             <div>
                                 <p className="font-semibold text-sm text-foreground">{testimonial.name}</p>
                                 <p className="text-xs text-muted-foreground">{testimonial.title}</p>
