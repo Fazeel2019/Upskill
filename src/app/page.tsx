@@ -118,7 +118,7 @@ export default function Home() {
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10">
-                    <Image src="https://picsum.photos/seed/professionals-community/1200/800" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community"/>
+                    <Image src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmFtMHdhMWJyMDg5dmVrbHh0bmVyZGpzbDUyNXBsOTljYWVtbWQ1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                 </div>
               </motion.div>
            </div>
