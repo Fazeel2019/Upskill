@@ -194,7 +194,7 @@ export default function Home() {
         <section id="features" className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
-                <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+                <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-foreground">
                  ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
@@ -255,7 +255,7 @@ export default function Home() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
-            <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight mb-4 text-foreground">
+            <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
              Trusted by Leading<br />
              <span className="gradient-text">Healthcare & STEM</span><br />
              Professionals
@@ -328,7 +328,7 @@ export default function Home() {
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-700 bg-blue-900/50">Limited Time Offer</Badge>
-                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
+                    <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
                     <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
@@ -354,7 +354,7 @@ export default function Home() {
                           </div>
 
                           <div>
-                             <p className="text-5xl font-bold"><span className="line-through text-muted-foreground text-3xl">$297</span> $97<span className="text-lg font-normal text-muted-foreground">/month</span></p>
+                             <p className="text-4xl md:text-5xl font-bold"><span className="line-through text-muted-foreground text-2xl md:text-3xl">$297</span> $97<span className="text-lg font-normal text-muted-foreground">/month</span></p>
                              <p className="text-green-500 font-semibold mt-2">Save $200/month - Limited Time</p>
                              <p className="text-muted-foreground text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
                           </div>
@@ -464,7 +464,7 @@ export default function Home() {
                       <Link href="/login">Schedule a Demo</Link>
                   </Button>
                 </div>
-                 <div className="mt-12 grid grid-cols-2 gap-4 text-foreground md:grid-cols-4">
+                 <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><TrendingUp className="w-8 h-8 text-green-500" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold text-muted-foreground">Success Rate</p></div>
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Star className="w-8 h-8 text-yellow-500" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold text-muted-foreground">User Rating</p></div>
@@ -490,5 +490,7 @@ export default function Home() {
 
 
 
+
+    
 
     
