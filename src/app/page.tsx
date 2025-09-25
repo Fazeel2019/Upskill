@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer, TrendingUp, Award } from "lucide-react";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer, TrendingUp, Award, BrainCircuit } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 const features = [
     { title: "AI-Powered Career Insights", description: "Get personalized career recommendations and skill gap analysis powered by advanced AI algorithms that understand your unique professional journey.", icon: Goal, tag: "AI-Driven", iconBg: "bg-blue-100", iconColor: "text-blue-600" },
@@ -75,7 +76,33 @@ const testimonials = [
   }
 ];
 
+const AnimatedTag = ({ children, className, animation }: { children: React.ReactNode, className?: string, animation: any }) => (
+  <motion.div
+    className={cn("absolute bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/30", className)}
+    variants={animation.variants}
+    initial="initial"
+    animate="animate"
+    transition={animation.transition}
+  >
+    {children}
+  </motion.div>
+);
+
 export default function Home() {
+
+    const floatingAnimation = (delay = 0, duration = 5) => ({
+      variants: {
+        initial: { y: 0 },
+        animate: { y: [0, -10, 0] },
+      },
+      transition: {
+        duration,
+        repeat: Infinity,
+        repeatType: "mirror",
+        ease: "easeInOut",
+        delay,
+      },
+    });
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground w-full overflow-x-hidden">
@@ -118,7 +145,34 @@ export default function Home() {
                   </div>
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10">
-                    <Image src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmFtMHdhMWJyMDg5dmVrbHh0bmVyZGpzbDUyNXBsOTljYWVtbWQ1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
+                    <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
+                      <Image src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmFtMHdhMWJyMDg5dmVrbHh0bmVyZGpzbDUyNXBsOTljYWVtbWQ1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
+                    </div>
+                    <AnimatedTag className="top-10 left-5 text-gray-800" animation={floatingAnimation(0, 6)}>
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-500 rounded-lg"><BrainCircuit className="w-5 h-5 text-white" /></div>
+                        <div>
+                          <p className="font-bold">AI Assistant</p>
+                          <p className="text-sm text-gray-600">Career insights</p>
+                        </div>
+                      </div>
+                    </AnimatedTag>
+                    <AnimatedTag className="bottom-12 left-0 text-gray-800" animation={floatingAnimation(1, 5)}>
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-red-500 rounded-lg"><Calendar className="w-5 h-5 text-white" /></div>
+                        <div>
+                          <p className="font-bold">Live Coaching</p>
+                          <p className="text-sm text-gray-600">Weekly sessions</p>
+                        </div>
+                      </div>
+                    </AnimatedTag>
+                    <AnimatedTag className="bottom-20 right-5 text-gray-800 w-64" animation={floatingAnimation(0.5, 7)}>
+                      <div>
+                        <p className="font-bold flex justify-between items-center">Leadership Index <span className="text-green-500">94%</span></p>
+                        <p className="text-sm text-gray-600 mb-2">Career progress</p>
+                        <Progress value={94} className="h-2" indicatorClassName="bg-green-500" />
+                      </div>
+                    </AnimatedTag>
                 </div>
               </motion.div>
            </div>
@@ -428,14 +482,6 @@ export default function Home() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
+    
 
     
