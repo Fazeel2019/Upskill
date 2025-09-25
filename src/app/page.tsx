@@ -194,7 +194,7 @@ export default function Home() {
         <section id="features" className="py-16 md:py-24 bg-white">
              <div className="container mx-auto px-4 text-center">
                 <Badge variant="outline" className="mb-4 font-semibold text-blue-600 border-blue-200 bg-blue-50">Platform Features</Badge>
-                <h2 className="font-headline text-6xl font-bold tracking-tight text-foreground">
+                <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight text-foreground">
                  ✨ Everything You Need to <span className="gradient-text">Accelerate Your Career</span>
                 </h2>
                 <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">Our comprehensive platform combines cutting-edge technology with human expertise to provide unparalleled career development opportunities for ambitious professionals.</p>
@@ -218,7 +218,7 @@ export default function Home() {
                     <div className="scroll-container w-full overflow-hidden">
                         <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
                             {[...features, ...features].map((feature, index) => (
-                                <Card key={index} className="group relative w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500 flex flex-col justify-between overflow-hidden">
+                                <Card key={index} className="group relative w-[320px] md:w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-blue-500 flex flex-col justify-between overflow-hidden">
                                   <div>
                                     <div className="flex items-start justify-between mb-4">
                                         <div className={cn("p-3 rounded-lg transition-transform duration-300 group-hover:rotate-[-15deg]", feature.iconBg)}>
@@ -237,9 +237,9 @@ export default function Home() {
                 </div>
 
                 <div className="mt-16 bg-blue-50 rounded-2xl p-8 text-center shadow-lg max-w-4xl mx-auto">
-                    <h3 className="font-headline text-3xl font-bold">Ready to unlock your potential?</h3>
-                    <p className="text-muted-foreground mt-2 text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
-                     <div className="mt-6 flex justify-center gap-4">
+                    <h3 className="font-headline text-2xl md:text-3xl font-bold">Ready to unlock your potential?</h3>
+                    <p className="text-muted-foreground mt-2 text-base md:text-lg">Join a community of driven professionals and get access to the tools you need to succeed.</p>
+                     <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
                         <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
                             <Link href="/login">Become a Member</Link>
                         </Button>
@@ -255,7 +255,7 @@ export default function Home() {
         <section className="bg-white py-16 md:py-24">
           <div className="container mx-auto px-4 text-center">
             <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
-            <h2 className="font-headline text-6xl font-bold tracking-tight mb-4 text-foreground">
+            <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight mb-4 text-foreground">
              Trusted by Leading<br />
              <span className="gradient-text">Healthcare & STEM</span><br />
              Professionals
@@ -264,33 +264,33 @@ export default function Home() {
               Join thousands of professionals who have accelerated their careers and achieved remarkable success with our comprehensive platform.
             </p>
 
-            <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-8">
-                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-blue-100">
-                    <p className="text-6xl">👥</p>
-                    <p className="text-4xl font-bold gradient-text mt-2">10,000+</p>
-                    <p className="text-muted-foreground mt-1 font-semibold">Active Members</p>
+            <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-blue-100">
+                    <p className="text-4xl md:text-6xl">👥</p>
+                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">10,000+</p>
+                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Active Members</p>
                 </Card>
-                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-green-100">
-                    <p className="text-6xl">📈</p>
-                    <p className="text-4xl font-bold gradient-text mt-2">94%</p>
-                    <p className="text-muted-foreground mt-1 font-semibold">Success Rate</p>
+                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-green-100">
+                    <p className="text-4xl md:text-6xl">📈</p>
+                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">94%</p>
+                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Success Rate</p>
                 </Card>
-                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-purple-100">
-                    <p className="text-6xl">🎯</p>
-                    <p className="text-4xl font-bold gradient-text mt-2">500+</p>
-                    <p className="text-muted-foreground mt-1 font-semibold">Expert Mentors</p>
+                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-purple-100">
+                    <p className="text-4xl md:text-6xl">🎯</p>
+                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">500+</p>
+                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Expert Mentors</p>
                 </Card>
-                <Card className="p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-yellow-100">
-                    <p className="text-6xl">⭐</p>
-                    <p className="text-4xl font-bold gradient-text mt-2">4.9/5</p>
-                    <p className="text-muted-foreground mt-1 font-semibold">Average Rating</p>
+                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-yellow-100">
+                    <p className="text-4xl md:text-6xl">⭐</p>
+                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">4.9/5</p>
+                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Average Rating</p>
                 </Card>
             </div>
 
             <div className="scroll-container w-full overflow-hidden">
                 <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
                     {[...testimonials, ...testimonials].map((testimonial, index) => (
-                      <Card key={index} className="group relative w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-purple-500 flex flex-col justify-between overflow-hidden">
+                      <Card key={index} className="group relative w-[320px] md:w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-purple-500 flex flex-col justify-between overflow-hidden">
                         <div>
                           <div className="flex items-center mb-2">
                               {Array.from({ length: 5 }).map((_, i) => (
@@ -314,9 +314,9 @@ export default function Home() {
                 </div>
             </div>
             
-            <div className="mt-16 bg-blue-50 rounded-2xl p-12 text-center shadow-lg max-w-4xl mx-auto">
-                <h3 className="font-headline text-3xl font-bold">Ready to Join Our Success Stories?</h3>
-                <p className="text-muted-foreground mt-2 text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
+            <div className="mt-16 bg-blue-50 rounded-2xl p-8 md:p-12 text-center shadow-lg max-w-4xl mx-auto">
+                <h3 className="font-headline text-2xl md:text-3xl font-bold">Ready to Join Our Success Stories?</h3>
+                <p className="text-muted-foreground mt-2 text-base md:text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
                 <Button asChild size="lg" className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
                     <Link href="/login">Join the Community</Link>
                 </Button>
@@ -328,7 +328,7 @@ export default function Home() {
            <div className="container mx-auto px-4">
                 <div className="text-center mb-12 max-w-4xl mx-auto">
                     <Badge variant="outline" className="mb-4 font-semibold text-blue-300 border-blue-700 bg-blue-900/50">Limited Time Offer</Badge>
-                    <h2 className="font-headline text-6xl font-bold tracking-tight">
+                    <h2 className="font-headline text-4xl md:text-6xl font-bold tracking-tight">
                         Transform Your Career<br/>Starting Today
                     </h2>
                     <p className="mt-4 text-lg text-gray-300 max-w-3xl mx-auto">Join the exclusive community of healthcare and STEM leaders. Everything you need to accelerate your career in one comprehensive platform.</p>
@@ -340,7 +340,7 @@ export default function Home() {
                      <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center text-white">
                         <p className="font-semibold">🚀 Most Popular Choice - Join 10,000+ Professionals</p>
                      </div>
-                     <div className="grid lg:grid-cols-2 gap-8 p-8">
+                     <div className="grid lg:grid-cols-2 gap-8 p-6 md:p-8">
                        {/* Left Column */}
                        <div className="flex flex-col gap-6">
                           <div className="flex items-center gap-4">
@@ -446,7 +446,7 @@ export default function Home() {
         {/* Final CTA Section */}
         <section className="relative overflow-hidden bg-background py-20 text-center md:py-32">
             <div className="container relative mx-auto px-4">
-                <h2 className="font-headline text-4xl font-bold tracking-tight text-foreground md:text-5xl">
+                <h2 className="font-headline text-3xl md:text-5xl font-bold tracking-tight text-foreground">
                   Ready to Transform <br/>
                   <span className="text-yellow-500">Your Career?</span>
                 </h2>
@@ -456,7 +456,7 @@ export default function Home() {
                 <p className="mt-4 flex items-center justify-center gap-2 text-sm text-muted-foreground">
                     <Timer className="w-4 h-4" /> Limited time offer - Save $200/month
                 </p>
-                <div className="mt-8 flex justify-center gap-4">
+                <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
                   <Button asChild size="lg" className="rounded-full bg-blue-600 font-semibold text-white shadow-lg hover:bg-blue-700">
                       <Link href="/login">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
@@ -489,3 +489,6 @@ export default function Home() {
     
 
 
+
+
+    
