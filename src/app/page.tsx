@@ -78,7 +78,7 @@ const testimonials = [
 
 const AnimatedTag = ({ children, className, animation }: { children: React.ReactNode, className?: string, animation: any }) => (
   <motion.div
-    className={cn("absolute bg-white/90 backdrop-blur-md p-4 rounded-xl shadow-lg border border-white/30", className)}
+    className={cn("absolute bg-card p-4 rounded-xl shadow-lg border", className)}
     variants={animation.variants}
     initial="initial"
     animate="animate"
@@ -148,29 +148,31 @@ export default function Home() {
                     <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmFtMHdhMWJyMDg5dmVrbHh0bmVyZGpzbDUyNXBsOTljYWVtbWQ1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                     </div>
-                    <AnimatedTag className="top-10 left-5 text-gray-800" animation={floatingAnimation(0, 6)}>
+                    <AnimatedTag className="top-10 left-5" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500 rounded-lg"><BrainCircuit className="w-5 h-5 text-white" /></div>
+                        <div className="p-2 bg-blue-500/20 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
                           <p className="font-bold">AI Assistant</p>
-                          <p className="text-sm text-gray-600">Career insights</p>
+                          <p className="text-sm text-muted-foreground">Career insights</p>
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-12 left-0 text-gray-800" animation={floatingAnimation(1, 5)}>
+                    <AnimatedTag className="bottom-12 left-0" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-red-500 rounded-lg"><Calendar className="w-5 h-5 text-white" /></div>
+                        <div className="p-2 bg-red-500/20 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
                           <p className="font-bold">Live Coaching</p>
-                          <p className="text-sm text-gray-600">Weekly sessions</p>
+                          <p className="text-sm text-muted-foreground">Weekly sessions</p>
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-20 right-5 text-gray-800 w-64" animation={floatingAnimation(0.5, 7)}>
+                    <AnimatedTag className="bottom-20 right-5 w-64" animation={floatingAnimation(0.5, 7)}>
                       <div>
-                        <p className="font-bold flex justify-between items-center">Leadership Index <span className="text-green-500">94%</span></p>
-                        <p className="text-sm text-gray-600 mb-2">Career progress</p>
-                        <Progress value={94} className="h-2" indicatorClassName="bg-green-500" />
+                        <div className="flex justify-between items-center mb-2">
+                            <p className="font-bold">Leadership Index</p>
+                            <span className="font-bold text-green-500">94%</span>
+                        </div>
+                        <Progress value={94} className="h-2" indicatorClassName="bg-gradient-to-r from-green-400 to-emerald-500" />
                       </div>
                     </AnimatedTag>
                 </div>
@@ -396,8 +398,8 @@ export default function Home() {
                             </Accordion>
                           </div>
 
-                           <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
-                            Start Your Transformation Today <ArrowRight className="ml-2"/>
+                           <Button asChild size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
+                             <Link href="/login">Start Your Transformation Today <ArrowRight className="ml-2"/></Link>
                            </Button>
                            <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
                        </div>
