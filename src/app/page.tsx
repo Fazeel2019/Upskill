@@ -109,7 +109,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient">
+        <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient pt-20">
            <div className="container relative mx-auto px-4">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -487,4 +487,5 @@ export default function Home() {
     
 
     
+
 
