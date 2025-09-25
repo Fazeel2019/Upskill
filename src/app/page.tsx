@@ -110,7 +110,7 @@ export default function Home() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient pt-20">
-           <div className="container relative mx-auto px-4">
+           <div className="container relative mx-auto px-4 pt-16">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
                 initial={{ opacity: 0, y: 20 }}
@@ -150,7 +150,7 @@ export default function Home() {
                     </div>
                     <AnimatedTag className="top-10 left-5" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-500/20 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
+                        <div className="p-2 bg-blue-100 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
                           <p className="font-bold">AI Assistant</p>
                           <p className="text-sm text-muted-foreground">Career insights</p>
@@ -159,7 +159,7 @@ export default function Home() {
                     </AnimatedTag>
                     <AnimatedTag className="bottom-12 left-0" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-red-500/20 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
+                        <div className="p-2 bg-red-100 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
                           <p className="font-bold">Live Coaching</p>
                           <p className="text-sm text-muted-foreground">Weekly sessions</p>
