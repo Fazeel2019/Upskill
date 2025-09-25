@@ -32,28 +32,7 @@ const testimonials = [
     image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
     rating: 5,
   },
-  {
-    name: "Marcus Rodriguez",
-    title: "Senior Data Scientist, BioAnalytics Corp",
-    quote: "The mentorship program connected me with industry leaders who provided invaluable guidance. The networking opportunities alone were worth the investment - I received 5 job offers.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
-  },
-  {
-    name: "Dr. Emily Watson",
-    title: "Research Director, Genomics Institute",
-    quote: "The exclusive events and workshops provided cutting-edge insights into industry trends. I've expanded my network significantly and gained confidence in leadership roles.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
-  },
    {
-    name: "James Park",
-    title: "VP of Engineering, HealthTech Solutions",
-    quote: "The career tracking tools and goal-setting framework kept me focused and motivated. I achieved my promotion goals 8 months ahead of schedule and doubled my team size.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
-  },
-  {
     name: "Dr. Lisa Thompson",
     title: "Clinical Research Lead, Pharma Dynamics",
     quote: "The community aspect is incredible. Being able to discuss challenges and solutions with peers facing similar situations has been transformative for my career development.",
@@ -109,7 +88,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient pt-20">
+        <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient pt-24 md:pt-20">
            <div className="container relative mx-auto px-4 pt-16">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -287,32 +266,18 @@ export default function Home() {
                 </Card>
             </div>
 
-            <div className="scroll-container w-full overflow-hidden">
-                <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
-                    {[...testimonials, ...testimonials].map((testimonial, index) => (
-                      <Card key={index} className="group relative w-[320px] md:w-[380px] h-[420px] shrink-0 m-4 text-left p-6 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 border-t-4 border-purple-500 flex flex-col justify-between overflow-hidden">
-                        <div>
-                          <div className="flex items-center mb-2">
-                              {Array.from({ length: 5 }).map((_, i) => (
-                                  <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-300'}`} />
-                              ))}
-                          </div>
-                          <p className="font-medium text-foreground mb-4 flex-grow italic">"{testimonial.quote}"</p>
-                        </div>
-                        <div className="flex items-center justify-between gap-3 mt-4">
-                          <div className="flex items-center gap-3">
-                            <Image src={testimonial.image} alt={testimonial.name} width={40} height={40} className="rounded-full" data-ai-hint="person portrait" unoptimized/>
-                            <div>
-                                <p className="font-semibold text-sm text-foreground">{testimonial.name}</p>
-                                <p className="text-xs text-muted-foreground">{testimonial.title}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-1/4 -right-1/4 w-48 h-48 bg-gradient-to-tr from-blue-500/20 via-purple-500/20 to-red-500/20 rounded-full opacity-0 scale-0 group-hover:scale-100 group-hover:opacity-100 transition-all duration-500 ease-in-out"></div>
-                      </Card>
-                    ))}
-                </div>
-            </div>
+            <Card className="w-full max-w-4xl mx-auto p-4 md:p-6 shadow-lg border-t-4 border-purple-500">
+              <CardContent className="p-0 md:p-2">
+                <Image 
+                  src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif" 
+                  alt="Testimonial GIF" 
+                  width={600} 
+                  height={400} 
+                  unoptimized 
+                  className="rounded-lg mx-auto" 
+                />
+              </CardContent>
+            </Card>
             
             <div className="mt-16 bg-blue-50 rounded-2xl p-8 md:p-12 text-center shadow-lg max-w-4xl mx-auto">
                 <h3 className="font-headline text-2xl md:text-3xl font-bold">Ready to Join Our Success Stories?</h3>
@@ -494,3 +459,4 @@ export default function Home() {
     
 
     
+
