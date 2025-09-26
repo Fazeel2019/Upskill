@@ -89,7 +89,7 @@ export default function Home() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative min-h-screen flex items-center bg-blue-600 text-foreground overflow-hidden hero-gradient pt-24 md:pt-20">
-           <div className="container relative mx-auto px-4 pt-16">
+           <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
                 initial={{ opacity: 0, y: 20 }}
@@ -125,7 +125,7 @@ export default function Home() {
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full z-10 order-1 md:order-2">
                     <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExYmFtMHdhMWJyMDg5dmVrbHh0bmVyZGpzbDUyNXBsOTljYWVtbWQ1ayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
+                      <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                     </div>
                     <AnimatedTag className="top-10 left-5" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
@@ -266,18 +266,14 @@ export default function Home() {
                 </Card>
             </div>
 
-            <Card className="w-full max-w-4xl mx-auto p-4 md:p-6 shadow-lg border-t-4 border-purple-500">
-              <CardContent className="p-0 md:p-2">
-                <Image 
-                  src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif" 
-                  alt="Testimonial GIF" 
-                  width={600} 
-                  height={400} 
-                  unoptimized 
-                  className="rounded-lg mx-auto" 
-                />
-              </CardContent>
-            </Card>
+            <Image 
+              src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif" 
+              alt="Testimonial GIF" 
+              width={1200}
+              height={400}
+              unoptimized 
+              className="rounded-lg mx-auto shadow-lg w-full h-auto" 
+            />
             
             <div className="mt-16 bg-blue-50 rounded-2xl p-8 md:p-12 text-center shadow-lg max-w-4xl mx-auto">
                 <h3 className="font-headline text-2xl md:text-3xl font-bold">Ready to Join Our Success Stories?</h3>
@@ -459,4 +455,5 @@ export default function Home() {
     
 
     
+
 
