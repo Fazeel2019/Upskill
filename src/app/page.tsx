@@ -128,7 +128,7 @@ export default function Home() {
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                     </div>
-                    <AnimatedTag className="top-10 -left-5" animation={floatingAnimation(0, 6)}>
+                    <AnimatedTag className="top-12 -left-4" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-100 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
@@ -137,7 +137,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-12 -left-10" animation={floatingAnimation(1, 5)}>
+                    <AnimatedTag className="bottom-16 -left-8" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-red-100 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
@@ -146,7 +146,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-20 -right-5 w-64" animation={floatingAnimation(0.5, 7)}>
+                    <AnimatedTag className="bottom-24 -right-8 w-64" animation={floatingAnimation(0.5, 7)}>
                       <div>
                         <div className="flex justify-between items-center mb-2">
                             <p className="font-bold">Leadership Index</p>
@@ -456,6 +456,7 @@ export default function Home() {
     
 
     
+
 
 
 
