@@ -123,7 +123,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                 <div className="relative h-80 md:h-[500px] w-full z-10 order-1 md:order-2">
+                 <div className="relative h-80 md:h-[500px] w-full z-0 order-1 md:order-2">
                     <div className="relative h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                     </div>
@@ -455,5 +455,6 @@ export default function Home() {
     
 
     
+
 
 
