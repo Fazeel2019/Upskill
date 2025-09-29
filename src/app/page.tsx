@@ -119,7 +119,7 @@ export default function Home() {
                 </div>
                  <div className="relative h-80 md:h-[500px] w-full order-1 md:order-2">
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
-                      <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized className="rounded-2xl"/>
+                      <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized className="rounded-2xl"/>
                     </div>
                     <AnimatedTag className="top-0 left-[-20px]" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
@@ -236,37 +236,39 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto">
               {/* Testimonial 1 */}
               <div className="text-center mt-16 md:mt-24">
-                <div className="relative inline-block">
-                  <motion.div
-                    animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
-                    transition={{ duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-                    className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]"
-                  ></motion.div>
-                  <div className="relative p-4 max-w-xs bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
-                     <Image
+                <motion.div
+                  animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
+                  transition={{ duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                  className="relative inline-block"
+                >
+                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]" />
+                  <div className="relative bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
+                    <Image
                       src={testimonials[0].image}
                       alt={testimonials[0].name}
                       width={120}
                       height={120}
-                      className="relative rounded-full mx-auto -mt-20 border-4 border-white"
+                      className="relative rounded-full mx-auto -mt-16 border-4 border-white"
                       data-ai-hint={testimonials[0].imageHint}
                     />
-                    <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[0].quote}</p>
+                    <div className="px-6 pb-8 pt-4">
+                      <p className="text-sm text-foreground/80 italic">{testimonials[0].quote}</p>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[0].name}</h3>
                 <p className="font-semibold text-muted-foreground text-sm">{testimonials[0].role}</p>
               </div>
               
               {/* Testimonial 2 (Center) */}
               <div className="text-center order-first md:order-none">
-                 <div className="relative inline-block">
-                  <motion.div
-                    animate={{ y: [0, 8, 0], rotate: [3, -3, 3] }}
-                    transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
-                    className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]"
-                  ></motion.div>
-                   <div className="relative p-4 max-w-xs bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
+                 <motion.div
+                  animate={{ y: [0, 8, 0], rotate: [3, -3, 3] }}
+                  transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
+                  className="relative inline-block"
+                >
+                  <div className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]" />
+                   <div className="relative bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
                       <Image
                         src={testimonials[1].image}
                         alt={testimonials[1].name}
@@ -275,33 +277,37 @@ export default function Home() {
                         className="relative rounded-full mx-auto -mt-16 border-4 border-white"
                         data-ai-hint={testimonials[1].imageHint}
                       />
-                      <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[1].quote}</p>
+                      <div className="px-6 pb-8 pt-4">
+                        <p className="text-sm text-foreground/80 italic">{testimonials[1].quote}</p>
+                      </div>
                    </div>
-                 </div>
+                 </motion.div>
                 <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[1].name}</h3>
                 <p className="font-semibold text-muted-foreground text-sm">{testimonials[1].role}</p>
               </div>
 
               {/* Testimonial 3 */}
               <div className="text-center mt-16 md:mt-24">
-                <div className="relative inline-block">
-                  <motion.div
-                    animate={{ y: [0, -6, 0], rotate: [-1, 3, -1] }}
-                    transition={{ duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 1 }}
-                    className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]"
-                  ></motion.div>
-                   <div className="relative p-4 max-w-xs bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
+                <motion.div
+                  animate={{ y: [0, -6, 0], rotate: [-1, 3, -1] }}
+                  transition={{ duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 1 }}
+                  className="relative inline-block"
+                >
+                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]" />
+                   <div className="relative bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
                      <Image
                       src={testimonials[2].image}
                       alt={testimonials[2].name}
                       width={120}
                       height={120}
-                      className="relative rounded-full mx-auto -mt-20 border-4 border-white"
+                      className="relative rounded-full mx-auto -mt-16 border-4 border-white"
                       data-ai-hint={testimonials[2].imageHint}
                     />
-                     <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[2].quote}</p>
+                    <div className="px-6 pb-8 pt-4">
+                      <p className="text-sm text-foreground/80 italic">{testimonials[2].quote}</p>
+                    </div>
                    </div>
-                </div>
+                </motion.div>
                 <h3 className="font-bold text-lg text-blue-700 mt-4">{testimonials[2].name}</h3>
                 <p className="font-semibold text-muted-foreground text-sm">{testimonials[2].role}</p>
               </div>
@@ -480,6 +486,7 @@ export default function Home() {
     
 
     
+
 
 
 
