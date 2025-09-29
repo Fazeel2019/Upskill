@@ -23,5 +23,3 @@ export const Logo = ({ className }: { className?: string }) => (
       </g>
     </svg>
 );
-
-    
