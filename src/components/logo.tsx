@@ -8,9 +8,9 @@ export const Logo = ({ className }: { className?: string }) => {
         <img
             src="/logo.png"
             alt="Upskill Logo"
-            width={192} // 12rem
-            height={48}  // 3rem
-            className={cn("h-12 w-48", className)}
+            width={256} // 16rem
+            height={128}  // 8rem
+            className={cn("h-32 w-64", className)}
         />
     );
 };
