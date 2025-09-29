@@ -26,19 +26,26 @@ const features = [
 
 const testimonials = [
   {
-    name: "Dr. Emily Watson",
-    role: "Research Director, Genomics Institute",
-    quote: "The exclusive events and workshops provided cutting-edge insights into industry trends. I've expanded my network significantly and gained confidence in leadership roles.",
-    image: "https://picsum.photos/seed/emily-watson/100/100",
+    name: "Lisa Howard, MBA",
+    role: "Healthcare Administrator",
+    quote: "\"Having a mentor through Upskill gave me the clarity and confidence to transition into healthcare administration. I was overwhelmed about making the pivot, but my mentor broke it down into manageable steps, offered industry insights, and helped me map out a career I now feel excited about.\"",
+    image: "https://picsum.photos/seed/lisa-howard/150/150",
     imageHint: "professional woman"
   },
   {
-    name: "DeAnna Wilcon",
-    role: "Pre-Dental Student",
-    quote: "Thank you so much for the opportunity to be part of this internship. My experience at Upskill has far exceeded my expectations, from the incredible networking opportunities to the growth in my multicultural awareness and professional development.",
-    image: "https://picsum.photos/seed/deanna-wilcon/100/100",
-    imageHint: "female student"
+    name: "Karen Mitchell, DNP",
+    role: "Nurse Practitioner & Emerging Health Entrepreneur",
+    quote: "\"As a Nurse Practitioner, I always thought my career would stay at the bedside. But the Bedside to Business course opened my eyes to how my clinical expertise could translate into entrepreneurship and leadership.\"",
+    image: "https://picsum.photos/seed/karen-mitchell/150/150",
+    imageHint: "female professional"
   },
+  {
+    name: "Dr. Samuel Adeyemi, MD",
+    role: "Internal Medicine Specialist",
+    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    image: "https://picsum.photos/seed/samuel-adeyemi/150/150",
+    imageHint: "male doctor"
+  }
 ];
 
 const AnimatedTag = ({ children, className, animation }: { children: React.ReactNode, className?: string, animation: any }) => (
@@ -114,7 +121,7 @@ export default function Home() {
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized className="rounded-2xl"/>
                     </div>
-                    <AnimatedTag className="top-8 left-0" animation={floatingAnimation(0, 6)}>
+                    <AnimatedTag className="top-0 left-[-20px]" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-100 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
@@ -123,7 +130,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-8 left-4" animation={floatingAnimation(1, 5)}>
+                    <AnimatedTag className="bottom-0 left-[-30px]" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-red-100 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
@@ -132,7 +139,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-12 right-0 w-64" animation={floatingAnimation(0.5, 7)}>
+                    <AnimatedTag className="bottom-8 right-[-20px] w-64" animation={floatingAnimation(0.5, 7)}>
                       <div>
                         <div className="flex justify-between items-center mb-2">
                             <p className="font-bold">Leadership Index</p>
@@ -218,42 +225,78 @@ export default function Home() {
         </section>
 
         {/* Community Feedback Section */}
-        <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 via-purple-50 to-red-50">
+        <section className="py-16 md:py-24 bg-white">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight mb-4">
-              Community Feedback
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-12">
-              Hear what our members have to say about their experience.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {testimonials.map((testimonial, index) => (
-                <Card key={index} className="text-left rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                  <CardContent className="p-8">
-                    <div className="flex items-center gap-4 mb-6">
+             <div className="inline-block px-6 py-3 mb-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg shadow-lg">
+                <h2 className="font-headline text-3xl font-bold tracking-tight text-white">
+                  COMMUNITY FEEDBACK
+                </h2>
+             </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto">
+              {/* Testimonial 1 */}
+              <div className="text-center mt-16 md:mt-24">
+                <div className="relative inline-block">
+                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]"></div>
+                  <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
+                     <Image
+                      src={testimonials[0].image}
+                      alt={testimonials[0].name}
+                      width={120}
+                      height={120}
+                      className="relative rounded-full mx-auto -mt-20 border-4 border-white"
+                      data-ai-hint={testimonials[0].imageHint}
+                    />
+                    <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[0].quote}</p>
+                  </div>
+                </div>
+                <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[0].name}</h3>
+                <p className="font-semibold text-muted-foreground text-sm">{testimonials[0].role}</p>
+              </div>
+              
+              {/* Testimonial 2 (Center) */}
+              <div className="text-center order-first md:order-none">
+                 <div className="relative inline-block">
+                  <div className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]"></div>
+                   <div className="relative p-6 bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
                       <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        width={64}
-                        height={64}
-                        className="rounded-full border-4 border-white shadow-md"
-                        data-ai-hint={testimonial.imageHint}
+                        src={testimonials[1].image}
+                        alt={testimonials[1].name}
+                        width={120}
+                        height={120}
+                        className="relative rounded-full mx-auto -mt-16 border-4 border-white"
+                        data-ai-hint={testimonials[1].imageHint}
                       />
-                      <div>
-                        <p className="font-bold text-lg text-foreground">{testimonial.name}</p>
-                        <p className="font-semibold text-muted-foreground">{testimonial.role}</p>
-                      </div>
-                    </div>
-                    <blockquote className="relative text-lg italic text-foreground/80 pl-8 border-l-4 border-purple-200">
-                      <Quote className="absolute -top-1 -left-1 w-6 h-6 text-purple-200" />
-                      {testimonial.quote}
-                    </blockquote>
-                  </CardContent>
-                </Card>
-              ))}
+                      <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[1].quote}</p>
+                   </div>
+                 </div>
+                <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[1].name}</h3>
+                <p className="font-semibold text-muted-foreground text-sm">{testimonials[1].role}</p>
+              </div>
+
+              {/* Testimonial 3 */}
+              <div className="text-center mt-16 md:mt-24">
+                <div className="relative inline-block">
+                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]"></div>
+                   <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
+                     <Image
+                      src={testimonials[2].image}
+                      alt={testimonials[2].name}
+                      width={120}
+                      height={120}
+                      className="relative rounded-full mx-auto -mt-20 border-4 border-white"
+                      data-ai-hint={testimonials[2].imageHint}
+                    />
+                     <p className="text-sm text-foreground/80 mt-4 italic">{testimonials[2].quote}</p>
+                   </div>
+                </div>
+                <h3 className="font-bold text-lg text-blue-700 mt-4">{testimonials[2].name}</h3>
+                <p className="font-semibold text-muted-foreground text-sm">{testimonials[2].role}</p>
+              </div>
             </div>
           </div>
         </section>
+
 
         <section id="pricing" className="py-16 md:py-24 bg-gray-900 text-white">
            <div className="container mx-auto px-4">
@@ -425,6 +468,7 @@ export default function Home() {
     
 
     
+
 
 
 

@@ -3,62 +3,80 @@
     {
       "id": "hero",
       "description": "Professionals collaborating in a modern office.",
-      "imageUrl": "https://picsum.photos/seed/hero/1200/600",
+      "imageUrl": "https://images.unsplash.com/photo-1543269865-cbf427effbad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHx0ZWFtJTIwY29sbGFib3JhdGlvbnxlbnwwfHx8fDE3NTkxMzEzMzN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "team collaboration"
     },
     {
       "id": "profile1",
       "description": "Profile picture for Dr. Emily Carter",
-      "imageUrl": "https://picsum.photos/seed/101/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1610655507808-a59293f4e332?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3b21hbiUyMHBvcnRyYWl0fGVufDB8fHx8MTc1OTA2NDc1MHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman portrait"
     },
     {
       "id": "profile2",
       "description": "Profile picture for David Chen, MPH",
-      "imageUrl": "https://picsum.photos/seed/102/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1715029005043-e88d219a3c48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bWFuJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzU5MDc5OTE3fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "man portrait"
     },
     {
       "id": "profile3",
       "description": "Profile picture for Aisha Khan, RN",
-      "imageUrl": "https://picsum.photos/seed/103/100/100",
+      "imageUrl": "https://images.unsplash.com/photo-1600275669439-14e40452d20b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx3b21hbiUyMHByb2Zlc3Npb25hbHxlbnwwfHx8fDE3NTkxNTI5ODB8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "woman professional"
     },
     {
       "id": "podcast1",
       "description": "Podcast cover art for 'The Mind of a Surgeon'",
-      "imageUrl": "https://picsum.photos/seed/podcast1/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1641792324071-d39bc9b73c40?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhYnN0cmFjdCUyMGJyYWlufGVufDB8fHx8MTc1OTEyNjQxN3ww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract brain"
     },
     {
       "id": "podcast2",
       "description": "Podcast cover art for 'From Lab to Market'",
-      "imageUrl": "https://picsum.photos/seed/podcast2/200/200",
+      "imageUrl": "https://images.unsplash.com/photo-1518152006812-edab29b069ac?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxzY2llbmNlJTIwbGFifGVufDB8fHx8MTc1OTE1NDYyMnww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "science lab"
     },
     {
       "id": "event1",
       "description": "Event image for 'AI in Diagnostics Webinar'",
-      "imageUrl": "https://picsum.photos/seed/event1/400/250",
+      "imageUrl": "https://images.unsplash.com/photo-1694903110330-cc64b7e1d21d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDB8fHx8MTc1OTEyODM0OHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "artificial intelligence"
     },
     {
       "id": "event2",
       "description": "Event image for 'Networking for STEM Grads'",
-      "imageUrl": "https://picsum.photos/seed/event2/400/250",
+      "imageUrl": "https://images.unsplash.com/photo-1713946598509-c8be7b08bf5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwZW9wbGUlMjBuZXR3b3JraW5nfGVufDB8fHx8MTc1OTEzMDMyOHww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "people networking"
     },
     {
       "id": "profile_cover",
       "description": "Default profile cover image.",
-      "imageUrl": "https://picsum.photos/seed/cover/1200/300",
+      "imageUrl": "https://images.unsplash.com/photo-1531169509526-f8f1fdaa4a67?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxhYnN0cmFjdCUyMHBhdHRlcm58ZW58MHx8fHwxNzU5MDczMDY2fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "abstract pattern"
     },
     {
       "id": "about_timeline",
       "description": "Image for about page timeline section.",
-      "imageUrl": "https://picsum.photos/seed/timeline/500/300",
+      "imageUrl": "https://images.unsplash.com/photo-1462899006636-339e08d1844e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxidXNpbmVzcyUyMGdyb3d0aHxlbnwwfHx8fDE3NTkwNzI0NjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "business growth"
+    },
+    {
+      "id": "lisa_howard",
+      "description": "Profile picture for Lisa Howard, MBA",
+      "imageUrl": "https://images.unsplash.com/photo-1573496527892-904f897eb744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cHJvZmVzc2lvbmFsJTIwd29tYW58ZW58MHx8fHwxNzU5MTMwNjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "professional woman"
+    },
+    {
+      "id": "karen_mitchell",
+      "description": "Profile picture for Karen Mitchell, DNP",
+      "imageUrl": "https://images.unsplash.com/photo-1600275669439-14e40452d20b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxmZW1hbGUlMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzU5MDc1NTY4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "female professional"
+    },
+    {
+      "id": "samuel_adeyemi",
+      "description": "Profile picture for Dr. Samuel Adeyemi, MD",
+      "imageUrl": "https://images.unsplash.com/photo-1612363584451-cd060fb62018?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxtYWxlJTIwZG9jdG9yfGVufDB8fHx8MTc1OTA4NjkxOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "male doctor"
     }
   ]
 }
