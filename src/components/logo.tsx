@@ -9,7 +9,7 @@ export const Logo = ({ className }: { className?: string }) => {
             alt="Upskill Logo"
             width={150}
             height={75}
-            className={cn("dark:invert", className)}
+            className={cn(className)}
             style={{ objectFit: 'contain' }}
         />
     );
