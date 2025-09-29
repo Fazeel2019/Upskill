@@ -11,7 +11,7 @@ import Footer from "@/components/footer";
 import PublicHeader from "@/components/public-header";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
@@ -233,85 +233,41 @@ export default function Home() {
                 </h2>
              </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start max-w-7xl mx-auto">
-              {/* Testimonial 1 */}
-              <div className="text-center mt-16 md:mt-24">
-                <motion.div
-                  animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
-                  transition={{ duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
-                  className="relative inline-block"
-                >
-                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]" />
-                  <div className="relative bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
-                    <Image
-                      src={testimonials[0].image}
-                      alt={testimonials[0].name}
-                      width={120}
-                      height={120}
-                      className="relative rounded-full mx-auto -mt-16 border-4 border-white"
-                      data-ai-hint={testimonials[0].imageHint}
-                    />
-                    <div className="px-6 pb-8 pt-4">
-                      <p className="text-sm text-foreground/80 italic">{testimonials[0].quote}</p>
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+              }}
+              className="w-full max-w-4xl mx-auto"
+            >
+              <CarouselContent>
+                {testimonials.map((testimonial, index) => (
+                  <CarouselItem key={index}>
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex flex-col items-center justify-center p-8 md:p-12 text-center">
+                           <Image
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            width={100}
+                            height={100}
+                            className="rounded-full mb-6 border-4 border-blue-200"
+                            data-ai-hint={testimonial.imageHint}
+                          />
+                          <blockquote className="max-w-2xl mx-auto text-lg md:text-xl font-medium text-foreground/80 italic leading-relaxed">
+                            {testimonial.quote}
+                          </blockquote>
+                          <h3 className="font-bold text-lg text-foreground mt-6">{testimonial.name}</h3>
+                          <p className="font-semibold text-muted-foreground text-sm">{testimonial.role}</p>
+                        </CardContent>
+                      </Card>
                     </div>
-                  </div>
-                </motion.div>
-                <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[0].name}</h3>
-                <p className="font-semibold text-muted-foreground text-sm">{testimonials[0].role}</p>
-              </div>
-              
-              {/* Testimonial 2 (Center) */}
-              <div className="text-center order-first md:order-none">
-                 <motion.div
-                  animate={{ y: [0, 8, 0], rotate: [3, -3, 3] }}
-                  transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
-                  className="relative inline-block"
-                >
-                  <div className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]" />
-                   <div className="relative bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
-                      <Image
-                        src={testimonials[1].image}
-                        alt={testimonials[1].name}
-                        width={120}
-                        height={120}
-                        className="relative rounded-full mx-auto -mt-16 border-4 border-white"
-                        data-ai-hint={testimonials[1].imageHint}
-                      />
-                      <div className="px-6 pb-8 pt-4">
-                        <p className="text-sm text-foreground/80 italic">{testimonials[1].quote}</p>
-                      </div>
-                   </div>
-                 </motion.div>
-                <h3 className="font-bold text-lg text-purple-700 mt-4">{testimonials[1].name}</h3>
-                <p className="font-semibold text-muted-foreground text-sm">{testimonials[1].role}</p>
-              </div>
-
-              {/* Testimonial 3 */}
-              <div className="text-center mt-16 md:mt-24">
-                <motion.div
-                  animate={{ y: [0, -6, 0], rotate: [-1, 3, -1] }}
-                  transition={{ duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 1 }}
-                  className="relative inline-block"
-                >
-                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]" />
-                   <div className="relative bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
-                     <Image
-                      src={testimonials[2].image}
-                      alt={testimonials[2].name}
-                      width={120}
-                      height={120}
-                      className="relative rounded-full mx-auto -mt-16 border-4 border-white"
-                      data-ai-hint={testimonials[2].imageHint}
-                    />
-                    <div className="px-6 pb-8 pt-4">
-                      <p className="text-sm text-foreground/80 italic">{testimonials[2].quote}</p>
-                    </div>
-                   </div>
-                </motion.div>
-                <h3 className="font-bold text-lg text-blue-700 mt-4">{testimonials[2].name}</h3>
-                <p className="font-semibold text-muted-foreground text-sm">{testimonials[2].role}</p>
-              </div>
-            </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="hidden md:flex"/>
+              <CarouselNext className="hidden md:flex"/>
+            </Carousel>
           </div>
         </section>
 
@@ -486,6 +442,7 @@ export default function Home() {
     
 
     
+
 
 
 
