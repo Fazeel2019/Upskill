@@ -14,6 +14,9 @@ import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
+import React from "react";
+import Autoplay from "embla-carousel-autoplay";
+
 
 const features = [
     { title: "AI-Powered Career Insights", description: "Get personalized career recommendations and skill gap analysis powered by advanced AI algorithms that understand your unique professional journey.", icon: Goal, tag: "AI-Driven", iconBg: "bg-blue-100", iconColor: "text-blue-600" },
@@ -75,6 +78,9 @@ const AnimatedTag = ({ children, className, animation }: { children: React.React
 );
 
 export default function Home() {
+    const plugin = React.useRef(
+        Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
+    );
 
     const floatingAnimation = (delay = 0, duration = 5) => ({
       variants: {
@@ -248,6 +254,7 @@ export default function Home() {
              </div>
             
             <Carousel
+              plugins={[plugin.current]}
               opts={{
                 align: "start",
                 loop: true,
@@ -457,6 +464,7 @@ export default function Home() {
     
 
     
+
 
 
 
