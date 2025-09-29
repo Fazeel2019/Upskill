@@ -76,7 +76,7 @@ export default function SignupPage() {
             <div className="w-full max-w-md">
                 <div className="text-center mb-6">
                     <Link href="/" className="inline-flex items-center gap-2 font-bold">
-                        <Logo className="h-12 w-auto" />
+                        <Logo />
                     </Link>
                 </div>
                 <Card>
