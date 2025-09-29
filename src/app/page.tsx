@@ -237,7 +237,11 @@ export default function Home() {
               {/* Testimonial 1 */}
               <div className="text-center mt-16 md:mt-24">
                 <div className="relative inline-block">
-                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]"></div>
+                  <motion.div
+                    animate={{ y: [0, -8, 0], rotate: [-2, 2, -2] }}
+                    transition={{ duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
+                    className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]"
+                  ></motion.div>
                   <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
                      <Image
                       src={testimonials[0].image}
@@ -257,7 +261,11 @@ export default function Home() {
               {/* Testimonial 2 (Center) */}
               <div className="text-center order-first md:order-none">
                  <div className="relative inline-block">
-                  <div className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]"></div>
+                  <motion.div
+                    animate={{ y: [0, 8, 0], rotate: [3, -3, 3] }}
+                    transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
+                    className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]"
+                  ></motion.div>
                    <div className="relative p-6 bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
                       <Image
                         src={testimonials[1].image}
@@ -277,7 +285,11 @@ export default function Home() {
               {/* Testimonial 3 */}
               <div className="text-center mt-16 md:mt-24">
                 <div className="relative inline-block">
-                  <div className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]"></div>
+                  <motion.div
+                    animate={{ y: [0, -6, 0], rotate: [-1, 3, -1] }}
+                    transition={{ duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 1 }}
+                    className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]"
+                  ></motion.div>
                    <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
                      <Image
                       src={testimonials[2].image}
@@ -468,6 +480,7 @@ export default function Home() {
     
 
     
+
 
 
 
