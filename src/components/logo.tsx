@@ -9,8 +9,7 @@ export const Logo = ({ className }: { className?: string }) => {
             alt="Upskill Logo"
             width={150}
             height={75}
-            className={cn(className)}
-            style={{ objectFit: 'contain' }}
+            className={cn("w-36 h-auto", className)}
         />
     );
 };
