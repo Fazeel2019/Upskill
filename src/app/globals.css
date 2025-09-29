@@ -63,14 +63,6 @@
     .gradient-text {
         @apply bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent;
     }
-    .hero-gradient {
-        @apply relative;
-    }
-    .hero-gradient::after {
-        content: '';
-        @apply absolute inset-0 z-0;
-        background: radial-gradient(ellipse 80% 50% at 100% 100%, hsl(0 70% 50% / 0.3), transparent);
-    }
     .scroll-container {
       -webkit-mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
       mask: linear-gradient(90deg, transparent, white 20%, white 80%, transparent);
@@ -79,6 +71,7 @@
         background: linear-gradient(90deg, rgba(109, 40, 217, 0.8), rgba(139, 92, 246, 0.8));
     }
 }
+
 
 
 
