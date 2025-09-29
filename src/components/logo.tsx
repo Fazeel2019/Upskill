@@ -5,15 +5,14 @@ import Image from 'next/image';
 
 export const Logo = ({ className }: { className?: string }) => {
     return (
-        <div className={cn("relative", className)}>
+        <div className={cn("relative h-10", className)}>
             <Image
                 src="/logo.png"
                 alt="Upskill Logo"
                 width={192}
-                height={96}
-                style={{objectFit: "contain"}}
+                height={192}
+                style={{objectFit: "contain", height: '100%', width: 'auto'}}
                 priority
-                className="w-auto h-10"
             />
         </div>
     );
