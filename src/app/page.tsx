@@ -4,7 +4,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer, TrendingUp, Award, BrainCircuit } from "lucide-react";
+import { ArrowRight, BarChart, BookOpen, Briefcase, Calendar, CheckCircle, ChevronDown, Goal, HeartHandshake, Lock, Mic, PlayCircle, ShieldCheck, Sparkles, Star, Users, Zap, Timer, TrendingUp, Award, BrainCircuit, Quote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Footer from "@/components/footer";
@@ -26,33 +26,19 @@ const features = [
 
 const testimonials = [
   {
-    name: "Dr. Sarah Chen",
-    title: "Chief Medical Officer, MedTech Innovations",
-    quote: "The AI-powered insights helped me identify key leadership gaps and develop a strategic career plan. Within 6 months, I secured my dream CMO position at a Fortune 500 company.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
-  },
-   {
-    name: "Dr. Lisa Thompson",
-    title: "Clinical Research Lead, Pharma Dynamics",
-    quote: "The community aspect is incredible. Being able to discuss challenges and solutions with peers facing similar situations has been transformative for my career development.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
+    name: "Dr. Emily Watson",
+    role: "Research Director, Genomics Institute",
+    quote: "The exclusive events and workshops provided cutting-edge insights into industry trends. I've expanded my network significantly and gained confidence in leadership roles.",
+    image: "https://picsum.photos/seed/emily-watson/100/100",
+    imageHint: "professional woman"
   },
   {
-    name: "Alex Kumar",
-    title: "Principal Scientist, Biotech Innovations",
-    quote: "The skill acceleration programs are top-notch. I gained expertise in emerging technologies that directly contributed to my recent promotion to Principal Scientist level.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
+    name: "DeAnna Wilcon",
+    role: "Pre-Dental Student",
+    quote: "Thank you so much for the opportunity to be part of this internship. My experience at Upskill has far exceeded my expectations, from the incredible networking opportunities to the growth in my multicultural awareness and professional development.",
+    image: "https://picsum.photos/seed/deanna-wilcon/100/100",
+    imageHint: "female student"
   },
-  {
-    name: "Dr. Rachel Kim",
-    title: "Head of Innovation, Digital Health Corp",
-    quote: "The platform's comprehensive approach to career development is unmatched. From AI insights to personal mentorship, every tool contributed to my success as Head of Innovation.",
-    image: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif",
-    rating: 5,
-  }
 ];
 
 const AnimatedTag = ({ children, className, animation }: { children: React.ReactNode, className?: string, animation: any }) => (
@@ -88,7 +74,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20 hero-gradient">
+        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20">
           <div className="absolute inset-0 bg-blue-600" />
            <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
@@ -128,7 +114,7 @@ export default function Home() {
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"contain"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized/>
                     </div>
-                    <AnimatedTag className="top-12 left-4" animation={floatingAnimation(0, 6)}>
+                    <AnimatedTag className="top-16 left-8" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-100 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
@@ -137,7 +123,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-8 -left-4" animation={floatingAnimation(1, 5)}>
+                    <AnimatedTag className="bottom-20 left-4" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-red-100 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
@@ -146,7 +132,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-16 -right-4 w-64" animation={floatingAnimation(0.5, 7)}>
+                    <AnimatedTag className="bottom-24 right-0 w-64" animation={floatingAnimation(0.5, 7)}>
                       <div>
                         <div className="flex justify-between items-center mb-2">
                             <p className="font-bold">Leadership Index</p>
@@ -231,57 +217,40 @@ export default function Home() {
              </div>
         </section>
 
-        {/* Success Stories Section */}
-        <section className="bg-white py-16 md:py-24">
+        {/* Community Feedback Section */}
+        <section className="py-16 md:py-24 bg-gradient-to-br from-blue-50 via-purple-50 to-red-50">
           <div className="container mx-auto px-4 text-center">
-            <Badge variant="outline" className="mb-4 font-semibold text-purple-600 border-purple-200 bg-purple-50 text-base py-2 px-4">🌟 Success Stories</Badge>
-            <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight mb-4 text-foreground">
-             Trusted by Leading<br />
-             <span className="gradient-text">Healthcare & STEM</span><br />
-             Professionals
+            <h2 className="font-headline text-3xl md:text-4xl font-bold tracking-tight mb-4">
+              Community Feedback
             </h2>
-            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-              Join thousands of professionals who have accelerated their careers and achieved remarkable success with our comprehensive platform.
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-12">
+              Hear what our members have to say about their experience.
             </p>
-
-            <div className="my-12 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-blue-100">
-                    <p className="text-4xl md:text-6xl">👥</p>
-                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">10,000+</p>
-                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Active Members</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+              {testimonials.map((testimonial, index) => (
+                <Card key={index} className="text-left rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
+                  <CardContent className="p-8">
+                    <div className="flex items-center gap-4 mb-6">
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        width={64}
+                        height={64}
+                        className="rounded-full border-4 border-white shadow-md"
+                        data-ai-hint={testimonial.imageHint}
+                      />
+                      <div>
+                        <p className="font-bold text-lg text-foreground">{testimonial.name}</p>
+                        <p className="font-semibold text-muted-foreground">{testimonial.role}</p>
+                      </div>
+                    </div>
+                    <blockquote className="relative text-lg italic text-foreground/80 pl-8 border-l-4 border-purple-200">
+                      <Quote className="absolute -top-1 -left-1 w-6 h-6 text-purple-200" />
+                      {testimonial.quote}
+                    </blockquote>
+                  </CardContent>
                 </Card>
-                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-green-100">
-                    <p className="text-4xl md:text-6xl">📈</p>
-                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">94%</p>
-                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Success Rate</p>
-                </Card>
-                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-purple-100">
-                    <p className="text-4xl md:text-6xl">🎯</p>
-                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">500+</p>
-                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Expert Mentors</p>
-                </Card>
-                <Card className="p-4 md:p-6 shadow-md aspect-square flex flex-col justify-center items-center text-center transition-colors duration-300 hover:bg-yellow-100">
-                    <p className="text-4xl md:text-6xl">⭐</p>
-                    <p className="text-2xl md:text-4xl font-bold gradient-text mt-2">4.9/5</p>
-                    <p className="text-muted-foreground mt-1 font-semibold text-sm md:text-base">Average Rating</p>
-                </Card>
-            </div>
-
-            <Image 
-              src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDBieWZ6dXlkOHhwdWk3OGE5ZTRyc2VwM2V3MHQxbmdmZzJkdGpkZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/bfnfrqd5nGiNMf0Lkz/giphy.gif" 
-              alt="Testimonial GIF" 
-              width={1200}
-              height={400}
-              unoptimized 
-              className="rounded-lg mx-auto shadow-lg w-full h-auto" 
-            />
-            
-            <div className="mt-16 bg-blue-50 rounded-2xl p-8 md:p-12 text-center shadow-lg max-w-4xl mx-auto">
-                <h3 className="font-headline text-2xl md:text-3xl font-bold">Ready to Join Our Success Stories?</h3>
-                <p className="text-muted-foreground mt-2 text-base md:text-lg">Start your journey today and become the next success story in our community of thriving professionals.</p>
-                <Button asChild size="lg" className="mt-6 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full">
-                    <Link href="/login">Join the Community</Link>
-                </Button>
+              ))}
             </div>
           </div>
         </section>
@@ -456,6 +425,7 @@ export default function Home() {
     
 
     
+
 
 
 
