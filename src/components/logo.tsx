@@ -1,15 +1,14 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 
 export const Logo = ({ className }: { className?: string }) => {
     return (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
             src="/logo.png"
             alt="Upskill Logo"
-            width={150}
-            height={75}
-            className={cn("w-36 h-auto", className)}
+            className={cn("h-12 w-auto", className)}
         />
     );
 };
