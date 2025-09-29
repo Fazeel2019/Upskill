@@ -242,7 +242,7 @@ export default function Home() {
                     transition={{ duration: 8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" }}
                     className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%]"
                   ></motion.div>
-                  <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
+                  <div className="relative p-4 max-w-xs bg-blue-100/80 rounded-[50%_50%_30%_70%/_60%_40%_60%_40%] shadow-md">
                      <Image
                       src={testimonials[0].image}
                       alt={testimonials[0].name}
@@ -266,7 +266,7 @@ export default function Home() {
                     transition={{ duration: 7, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 0.5 }}
                     className="absolute -inset-2 bg-purple-100/50 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%]"
                   ></motion.div>
-                   <div className="relative p-6 bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
+                   <div className="relative p-4 max-w-xs bg-purple-100/80 rounded-[50%_50%_70%_30%/_40%_60%_40%_60%] shadow-md">
                       <Image
                         src={testimonials[1].image}
                         alt={testimonials[1].name}
@@ -290,7 +290,7 @@ export default function Home() {
                     transition={{ duration: 9, repeat: Infinity, repeatType: "mirror", ease: "easeInOut", delay: 1 }}
                     className="absolute -inset-2 bg-blue-100/50 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%]"
                   ></motion.div>
-                   <div className="relative p-6 bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
+                   <div className="relative p-4 max-w-xs bg-blue-100/80 rounded-[50%_50%_60%_40%/_70%_30%_70%_30%] shadow-md">
                      <Image
                       src={testimonials[2].image}
                       alt={testimonials[2].name}
@@ -480,6 +480,7 @@ export default function Home() {
     
 
     
+
 
 
 
