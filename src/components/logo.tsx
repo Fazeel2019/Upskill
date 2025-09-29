@@ -13,10 +13,10 @@ export const Logo = ({ className }: { className?: string }) => (
         <text x="30" y="115" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="60" fill="#FF0000">
           UP
         </text>
-        <text x="170" y="115" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="60" fill="#000000">
+        <text x="120" y="115" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="60" fill="#000000">
           SKILL
         </text>
-        <path d="M 125,70 L 210,120" stroke="white" strokeWidth="14" />
+        <path d="M 80,95 L 145,95" stroke="black" strokeWidth="6" />
          <text x="35" y="140" fontFamily="Arial, sans-serif" fontWeight="bold" fontSize="16" fill="#000000">
           Health Careers Customize For You
         </text>
