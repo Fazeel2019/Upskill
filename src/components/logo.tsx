@@ -4,14 +4,13 @@ import Image from 'next/image';
 
 export const Logo = ({ className }: { className?: string }) => {
     return (
-        <div className={cn("relative h-12 w-48", className)}>
-            <Image
-                src="/logo.png"
-                alt="Upskill Logo"
-                fill
-                sizes="192px"
-                style={{ objectFit: 'contain' }}
-            />
-        </div>
+        <Image
+            src="/logo.png"
+            alt="Upskill Logo"
+            width={150}
+            height={75}
+            className={cn("dark:invert", className)}
+            style={{ objectFit: 'contain' }}
+        />
     );
 };
