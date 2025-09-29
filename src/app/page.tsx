@@ -233,41 +233,33 @@ export default function Home() {
                 </h2>
              </div>
             
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-4xl mx-auto"
-            >
-              <CarouselContent>
-                {testimonials.map((testimonial, index) => (
-                  <CarouselItem key={index}>
-                    <div className="p-1">
-                      <Card>
-                        <CardContent className="flex flex-col items-center justify-center p-8 md:p-12 text-center">
-                           <Image
-                            src={testimonial.image}
-                            alt={testimonial.name}
-                            width={100}
-                            height={100}
-                            className="rounded-full mb-6 border-4 border-blue-200"
-                            data-ai-hint={testimonial.imageHint}
-                          />
-                          <blockquote className="max-w-2xl mx-auto text-lg md:text-xl font-medium text-foreground/80 italic leading-relaxed">
-                            {testimonial.quote}
-                          </blockquote>
-                          <h3 className="font-bold text-lg text-foreground mt-6">{testimonial.name}</h3>
-                          <p className="font-semibold text-muted-foreground text-sm">{testimonial.role}</p>
-                        </CardContent>
-                      </Card>
+            <div className="grid md:grid-cols-3 gap-8 items-start">
+              {testimonials.map((testimonial, index) => (
+                <div key={index} className={cn("relative flex justify-center", 
+                  index === 0 && "md:mt-8",
+                  index === 2 && "md:mt-8"
+                )}>
+                  <div className="absolute inset-0 bg-blue-100/50 rounded-[50%] blur-2xl"></div>
+                   <div className="relative p-6">
+                    <Image
+                      src={testimonial.image}
+                      alt={testimonial.name}
+                      width={100}
+                      height={100}
+                      className="rounded-full mb-4 mx-auto border-4 border-white shadow-md"
+                      data-ai-hint={testimonial.imageHint}
+                    />
+                    <div className="text-center max-w-xs mx-auto">
+                      <blockquote className="text-foreground/80 italic leading-relaxed">
+                        {testimonial.quote}
+                      </blockquote>
+                      <h3 className="font-bold text-lg text-foreground mt-4">{testimonial.name}</h3>
+                      <p className="font-semibold text-muted-foreground text-sm">{testimonial.role}</p>
                     </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex"/>
-              <CarouselNext className="hidden md:flex"/>
-            </Carousel>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -442,6 +434,7 @@ export default function Home() {
     
 
     
+
 
 
 
