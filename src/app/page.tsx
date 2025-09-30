@@ -32,35 +32,42 @@ const testimonials = [
     name: "Lisa Howard, MBA",
     role: "Healthcare Administrator",
     quote: "\"Having a mentor through Upskill gave me the clarity and confidence to transition into healthcare administration. I was overwhelmed about making the pivot, but my mentor broke it down into manageable steps, offered industry insights, and helped me map out a career I now feel excited about.\"",
-    image: "https://picsum.photos/seed/lisa-howard/150/150",
+    image: "/1.jpg",
     imageHint: "professional woman"
   },
   {
     name: "Karen Mitchell, DNP",
     role: "Nurse Practitioner & Emerging Health Entrepreneur",
     quote: "\"As a Nurse Practitioner, I always thought my career would stay at the bedside. But the Bedside to Business course opened my eyes to how my clinical expertise could translate into entrepreneurship and leadership.\"",
-    image: "https://picsum.photos/seed/karen-mitchell/150/150",
+    image: "/2.png",
     imageHint: "female professional"
   },
   {
     name: "Dr. Samuel Adeyemi, MD",
     role: "Internal Medicine Specialist",
     quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
-    image: "https://picsum.photos/seed/samuel-adeyemi/150/150",
+    image: "/3.png",
     imageHint: "male doctor"
   },
   {
     name: "Dr. Samuel Adeyemi, MD",
     role: "Internal Medicine Specialist",
     quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
-    image: "https://picsum.photos/seed/samuel-adeyemi/150/150",
+    image: "/4.png",
     imageHint: "male doctor"
   },
   {
     name: "Dr. Samuel Adeyemi, MD",
     role: "Internal Medicine Specialist",
     quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
-    image: "https://picsum.photos/seed/samuel-adeyemi/150/150",
+    image: "/5.jpg",
+    imageHint: "male doctor"
+  },
+  {
+    name: "Dr. Samuel Adeyemi, MD",
+    role: "Internal Medicine Specialist",
+    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    image: "/6.png",
     imageHint: "male doctor"
   }
 ];
@@ -102,7 +109,7 @@ export default function Home() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-red-600" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-red-600 hero-gradient" />
 
            <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
@@ -266,17 +273,19 @@ export default function Home() {
                 {testimonials.map((testimonial, index) => (
                   <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                     <div className="p-1">
-                      <div className="relative flex justify-center p-6">
-                        <div className="absolute inset-0 bg-blue-100/50 rounded-[50%] blur-2xl"></div>
-                        <div className="relative text-center max-w-xs mx-auto">
-                          <Image
-                            src={testimonial.image}
-                            alt={testimonial.name}
-                            width={100}
-                            height={100}
-                            className="rounded-full mb-4 mx-auto border-4 border-white shadow-md"
-                            data-ai-hint={testimonial.imageHint}
-                          />
+                      <div className="relative flex flex-col items-center p-6">
+                        <div className="relative mb-4">
+                            <div className="absolute inset-0 bg-blue-100/50 rounded-full blur-2xl -z-10"></div>
+                            <Image
+                                src={testimonial.image}
+                                alt={testimonial.name}
+                                width={120}
+                                height={120}
+                                className="rounded-full border-4 border-white shadow-md"
+                                data-ai-hint={testimonial.imageHint}
+                            />
+                        </div>
+                        <div className="text-center max-w-xs mx-auto">
                           <blockquote className="text-foreground/80 italic leading-relaxed">
                             {testimonial.quote}
                           </blockquote>
@@ -452,6 +461,7 @@ export default function Home() {
     
 
     
+
 
 
 
