@@ -101,8 +101,8 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20 hero-gradient">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-transparent" />
+        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-transparent hero-gradient" />
 
            <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
@@ -319,7 +319,7 @@ export default function Home() {
                                <Sparkles className="w-8 h-8 text-blue-400"/>
                              </div>
                              <div>
-                                <h3 className="text-2xl font-bold font-headline">Executive Membership</h3>
+                                <h3 className="text-2xl font-bold font-headline">Winner Circle</h3>
                                 <Badge className="bg-green-500/20 border-green-500 text-green-400 mt-1">Premium Access</Badge>
                              </div>
                           </div>
@@ -453,6 +453,7 @@ export default function Home() {
     
 
     
+
 
 
 
