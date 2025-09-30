@@ -101,8 +101,9 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20">
-          <div className="absolute inset-0 bg-blue-600" />
+        <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20 hero-gradient">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-transparent" />
+
            <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
                 className="grid md:grid-cols-2 gap-12 items-center"
@@ -330,42 +331,30 @@ export default function Home() {
                           </div>
                           
                           <div className="bg-background/50 border rounded-lg p-6">
-                            <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Exclusive Bonuses (Worth $2,800)</h4>
-                            <Accordion type="single" collapsible className="w-full mt-4">
-                              <AccordionItem value="item-1">
-                                <AccordionTrigger>
-                                  <div className="flex justify-between w-full pr-4">
-                                    <span>Executive Masterclass Series</span>
-                                    <span className="text-green-500 font-bold">$2,000</span>
-                                  </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                  <p className="text-sm text-muted-foreground pl-2">Monthly sessions with Fortune 500 leaders.</p>
-                                </AccordionContent>
-                              </AccordionItem>
-                              <AccordionItem value="item-2">
-                                <AccordionTrigger>
-                                   <div className="flex justify-between w-full pr-4">
-                                      <span>Personal Branding Toolkit</span>
-                                      <span className="text-green-500 font-bold">$500</span>
-                                  </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                  <p className="text-sm text-muted-foreground pl-2">Professional templates & LinkedIn optimization.</p>
-                                </AccordionContent>
-                              </AccordionItem>
-                              <AccordionItem value="item-3">
-                                <AccordionTrigger>
-                                   <div className="flex justify-between w-full pr-4">
-                                    <span>Career Acceleration Workbook</span>
-                                    <span className="text-green-500 font-bold">$300</span>
-                                  </div>
-                                </AccordionTrigger>
-                                <AccordionContent>
-                                  <p className="text-sm text-muted-foreground pl-2">Step-by-step guide to leadership roles.</p>
-                                </AccordionContent>
-                              </AccordionItem>
-                            </Accordion>
+                            <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Premium Features Included</h4>
+                            <ul className="space-y-4 mt-4">
+                                <li className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-semibold">AI-Powered Career Insights</p>
+                                        <p className="text-sm text-muted-foreground">Personalized recommendations & skill analysis</p>
+                                    </div>
+                                    <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
+                                </li>
+                                <li className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-semibold">Expert Mentorship Access</p>
+                                        <p className="text-sm text-muted-foreground">Connect with industry leaders and mentors</p>
+                                    </div>
+                                    <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
+                                </li>
+                                <li className="flex items-center justify-between">
+                                    <div>
+                                        <p className="font-semibold">Exclusive Networking Events</p>
+                                        <p className="text-sm text-muted-foreground">Monthly leadership summits & workshops</p>
+                                    </div>
+                                    <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
+                                </li>
+                            </ul>
                           </div>
 
                            <Button asChild size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
@@ -464,6 +453,7 @@ export default function Home() {
     
 
     
+
 
 
 
