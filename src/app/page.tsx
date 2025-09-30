@@ -310,7 +310,7 @@ export default function Home() {
                      <div className="p-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-t-xl text-center text-white">
                         <p className="font-semibold">🚀 Most Popular Choice - Join 10,000+ Professionals</p>
                      </div>
-                     <div className="grid lg:grid-cols-2 gap-8 p-6 md:p-8">
+                     <div className="grid md:grid-cols-2 gap-8 p-6 md:p-8">
                        {/* Left Column */}
                        <div className="flex flex-col gap-6">
                           <div className="flex items-center gap-4">
@@ -464,6 +464,7 @@ export default function Home() {
     
 
     
+
 
 
 
