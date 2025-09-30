@@ -274,16 +274,15 @@ export default function Home() {
                   <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                     <div className="p-1">
                       <div className="relative flex flex-col items-center p-6">
-                        <div className="relative mb-4">
-                            <div className="absolute inset-0 bg-blue-100/50 rounded-full blur-2xl -z-10"></div>
-                            <Image
-                                src={testimonial.image}
-                                alt={testimonial.name}
-                                width={120}
-                                height={120}
-                                className="rounded-full border-4 border-white shadow-md object-cover"
-                                data-ai-hint={testimonial.imageHint}
-                            />
+                        <div className="relative mb-4 h-32 w-32">
+                          <div className="absolute inset-0 bg-blue-100/50 rounded-full blur-2xl -z-10"></div>
+                          <Image
+                            src={testimonial.image}
+                            alt={testimonial.name}
+                            fill
+                            className="rounded-full border-4 border-white shadow-md object-cover"
+                            data-ai-hint={testimonial.imageHint}
+                          />
                         </div>
                         <div className="text-center max-w-xs mx-auto">
                           <blockquote className="text-foreground/80 italic leading-relaxed">
@@ -461,6 +460,7 @@ export default function Home() {
     
 
     
+
 
 
 
