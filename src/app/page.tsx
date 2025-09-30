@@ -325,8 +325,7 @@ export default function Home() {
                           </div>
 
                           <div>
-                             <p className="text-4xl md:text-5xl font-bold"><span className="line-through text-muted-foreground text-2xl md:text-3xl">$297</span> $97<span className="text-lg font-normal text-muted-foreground">/month</span></p>
-                             <p className="text-green-500 font-semibold mt-2">Save $200/month - Limited Time</p>
+                             <p className="text-4xl md:text-5xl font-bold">$14.99<span className="text-lg font-normal text-muted-foreground"> / month</span></p>
                              <p className="text-muted-foreground text-sm mt-2">Cancel anytime • 30-day money-back guarantee</p>
                           </div>
                           
@@ -453,6 +452,7 @@ export default function Home() {
     
 
     
+
 
 
 
