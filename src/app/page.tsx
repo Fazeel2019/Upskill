@@ -109,7 +109,7 @@ export default function Home() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative min-h-screen flex items-center text-foreground pt-24 md:pt-20">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-red-600 hero-gradient" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-red-600" />
 
            <div className="container relative mx-auto px-4 pt-16 md:pt-0">
               <motion.div
@@ -281,7 +281,7 @@ export default function Home() {
                                 alt={testimonial.name}
                                 width={120}
                                 height={120}
-                                className="rounded-full border-4 border-white shadow-md"
+                                className="rounded-full border-4 border-white shadow-md object-cover"
                                 data-ai-hint={testimonial.imageHint}
                             />
                         </div>
@@ -461,6 +461,7 @@ export default function Home() {
     
 
     
+
 
 
 
