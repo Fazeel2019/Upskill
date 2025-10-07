@@ -76,6 +76,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/learning", label: "Learning", icon: GraduationCap },
+    { href: "https://upskilledu.net/2-demo/", label: "Create Course", icon: Rocket, external: true },
     { href: "/podcast", label: "Podcasts", icon: MicVocal },
     { href: "/community", label: "Community", icon: Users, badge: friendRequestCount },
     { href: "/events", label: "Events", icon: Calendar },
@@ -133,14 +134,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
-                  isActive={pathname.startsWith(item.href)}
+                  isActive={!item.external && pathname.startsWith(item.href)}
                   tooltip={item.label}
                 >
-                  <Link href={item.href}>
+                  <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>
                     <item.icon />
                     <span className="flex-grow">{item.label}</span>
                     {item.badge && item.badge > 0 ? <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge> : null}
-                  </Link>
+                  </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
