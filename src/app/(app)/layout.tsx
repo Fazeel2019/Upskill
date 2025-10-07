@@ -140,7 +140,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>
                     <item.icon />
                     <span className="flex-grow">{item.label}</span>
-                    {item.tag && <Badge variant="secondary">{item.tag}</Badge>}
+                    {item.tag && <Badge variant="destructive">{item.tag}</Badge>}
                     {item.badge && item.badge > 0 ? <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge> : null}
                   </a>
                 </SidebarMenuButton>
