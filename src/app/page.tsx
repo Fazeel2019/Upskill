@@ -261,18 +261,10 @@ export default function Home() {
                 </h2>
              </div>
             
-            <Carousel
-              plugins={[plugin.current]}
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-5xl mx-auto"
-            >
-              <CarouselContent>
-                {testimonials.map((testimonial, index) => (
-                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-1">
+            <div className="scroll-container w-full overflow-hidden">
+                <div className="flex animate-scroll-x hover:[animation-play-state:paused]">
+                {[...testimonials, ...testimonials].map((testimonial, index) => (
+                    <div key={index} className="shrink-0 w-[320px] md:w-[380px] m-4">
                       <div className="relative flex flex-col items-center p-6">
                         <div className="relative mb-4 h-32 w-32">
                           <div className="absolute inset-0 bg-blue-100/50 rounded-full blur-2xl -z-10"></div>
@@ -293,12 +285,9 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                  </CarouselItem>
                 ))}
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -460,6 +449,7 @@ export default function Home() {
     
 
     
+
 
 
 
