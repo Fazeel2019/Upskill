@@ -35,7 +35,7 @@ export default function LoginPage() {
             } else {
                 await signInWithEmailAndPassword(auth, email, password);
             }
-            router.push('/dashboard');
+            router.push('/community');
         } catch (error: any) {
             toast({
                 title: "Login Failed",

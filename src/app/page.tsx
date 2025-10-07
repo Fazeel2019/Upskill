@@ -11,11 +11,9 @@ import Footer from "@/components/footer";
 import PublicHeader from "@/components/public-header";
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import React from "react";
-import Autoplay from "embla-carousel-autoplay";
 
 
 const features = [
@@ -85,10 +83,6 @@ const AnimatedTag = ({ children, className, animation }: { children: React.React
 );
 
 export default function Home() {
-    const plugin = React.useRef(
-        Autoplay({ delay: 4000, stopOnInteraction: true, stopOnMouseEnter: true })
-    );
-
     const floatingAnimation = (delay = 0, duration = 5) => ({
       variants: {
         initial: { y: 0 },
@@ -271,8 +265,9 @@ export default function Home() {
                           <Image
                             src={testimonial.image}
                             alt={testimonial.name}
-                            fill
-                            className="rounded-full border-4 border-white shadow-md object-cover"
+                            width={128}
+                            height={128}
+                            className="rounded-full border-4 border-white shadow-md object-cover h-32 w-32"
                             data-ai-hint={testimonial.imageHint}
                           />
                         </div>
@@ -449,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
