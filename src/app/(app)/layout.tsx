@@ -123,6 +123,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <Link href="/dashboard">
                 <Logo />
             </Link>
+             {/* This trigger is hidden when sidebar is collapsed to an icon */}
             <SidebarTrigger className="group-data-[collapsible=icon]:hidden">
                 <ChevronLeft />
             </SidebarTrigger>
@@ -184,12 +185,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       </Sidebar>
       <SidebarInset>
         <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur-sm sm:px-8">
-          <SidebarTrigger className="md:hidden">
-            <PanelLeft />
-          </SidebarTrigger>
-          <div className="relative w-full max-w-sm hidden md:block">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-            <Input placeholder="Search courses, mentors, discussions..." className="pl-9 bg-muted/50"/>
+          <div className="flex items-center gap-4">
+            <SidebarTrigger className="md:hidden">
+              <PanelLeft />
+            </SidebarTrigger>
+            <SidebarTrigger className="hidden md:flex">
+              <PanelLeft />
+            </SidebarTrigger>
+             <div className="relative w-full max-w-sm hidden md:block">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
+              <Input placeholder="Search courses, mentors, discussions..." className="pl-9 bg-muted/50"/>
+            </div>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" className="hidden md:flex"><HelpCircle className="mr-2"/>Help</Button>
