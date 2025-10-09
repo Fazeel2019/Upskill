@@ -105,19 +105,37 @@ export default function PodcastsPage() {
       animate="visible"
       variants={pageVariants}
     >
+      <motion.section
+        className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-center overflow-hidden rounded-xl"
+        variants={itemVariants}
+      >
+        <Image
+          src="/upskilp.jpg"
+          alt="Upskill Podcasts Banner"
+          fill
+          className="object-cover"
+          data-ai-hint="abstract background"
+        />
+        <div className="absolute inset-0 bg-black/60"></div>
+        <div className="container relative mx-auto px-4">
+          <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tight text-white">
+            Upskill Podcasts
+          </h1>
+          <p className="mt-4 text-lg md:text-xl text-white/80 max-w-3xl mx-auto">
+            Listen to insights from leading STEM & Healthcare professionals
+          </p>
+        </div>
+      </motion.section>
+
       <motion.div variants={itemVariants}>
         <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight font-headline">Upskill Podcasts</h1>
-            <p className="text-muted-foreground">Listen to insights from leading STEM & Healthcare professionals</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="relative w-full sm:w-64">
+          <div className="flex items-center gap-2 flex-grow">
+            <div className="relative w-full">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input placeholder="Search podcasts..." className="pl-9" />
             </div>
              <Select defaultValue="all">
-                <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectTrigger className="w-[180px]">
                     <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
