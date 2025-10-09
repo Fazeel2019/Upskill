@@ -324,22 +324,22 @@ export default function Home() {
                           <div className="bg-background/50 border rounded-lg p-6">
                             <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Premium Features Included</h4>
                             <ul className="space-y-4 mt-4">
-                                <li className="flex flex-wrap items-center justify-between gap-2">
-                                    <div>
+                                <li className="flex flex-wrap items-center gap-2">
+                                    <div className="flex-1 min-w-[150px]">
                                         <p className="font-semibold">AI-Powered Career Insights</p>
                                         <p className="text-sm text-muted-foreground">Personalized recommendations & skill analysis</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex flex-wrap items-center justify-between gap-2">
-                                    <div>
+                                <li className="flex flex-wrap items-center gap-2">
+                                    <div className="flex-1 min-w-[150px]">
                                         <p className="font-semibold">Expert Mentorship Access</p>
                                         <p className="text-sm text-muted-foreground">Connect with industry leaders and mentors</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex flex-wrap items-center justify-between gap-2">
-                                    <div>
+                                <li className="flex flex-wrap items-center gap-2">
+                                    <div className="flex-1 min-w-[150px]">
                                         <p className="font-semibold">Exclusive Networking Events</p>
                                         <p className="text-sm text-muted-foreground">Monthly leadership summits & workshops</p>
                                     </div>
@@ -444,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
