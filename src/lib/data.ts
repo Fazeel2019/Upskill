@@ -15,14 +15,30 @@ export type Event = {
   registeredUids?: string[];
 };
 
-export type Resource = {
+export type Lecture = {
+  id: string;
+  title: string;
+  videoUrl: string;
+  duration: number; // in minutes
+};
+
+export type Section = {
+  id: string;
+  title: string;
+  lectures: Lecture[];
+};
+
+export type Course = {
   id: string;
   title: string;
   description: string;
   category: "Career" | "STEM" | "Healthcare" | "Public Health";
-  youtubeUrl: string;
+  sections: Section[];
+  thumbnailUrl: string;
+  imageHint: string;
   createdAt: Timestamp;
 };
+
 
 export type Podcast = {
   id: string;

@@ -1,5 +1,4 @@
 
-
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -7,12 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
-import { addResource, listenToResources, updateResource, deleteResource } from "@/services/resources";
-import type { Resource } from "@/lib/data";
+import { addCourse, listenToCourses, updateCourse, deleteCourse } from "@/services/courses";
+import type { Course } from "@/lib/data";
 import {
   Select,
   SelectContent,
@@ -32,85 +31,153 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Loader2, Edit, Trash2 } from "lucide-react";
+import { Loader2, Edit, Trash2, PlusCircle, GripVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
-const resourceFormSchema = z.object({
+const lectureSchema = z.object({
+    id: z.string().default(() => crypto.randomUUID()),
+    title: z.string().min(3, "Lecture title is required"),
+    videoUrl: z.string().url("Must be a valid YouTube or Vimeo URL"),
+    duration: z.coerce.number().min(1, "Duration must be at least 1 minute"),
+});
+
+const sectionSchema = z.object({
+    id: z.string().default(() => crypto.randomUUID()),
+    title: z.string().min(3, "Section title is required"),
+    lectures: z.array(lectureSchema),
+});
+
+const courseFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   category: z.enum(["Career", "STEM", "Healthcare", "Public Health"]),
-  youtubeUrl: z.string().url("Must be a valid YouTube URL"),
+  thumbnailUrl: z.string().url("Must be a valid thumbnail URL"),
+  imageHint: z.string().optional(),
+  sections: z.array(sectionSchema).min(1, "Course must have at least one section"),
 });
 
-type ResourceFormValues = z.infer<typeof resourceFormSchema>;
+type CourseFormValues = z.infer<typeof courseFormSchema>;
 
-function EditResourceDialog({ resource, onResourceUpdated }: { resource: Resource, onResourceUpdated: () => void }) {
+function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCourseUpdated: () => void }) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
-    const form = useForm<ResourceFormValues>({
-        resolver: zodResolver(resourceFormSchema),
-        defaultValues: resource
+    const form = useForm<CourseFormValues>({
+        resolver: zodResolver(courseFormSchema),
+        defaultValues: {
+          ...course,
+          sections: course.sections || [],
+        },
     });
 
-    const onSubmit = async (data: ResourceFormValues) => {
+    const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
+        control: form.control,
+        name: "sections",
+    });
+
+    const onSubmit = async (data: CourseFormValues) => {
         try {
-            await updateResource(resource.id, data as any);
-            toast({ title: "Resource Updated", description: "The resource has been updated successfully." });
-            onResourceUpdated();
+            await updateCourse(course.id, data);
+            toast({ title: "Course Updated", description: "The course has been updated successfully." });
+            onCourseUpdated();
             setOpen(false);
         } catch (error) {
-            toast({ title: "Error", description: "Failed to update resource.", variant: "destructive" });
+            toast({ title: "Error", description: "Failed to update course.", variant: "destructive" });
         }
     };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <Button variant="ghost" size="sm" onClick={() => setOpen(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
-            <DialogContent className="sm:max-w-lg">
+            <DialogContent className="max-w-4xl">
                 <DialogHeader>
-                    <DialogTitle>Edit Resource</DialogTitle>
-                    <DialogDescription>Make changes to the resource details below.</DialogDescription>
+                    <DialogTitle>Edit Course</DialogTitle>
+                    <DialogDescription>Make changes to the course structure and details below.</DialogDescription>
                 </DialogHeader>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <div><Label>Title</Label><Input {...form.register("title")} /></div>
-                    <div><Label>Description</Label><Textarea {...form.register("description")} /></div>
-                    <div><Label>Category</Label><Controller name="category" control={form.control} render={({ field }) => (
-                        <Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent>
-                            <SelectItem value="Career">Career</SelectItem>
-                            <SelectItem value="STEM">STEM</SelectItem>
-                            <SelectItem value="Healthcare">Healthcare</SelectItem>
-                            <SelectItem value="Public Health">Public Health</SelectItem>
-                        </SelectContent></Select>
-                        )} />
-                    </div>
-                    <div><Label htmlFor="youtubeUrl">YouTube URL</Label><Input id="youtubeUrl" {...form.register("youtubeUrl")} /></div>
-                    <DialogFooter>
-                        <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
-                        <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
-                    </DialogFooter>
-                </form>
+                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} />
             </DialogContent>
         </Dialog>
     );
 }
 
-function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
+const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit}: any) => {
+    return (
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-h-[80vh] overflow-y-auto pr-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div><Label>Title</Label><Input {...form.register("title")} />{form.formState.errors.title && <p className="text-destructive text-xs mt-1">{form.formState.errors.title.message}</p>}</div>
+          <div><Label>Category</Label><Controller name="category" control={form.control} render={({ field }) => (<Select onValueChange={field.onChange} value={field.value}><SelectTrigger><SelectValue /></SelectTrigger><SelectContent><SelectItem value="Career">Career</SelectItem><SelectItem value="STEM">STEM</SelectItem><SelectItem value="Healthcare">Healthcare</SelectItem><SelectItem value="Public Health">Public Health</SelectItem></SelectContent></Select>)} /></div>
+        </div>
+        <div><Label>Description</Label><Textarea {...form.register("description")} />{form.formState.errors.description && <p className="text-destructive text-xs mt-1">{form.formState.errors.description.message}</p>}</div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><Label>Thumbnail URL</Label><Input {...form.register("thumbnailUrl")} />{form.formState.errors.thumbnailUrl && <p className="text-destructive text-xs mt-1">{form.formState.errors.thumbnailUrl.message}</p>}</div>
+            <div><Label>Image AI Hint</Label><Input {...form.register("imageHint")} /></div>
+        </div>
+        
+        <div className="space-y-4">
+            <h3 className="font-semibold text-lg">Course Content</h3>
+            {sectionFields.map((section, sectionIndex) => (
+                <SectionField key={section.id} form={form} sectionIndex={sectionIndex} removeSection={removeSection} />
+            ))}
+             {form.formState.errors.sections && <p className="text-destructive text-xs mt-1">{form.formState.errors.sections.message || form.formState.errors.sections?.root?.message}</p>}
+        </div>
+
+        <Button type="button" variant="outline" size="sm" onClick={() => appendSection({ title: "", lectures: [] })}><PlusCircle className="mr-2 h-4 w-4" />Add Section</Button>
+
+        <DialogFooter className="sticky bottom-0 bg-background pt-4 z-10">
+            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+            <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Course"}</Button>
+        </DialogFooter>
+      </form>
+    )
+}
+
+const SectionField = ({ form, sectionIndex, removeSection }: any) => {
+    const { fields, append, remove } = useFieldArray({
+        control: form.control,
+        name: `sections.${sectionIndex}.lectures`,
+    });
+
+    return (
+        <Card className="bg-muted/50 p-4">
+            <div className="flex justify-between items-center mb-2">
+                <Input placeholder="Section Title" {...form.register(`sections.${sectionIndex}.title`)} className="font-semibold text-md" />
+                <Button variant="ghost" size="sm" onClick={() => removeSection(sectionIndex)}><Trash2 className="text-destructive h-4 w-4" /></Button>
+            </div>
+            {form.formState.errors.sections?.[sectionIndex]?.title && <p className="text-destructive text-xs mt-1">{form.formState.errors.sections?.[sectionIndex]?.title?.message}</p>}
+            
+            <div className="space-y-2 pl-4 mt-2">
+                {fields.map((lecture, lectureIndex) => (
+                    <div key={lecture.id} className="flex items-center gap-2 bg-background p-2 rounded-md">
+                        <GripVertical className="h-4 w-4 text-muted-foreground" />
+                        <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-2">
+                           <Input placeholder="Lecture Title" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.title`)} />
+                           <Input placeholder="Video URL" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.videoUrl`)} />
+                           <Input type="number" placeholder="Duration (min)" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.duration`)} />
+                        </div>
+                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => remove(lectureIndex)}><Trash2 className="text-destructive h-4 w-4" /></Button>
+                    </div>
+                ))}
+            </div>
+            <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ title: "", videoUrl: "", duration: 0 })}><PlusCircle className="mr-2 h-4 w-4" />Add Lecture</Button>
+        </Card>
+    );
+};
+
+
+function DeleteCourseAlert({ courseId }: { courseId: string }) {
     const { toast } = useToast();
-    const [open, setOpen] = useState(false);
 
     const handleDelete = async () => {
         try {
-            await deleteResource(resourceId);
-            toast({ title: "Resource Deleted", description: "The resource has been removed." });
-            setOpen(false);
+            await deleteCourse(courseId);
+            toast({ title: "Course Deleted", description: "The course has been removed." });
         } catch (error) {
-            toast({ title: "Error", description: "Failed to delete resource.", variant: "destructive" });
+            toast({ title: "Error", description: "Failed to delete course.", variant: "destructive" });
         }
     };
 
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialog>
             <AlertDialogTrigger asChild>
                 <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
                     <Trash2 className="h-4 w-4" />
@@ -120,7 +187,7 @@ function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the resource.
+                        This action cannot be undone. This will permanently delete the course and all its content.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -132,42 +199,49 @@ function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
     )
 }
 
-export default function ManageResources() {
+export default function ManageCourses() {
   const { toast } = useToast();
-  const [resources, setResources] = useState<Resource[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const form = useForm<ResourceFormValues>({
-    resolver: zodResolver(resourceFormSchema),
+  const form = useForm<CourseFormValues>({
+    resolver: zodResolver(courseFormSchema),
     defaultValues: {
       title: "",
       description: "",
       category: "Career",
-      youtubeUrl: "",
+      thumbnailUrl: "https://picsum.photos/seed/course-thumb/400/225",
+      imageHint: "abstract course",
+      sections: [{ title: "Introduction", lectures: [] }],
     },
   });
 
-  const fetchResources = () => {
+  const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
+      control: form.control,
+      name: "sections",
+  });
+
+  const fetchCourses = () => {
     setLoading(true);
-    const unsubscribe = listenToResources((newResources) => {
-        setResources(newResources);
+    const unsubscribe = listenToCourses((newCourses) => {
+        setCourses(newCourses);
         setLoading(false);
     });
     return unsubscribe;
   }
   
   useEffect(() => {
-    const unsubscribe = fetchResources();
+    const unsubscribe = fetchCourses();
     return () => unsubscribe();
   }, []);
 
-  const onSubmit = async (data: ResourceFormValues) => {
+  const onSubmit = async (data: CourseFormValues) => {
     try {
-      await addResource(data as any);
-      toast({ title: "Resource Created", description: "The new resource has been added successfully." });
+      await addCourse(data);
+      toast({ title: "Course Created", description: "The new course has been added successfully." });
       form.reset();
     } catch (error) {
-      toast({ title: "Error", description: "Failed to create resource.", variant: "destructive" });
+      toast({ title: "Error", description: "Failed to create course.", variant: "destructive" });
     }
   };
 
@@ -176,72 +250,39 @@ export default function ManageResources() {
       <div className="md:col-span-1">
         <Card>
           <CardHeader>
-            <CardTitle>Add New Resource</CardTitle>
+            <CardTitle>Add New Course</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title</Label>
-                <Input id="title" {...form.register("title")} />
-                {form.formState.errors.title && <p className="text-red-500 text-xs mt-1">{form.formState.errors.title.message}</p>}
-              </div>
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea id="description" {...form.register("description")} />
-                {form.formState.errors.description && <p className="text-red-500 text-xs mt-1">{form.formState.errors.description.message}</p>}
-              </div>
-              <div>
-                  <Label>Category</Label>
-                  <Controller name="category" control={form.control} render={({ field }) => (
-                     <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <SelectTrigger><SelectValue /></SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="Career">Career</SelectItem>
-                            <SelectItem value="STEM">STEM</SelectItem>
-                            <SelectItem value="Healthcare">Healthcare</SelectItem>
-                            <SelectItem value="Public Health">Public Health</SelectItem>
-                        </SelectContent>
-                    </Select>
-                  )} />
-                </div>
-               <div>
-                <Label htmlFor="youtubeUrl">YouTube URL</Label>
-                <Input id="youtubeUrl" {...form.register("youtubeUrl")} placeholder="https://www.youtube.com/watch?v=..."/>
-                {form.formState.errors.youtubeUrl && <p className="text-red-500 text-xs mt-1">{form.formState.errors.youtubeUrl.message}</p>}
-              </div>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
-                {form.formState.isSubmitting ? "Adding Resource..." : "Add Resource"}
-              </Button>
-            </form>
+            <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} />
           </CardContent>
         </Card>
       </div>
       <div className="md:col-span-2">
         <Card>
           <CardHeader>
-            <CardTitle>Existing Resources</CardTitle>
+            <CardTitle>Existing Courses</CardTitle>
           </CardHeader>
           <CardContent>
-            {loading ? <Loader2 className="animate-spin" /> :
-             resources.length > 0 ? (
+            {loading ? <div className="flex justify-center"><Loader2 className="animate-spin" /></div> :
+             courses.length > 0 ? (
                 <ul className="space-y-4">
-                    {resources.map(resource => (
-                        <li key={resource.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
+                    {courses.map(course => (
+                        <li key={course.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
                             <div>
-                                <p className="font-semibold">{resource.title}</p>
-                                {resource.createdAt && (
-                                  <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
+                                <p className="font-semibold">{course.title}</p>
+                                {course.createdAt && (
+                                  <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(course.createdAt.toDate())} ago</p>
                                 )}
                             </div>
                             <div className="flex items-center">
-                                <EditResourceDialog resource={resource} onResourceUpdated={fetchResources} />
-                                <DeleteResourceAlert resourceId={resource.id} />
+                                <EditCourseDialog course={course} onCourseUpdated={fetchCourses} />
+                                <DeleteCourseAlert courseId={course.id} />
                             </div>
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p className="text-muted-foreground text-center">No resources found.</p>
+                <p className="text-muted-foreground text-center">No courses found.</p>
             )}
           </CardContent>
         </Card>

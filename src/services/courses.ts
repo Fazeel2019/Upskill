@@ -1,6 +1,6 @@
 
 import { db } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, getDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import type { Course } from "@/lib/data";
 
 type NewCourse = Omit<Course, 'id' | 'createdAt'>;
@@ -35,6 +35,20 @@ export const deleteCourse = async (courseId: string) => {
     } catch (error) {
         console.error("Error deleting course: ", error);
         throw new Error("Could not delete course");
+    }
+}
+
+export const getCourse = async (courseId: string): Promise<Course | null> => {
+    try {
+        const courseDoc = doc(db, "courses", courseId);
+        const docSnap = await getDoc(courseDoc);
+        if (docSnap.exists()) {
+            return { id: docSnap.id, ...docSnap.data() } as Course;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error getting course:", error);
+        throw new Error("Could not retrieve course");
     }
 }
 
