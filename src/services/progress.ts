@@ -1,52 +1,69 @@
 
+"use client"
+
 import { db } from "@/lib/firebase";
-import { doc, getDoc, setDoc, onSnapshot, serverTimestamp, Timestamp } from "firebase/firestore";
-import type { Resource } from "@/lib/data";
+import { doc, getDoc, setDoc, onSnapshot, serverTimestamp, Timestamp, updateDoc, writeBatch } from "firebase/firestore";
+import type { Course } from "@/lib/data";
+import { addNotification } from "./notifications";
 
 export interface CourseProgress {
-    resource: Resource;
+    course: Course;
     progress: number; // Percentage
+    completedLectures: string[];
+    lastLectureId?: string;
 }
 
 export interface UserProgress {
-  lastResourceId?: string;
-  courses?: { [resourceId: string]: CourseProgress };
+  lastCourseId?: string;
+  courses?: { [courseId: string]: CourseProgress };
   updatedAt: Timestamp;
 }
 
-export const enrollInCourse = async (uid: string, resource: Resource) => {
+export const enrollInCourse = async (uid: string, course: Course) => {
     const progressRef = doc(db, "userProgress", uid);
-    const progressDoc = await getDoc(progressRef);
     
     const newCourseData: CourseProgress = {
-        resource,
-        progress: 0
+        course: course, // The course object itself
+        progress: 0,
+        completedLectures: [],
     };
 
-    if (progressDoc.exists()) {
+    try {
         await setDoc(progressRef, {
             courses: {
-                [resource.id]: newCourseData
+                [course.id]: newCourseData
             },
+            lastCourseId: course.id,
             updatedAt: serverTimestamp(),
         }, { merge: true });
-    } else {
-         await setDoc(progressRef, {
-            courses: {
-                [resource.id]: newCourseData
-            },
-            updatedAt: serverTimestamp(),
-        });
+        
+        await addNotification(uid, {
+            type: "course_progress",
+            message: `You've enrolled in "${course.title}"! Start learning now.`,
+            link: `/learning/course/${course.id}`,
+        })
+
+    } catch (error) {
+        console.error("Error enrolling in course:", error);
+        throw new Error("Could not enroll in course.");
     }
 };
 
-export const updateUserProgress = async (uid: string, data: Partial<Omit<UserProgress, 'updatedAt'>>) => {
+export const updateUserProgress = async (uid: string, courseId: string, progress: number, completedLectures: string[], lastLectureId: string) => {
   const progressRef = doc(db, "userProgress", uid);
   try {
-    await setDoc(progressRef, {
-      ...data,
+    const batch = writeBatch(db);
+
+    batch.update(progressRef, {
+      [`courses.${courseId}.progress`]: progress,
+      [`courses.${courseId}.completedLectures`]: completedLectures,
+      [`courses.${courseId}.lastLectureId`]: lastLectureId,
+      lastCourseId: courseId,
       updatedAt: serverTimestamp(),
-    }, { merge: true });
+    });
+
+    await batch.commit();
+
   } catch (error) {
     console.error("Error updating user progress:", error);
     throw new Error("Could not update user progress");
