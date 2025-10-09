@@ -30,7 +30,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose, DialogTrigger } from "@/components/ui/dialog";
 import { Loader2, Edit, Trash2, PlusCircle, GripVertical } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
@@ -58,49 +58,8 @@ const courseFormSchema = z.object({
 
 type CourseFormValues = z.infer<typeof courseFormSchema>;
 
-function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCourseUpdated: () => void }) {
-    const { toast } = useToast();
-    const [open, setOpen] = useState(false);
 
-    const form = useForm<CourseFormValues>({
-        resolver: zodResolver(courseFormSchema),
-        defaultValues: {
-          ...course,
-          sections: course.sections || [],
-        },
-    });
-
-    const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
-        control: form.control,
-        name: "sections",
-    });
-
-    const onSubmit = async (data: CourseFormValues) => {
-        try {
-            await updateCourse(course.id, data);
-            toast({ title: "Course Updated", description: "The course has been updated successfully." });
-            onCourseUpdated();
-            setOpen(false);
-        } catch (error) {
-            toast({ title: "Error", description: "Failed to update course.", variant: "destructive" });
-        }
-    };
-
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <Button variant="ghost" size="sm" onClick={() => setOpen(true)}><Edit className="h-4 w-4 mr-2" />Edit</Button>
-            <DialogContent className="max-w-4xl">
-                <DialogHeader>
-                    <DialogTitle>Edit Course</DialogTitle>
-                    <DialogDescription>Make changes to the course structure and details below.</DialogDescription>
-                </DialogHeader>
-                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} isEditMode={true} />
-            </DialogContent>
-        </Dialog>
-    );
-}
-
-const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, isEditMode = false}: any) => {
+const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, children}: {form: any, sectionFields: any, appendSection: any, removeSection: any, onSubmit: any, children: React.ReactNode}) => {
     return (
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-h-[80vh] overflow-y-auto pr-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -124,8 +83,7 @@ const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, 
         <Button type="button" variant="outline" size="sm" onClick={() => appendSection({ title: "", lectures: [] })}><PlusCircle className="mr-2 h-4 w-4" />Add Section</Button>
 
         <DialogFooter className="sticky bottom-0 bg-background pt-4 z-10">
-            {isEditMode && <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>}
-            <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Course"}</Button>
+            {children}
         </DialogFooter>
       </form>
     )
@@ -163,6 +121,104 @@ const SectionField = ({ form, sectionIndex, removeSection }: any) => {
     );
 };
 
+function AddCourseDialog({ onCourseCreated }: { onCourseCreated: () => void }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    const form = useForm<CourseFormValues>({
+        resolver: zodResolver(courseFormSchema),
+        defaultValues: {
+            title: "",
+            description: "",
+            category: "Career",
+            thumbnailUrl: "https://picsum.photos/seed/course-thumb/400/225",
+            imageHint: "abstract course",
+            sections: [{ id: crypto.randomUUID(), title: "Introduction", lectures: [] }],
+        },
+    });
+
+    const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
+        control: form.control,
+        name: "sections",
+    });
+
+    const onSubmit = async (data: CourseFormValues) => {
+        try {
+            await addCourse(data);
+            toast({ title: "Course Created", description: "The new course has been added successfully." });
+            form.reset();
+            onCourseCreated();
+            setOpen(false);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to create course.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button><PlusCircle className="mr-2 h-4 w-4" /> Add New Course</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl">
+                <DialogHeader>
+                    <DialogTitle>Add New Course</DialogTitle>
+                    <DialogDescription>Fill out the details to create a new course.</DialogDescription>
+                </DialogHeader>
+                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit}>
+                    <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Creating..." : "Create Course"}</Button>
+                </FormBody>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
+function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCourseUpdated: () => void }) {
+    const { toast } = useToast();
+    const [open, setOpen] = useState(false);
+
+    const form = useForm<CourseFormValues>({
+        resolver: zodResolver(courseFormSchema),
+        defaultValues: {
+          ...course,
+          sections: course.sections || [],
+        },
+    });
+
+    const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
+        control: form.control,
+        name: "sections",
+    });
+
+    const onSubmit = async (data: CourseFormValues) => {
+        try {
+            await updateCourse(course.id, data);
+            toast({ title: "Course Updated", description: "The course has been updated successfully." });
+            onCourseUpdated();
+            setOpen(false);
+        } catch (error) {
+            toast({ title: "Error", description: "Failed to update course.", variant: "destructive" });
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button variant="ghost" size="sm"><Edit className="h-4 w-4 mr-2" />Edit</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl">
+                <DialogHeader>
+                    <DialogTitle>Edit Course</DialogTitle>
+                    <DialogDescription>Make changes to the course structure and details below.</DialogDescription>
+                </DialogHeader>
+                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit}>
+                    <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
+                </FormBody>
+            </DialogContent>
+        </Dialog>
+    );
+}
 
 function DeleteCourseAlert({ courseId }: { courseId: string }) {
     const { toast } = useToast();
@@ -200,27 +256,9 @@ function DeleteCourseAlert({ courseId }: { courseId: string }) {
 }
 
 export default function ManageCourses() {
-  const { toast } = useToast();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const form = useForm<CourseFormValues>({
-    resolver: zodResolver(courseFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      category: "Career",
-      thumbnailUrl: "https://picsum.photos/seed/course-thumb/400/225",
-      imageHint: "abstract course",
-      sections: [{ id: crypto.randomUUID(), title: "Introduction", lectures: [] }],
-    },
-  });
-
-  const { fields: sectionFields, append: appendSection, remove: removeSection } = useFieldArray({
-      control: form.control,
-      name: "sections",
-  });
-
+  
   const fetchCourses = () => {
     setLoading(true);
     const unsubscribe = listenToCourses((newCourses) => {
@@ -235,58 +273,36 @@ export default function ManageCourses() {
     return () => unsubscribe();
   }, []);
 
-  const onSubmit = async (data: CourseFormValues) => {
-    try {
-      await addCourse(data);
-      toast({ title: "Course Created", description: "The new course has been added successfully." });
-      form.reset();
-    } catch (error) {
-      toast({ title: "Error", description: "Failed to create course.", variant: "destructive" });
-    }
-  };
 
   return (
-    <div className="grid md:grid-cols-3 gap-8">
-      <div className="md:col-span-1">
-        <Card>
-          <CardHeader>
-            <CardTitle>Add New Course</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="md:col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Existing Courses</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {loading ? <div className="flex justify-center"><Loader2 className="animate-spin" /></div> :
-             courses.length > 0 ? (
-                <ul className="space-y-4">
-                    {courses.map(course => (
-                        <li key={course.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
-                            <div>
-                                <p className="font-semibold">{course.title}</p>
-                                {course.createdAt && (
-                                  <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(course.createdAt.toDate())} ago</p>
-                                )}
-                            </div>
-                            <div className="flex items-center">
-                                <EditCourseDialog course={course} onCourseUpdated={fetchCourses} />
-                                <DeleteCourseAlert courseId={course.id} />
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p className="text-muted-foreground text-center">No courses found.</p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>Existing Courses</CardTitle>
+        <AddCourseDialog onCourseCreated={fetchCourses} />
+      </CardHeader>
+      <CardContent>
+        {loading ? <div className="flex justify-center"><Loader2 className="animate-spin" /></div> :
+         courses.length > 0 ? (
+            <ul className="space-y-4">
+                {courses.map(course => (
+                    <li key={course.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
+                        <div>
+                            <p className="font-semibold">{course.title}</p>
+                            {course.createdAt && (
+                              <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(course.createdAt.toDate())} ago</p>
+                            )}
+                        </div>
+                        <div className="flex items-center">
+                            <EditCourseDialog course={course} onCourseUpdated={fetchCourses} />
+                            <DeleteCourseAlert courseId={course.id} />
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p className="text-muted-foreground text-center py-8">No courses found. Click "Add New Course" to get started.</p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
