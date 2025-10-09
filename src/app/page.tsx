@@ -411,8 +411,8 @@ export default function Home() {
                       <Link href="/login">Join Free Community <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="rounded-full font-semibold">
-                      <Link href="/login">Schedule a Demo</Link>
-                  </Button>
+                      <Link href="/login">Join Winner Circle</Link>
+                   </Button>
                 </div>
                  <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
@@ -444,6 +444,8 @@ export default function Home() {
     
 
     
+
+
 
 
 
