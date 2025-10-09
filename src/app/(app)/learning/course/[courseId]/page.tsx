@@ -19,34 +19,6 @@ import Link from "next/link";
 import { addNotification } from "@/services/notifications";
 
 
-export function getEmbedUrl(url: string) {
-    let embedUrl = null;
-    try {
-        const urlObj = new URL(url);
-        // Handle YouTube URLs
-        if (urlObj.hostname === 'youtu.be') {
-            const videoId = urlObj.pathname.slice(1);
-            if(videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        } else if (urlObj.hostname.includes('youtube.com')) {
-            const videoId = urlObj.searchParams.get('v');
-            if(videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
-        } 
-        // Handle Vimeo URLs
-        else if (urlObj.hostname.includes('vimeo.com')) {
-            const videoId = urlObj.pathname.split('/').pop();
-            if (videoId && /^\d+$/.test(videoId)) {
-                embedUrl = `https://player.vimeo.com/video/${videoId}`;
-            }
-        }
-    } catch(e) {
-        // Fallback for simple IDs
-        if (url.length === 11) { // Likely a YouTube ID
-             embedUrl = `https://www.youtube.com/embed/${url}`;
-        }
-    }
-    return embedUrl;
-}
-
 function CourseSkeleton() {
     return (
       <div className="grid md:grid-cols-3 gap-8">
@@ -114,6 +86,15 @@ export default function CoursePage() {
             return () => unsub();
         }
     }, [user]);
+    
+    useEffect(() => {
+        // Set the first lecture as active by default when the course loads and user is enrolled
+        if (course && course.sections.length > 0 && course.sections[0].lectures.length > 0 && isEnrolled) {
+            if (!activeLecture) {
+              setActiveLecture(course.sections[0].lectures[0]);
+            }
+        }
+    }, [course, isEnrolled, activeLecture]);
 
     const handleEnroll = async () => {
         if (!user || !course) return;
@@ -166,8 +147,8 @@ export default function CoursePage() {
     }
     
     if (loading || !course) return <CourseSkeleton />;
-
-    const embedUrl = activeLecture ? getEmbedUrl(activeLecture.videoUrl) : getEmbedUrl(course.sections[0].lectures[0].videoUrl);
+    
+    const videoEmbedCode = activeLecture ? activeLecture.videoEmbedCode : (course.sections?.[0]?.lectures?.[0]?.videoEmbedCode || '');
 
     return (
         <div className="space-y-8">
@@ -177,22 +158,10 @@ export default function CoursePage() {
             <div className="grid md:grid-cols-3 gap-8 items-start">
                 <div className="md:col-span-2 space-y-6">
                     <Card className="overflow-hidden">
-                        <div className="aspect-video">
-                        {embedUrl ? (
-                            <iframe
-                                src={embedUrl}
-                                title={activeLecture?.title || "Course Video"}
-                                frameBorder="0"
-                                allow="autoplay; fullscreen; picture-in-picture"
-                                allowFullScreen
-                                className="w-full h-full"
-                            ></iframe>
-                        ) : (
-                             <div className="w-full h-full bg-muted flex items-center justify-center">
-                               <p className="text-muted-foreground">Invalid video URL</p>
-                            </div>
-                        )}
-                        </div>
+                        <div 
+                            className="aspect-video w-full bg-black [&>iframe]:w-full [&>iframe]:h-full"
+                            dangerouslySetInnerHTML={{ __html: videoEmbedCode || '<div class="w-full h-full bg-muted flex items-center justify-center"><p class="text-muted-foreground">Select a lecture to begin.</p></div>' }}
+                        />
                     </Card>
 
                     <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">

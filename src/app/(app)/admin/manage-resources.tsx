@@ -37,7 +37,7 @@ import { formatDistanceToNow } from "date-fns";
 const lectureSchema = z.object({
     id: z.string().default(() => crypto.randomUUID()),
     title: z.string().min(3, "Lecture title is required"),
-    videoUrl: z.string().url("Must be a valid YouTube or Vimeo URL"),
+    videoEmbedCode: z.string().min(10, "Embed code is required"),
     duration: z.coerce.number().min(1, "Duration must be at least 1 minute"),
 });
 
@@ -105,18 +105,18 @@ const SectionField = ({ form, sectionIndex, removeSection }: any) => {
             
             <div className="space-y-2 pl-4 mt-2">
                 {fields.map((lecture, lectureIndex) => (
-                    <div key={lecture.id} className="flex items-center gap-2 bg-background p-2 rounded-md">
-                        <GripVertical className="h-4 w-4 text-muted-foreground" />
-                        <div className="flex-grow grid grid-cols-1 md:grid-cols-3 gap-2">
+                    <div key={lecture.id} className="flex items-start gap-2 bg-background p-2 rounded-md">
+                        <GripVertical className="h-4 w-4 text-muted-foreground mt-2.5" />
+                        <div className="flex-grow grid grid-cols-1 gap-2">
                            <Input placeholder="Lecture Title" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.title`)} />
-                           <Input placeholder="Video URL" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.videoUrl`)} />
+                           <Textarea placeholder="Video Embed Code (e.g. <iframe>...)" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.videoEmbedCode`)} />
                            <Input type="number" placeholder="Duration (min)" {...form.register(`sections.${sectionIndex}.lectures.${lectureIndex}.duration`)} />
                         </div>
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => remove(lectureIndex)}><Trash2 className="text-destructive h-4 w-4" /></Button>
                     </div>
                 ))}
             </div>
-            <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ title: "", videoUrl: "", duration: 0 })}><PlusCircle className="mr-2 h-4 w-4" />Add Lecture</Button>
+            <Button type="button" variant="outline" size="sm" className="mt-2" onClick={() => append({ title: "", videoEmbedCode: "", duration: 0 })}><PlusCircle className="mr-2 h-4 w-4" />Add Lecture</Button>
         </Card>
     );
 };

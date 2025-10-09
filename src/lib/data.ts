@@ -18,7 +18,7 @@ export type Event = {
 export type Lecture = {
   id: string;
   title: string;
-  videoUrl: string;
+  videoEmbedCode: string;
   duration: number; // in minutes
 };
 
