@@ -31,42 +31,42 @@ const testimonials = [
     role: "Internal Medicine Specialist",
     quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools I now use to manage my clinic more efficiently and mentor junior doctors with greater confidence.\"",
     image: "/1.jpg",
-    imageHint: "professional woman"
+    imageHint: "professional male"
   },
   {
     name: "Karen Mitchell, DNP",
     role: "Nurse Practitioner & Emerging Health Entrepreneur",
-    quote: "\"As a Nurse Practitioner, I always thought my career would stay at the bedside. But the Bedside to Business course opened my eyes to how my clinical expertise could translate into entrepreneurship and leadership.\"",
+    quote: "\"As a Nurse Practitioner, I always thought my career would stay at the bedside. But the Bedside to Business course opened my eyes to how my clinical expertise could translate into entrepreneurship and leadership. I learned how to package my skills, build a business plan, and explore opportunities beyond direct patient care. It gave me the confidence to step into new spaces I never imagined possible\"",
     image: "/2.png",
     imageHint: "female professional"
   },
   {
-    name: "Dr. Samuel Adeyemi, MD",
-    role: "Internal Medicine Specialist",
-    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    name: "Lisa Howard, MBA",
+    role: "Healthcare Administrator",
+    quote: "\"Having a mentor through Upskill gave me the clarity and confidence to transition into healthcare administration. I was overwhelmed about making the pivot, but my mentor broke it down into manageable steps, offered industry insights, and helped me map out a career I now feel excited about.\"",
     image: "/3.png",
-    imageHint: "male doctor"
+    imageHint: "female professional"
   },
   {
-    name: "Dr. Samuel Adeyemi, MD",
-    role: "Internal Medicine Specialist",
-    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    name: "Dr. Isaac Mwape",
+    role: "Healthcare Policy Advisor",
+    quote: "\"This community is a living ecosystem of professionals committed to global health equity. Being part of it means you’re never navigating your career alone.\"",
     image: "/4.png",
     imageHint: "male doctor"
   },
   {
-    name: "Dr. Samuel Adeyemi, MD",
-    role: "Internal Medicine Specialist",
-    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    name: "DeAnna Wilson",
+    role: "Growing Professional",
+    quote: "\"Thank you so much for the opportunity to be part of this internship. My experience at Upskill has far exceeded my expectations, from the incredible networking opportunities to the growth in my multicultural awareness and professional development.\"",
     image: "/5.jpg",
-    imageHint: "male doctor"
+    imageHint: "female professional"
   },
   {
-    name: "Dr. Samuel Adeyemi, MD",
-    role: "Internal Medicine Specialist",
-    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools and mentor junior doctors with greater confidence.\"",
+    name: "Dr. Emily Watson, RD",
+    role: "Research Director",
+    quote: "\"The exclusive events and workshops provided cutting-edge insights into industry trends. I’ve expanded my network significantly and gained confidence in leadership roles.\"",
     image: "/6.png",
-    imageHint: "male doctor"
+    imageHint: "female professional"
   }
 ];
 
