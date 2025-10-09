@@ -408,7 +408,7 @@ export default function Home() {
                 </p>
                 <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4">
                   <Button asChild size="lg" className="rounded-full bg-blue-600 font-semibold text-white shadow-lg hover:bg-blue-700">
-                      <Link href="/login">Start Your Free Journey <ArrowRight className="ml-2 w-4 h-4"/></Link>
+                      <Link href="/login">Join Free Community <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="rounded-full font-semibold">
                       <Link href="/login">Schedule a Demo</Link>
@@ -444,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
