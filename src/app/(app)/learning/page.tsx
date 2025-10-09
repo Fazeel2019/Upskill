@@ -224,12 +224,14 @@ function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
     return (
         <motion.div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6" variants={containerVariants}>
             {enrolledCourses.map(courseData => (
+                courseData.course && courseData.course.id ?
                 <motion.div key={courseData.course.id} variants={itemVariants}>
                     <CourseCard 
                         course={courseData.course} 
                         isEnrolled={true}
                     />
                 </motion.div>
+                : null
             ))}
         </motion.div>
     );
