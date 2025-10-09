@@ -27,9 +27,9 @@ const features = [
 
 const testimonials = [
   {
-    name: "Lisa Howard, MBA",
-    role: "Healthcare Administrator",
-    quote: "\"Having a mentor through Upskill gave me the clarity and confidence to transition into healthcare administration. I was overwhelmed about making the pivot, but my mentor broke it down into manageable steps, offered industry insights, and helped me map out a career I now feel excited about.\"",
+    name: "Dr. Samuel Adeyemi, MD",
+    role: "Internal Medicine Specialist",
+    quote: "\"Upskill's workshops have been transformative. As a physician, I've always been focused on patient care, but I realized I also needed to invest in my career growth. The sessions on leadership and digital skills gave me practical tools I now use to manage my clinic more efficiently and mentor junior doctors with greater confidence.\"",
     image: "/1.jpg",
     imageHint: "professional woman"
   },
