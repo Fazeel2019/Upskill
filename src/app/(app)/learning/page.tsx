@@ -210,7 +210,7 @@ function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
         );
     }
     
-    const enrolledCourses = Object.values(userProgress.courses);
+    const enrolledCourses = Object.values(userProgress.courses).filter(c => c && c.course);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -260,7 +260,7 @@ export default function LearningPage() {
     const enrolledCount = userProgress?.courses ? Object.keys(userProgress.courses).length : 0;
     const completedCount = useMemo(() => {
         if (!userProgress?.courses) return 0;
-        return Object.values(userProgress.courses).filter(c => c.progress === 100).length;
+        return Object.values(userProgress.courses).filter(c => c?.progress === 100).length;
     }, [userProgress]);
 
     const statsWithValues = useMemo(() => [
