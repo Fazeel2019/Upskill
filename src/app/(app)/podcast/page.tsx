@@ -106,24 +106,24 @@ export default function PodcastsPage() {
       variants={pageVariants}
     >
       <motion.section
-        className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-center overflow-hidden"
+        className="flex items-center gap-8"
         variants={itemVariants}
       >
-        <div className="absolute inset-0 bg-gray-700"></div>
         <Image
-          src="/upskilp.jpg"
-          alt="Upskill Podcasts Banner"
-          fill
-          className="object-contain"
-          data-ai-hint="abstract background"
+            src="/upskilp.jpg"
+            alt="Upskill Podcasts Logo"
+            width={120}
+            height={120}
+            className="rounded-full object-cover border-4 border-muted"
+            data-ai-hint="abstract background"
         />
-        <div className="container relative mx-auto px-4">
-          <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tight text-white">
-            Upskill Podcasts
-          </h1>
-          <p className="mt-4 text-lg md:text-xl text-white/80 max-w-3xl mx-auto">
-            Listen to insights from leading STEM & Healthcare professionals
-          </p>
+        <div>
+            <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tight">
+                Upskill Podcasts
+            </h1>
+            <p className="mt-2 text-lg md:text-xl text-muted-foreground max-w-3xl">
+                Listen to insights from leading STEM & Healthcare professionals
+            </p>
         </div>
       </motion.section>
 
