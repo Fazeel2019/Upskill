@@ -94,13 +94,13 @@ function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCours
                     <DialogTitle>Edit Course</DialogTitle>
                     <DialogDescription>Make changes to the course structure and details below.</DialogDescription>
                 </DialogHeader>
-                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} />
+                <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit} isEditMode={true} />
             </DialogContent>
         </Dialog>
     );
 }
 
-const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit}: any) => {
+const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, isEditMode = false}: any) => {
     return (
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-h-[80vh] overflow-y-auto pr-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -115,16 +115,16 @@ const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit}:
         
         <div className="space-y-4">
             <h3 className="font-semibold text-lg">Course Content</h3>
-            {sectionFields.map((section, sectionIndex) => (
+            {sectionFields.map((section: any, sectionIndex: number) => (
                 <SectionField key={section.id} form={form} sectionIndex={sectionIndex} removeSection={removeSection} />
             ))}
-             {form.formState.errors.sections && <p className="text-destructive text-xs mt-1">{form.formState.errors.sections.message || form.formState.errors.sections?.root?.message}</p>}
+             {form.formState.errors.sections && <p className="text-destructive text-xs mt-1">{typeof form.formState.errors.sections.message === 'string' ? form.formState.errors.sections.message : 'Please add at least one section.'}</p>}
         </div>
 
         <Button type="button" variant="outline" size="sm" onClick={() => appendSection({ title: "", lectures: [] })}><PlusCircle className="mr-2 h-4 w-4" />Add Section</Button>
 
         <DialogFooter className="sticky bottom-0 bg-background pt-4 z-10">
-            <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
+            {isEditMode && <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>}
             <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Course"}</Button>
         </DialogFooter>
       </form>
@@ -212,7 +212,7 @@ export default function ManageCourses() {
       category: "Career",
       thumbnailUrl: "https://picsum.photos/seed/course-thumb/400/225",
       imageHint: "abstract course",
-      sections: [{ title: "Introduction", lectures: [] }],
+      sections: [{ id: crypto.randomUUID(), title: "Introduction", lectures: [] }],
     },
   });
 
