@@ -13,9 +13,9 @@ import { Badge } from "@/components/ui/badge"
 import { motion } from "framer-motion"
 import { cn } from "@/lib/utils"
 import React, { useEffect, useState, useMemo } from "react"
-import { listenToResources } from "@/services/resources"
-import type { Resource } from "@/lib/data"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { listenToCourses } from "@/services/courses"
+import type { Course } from "@/lib/data"
+import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { updateUserProgress, listenToUserProgress, enrollInCourse, UserProgress } from "@/services/progress"
 import { addAchievement } from "@/services/profile"
@@ -45,36 +45,14 @@ function StatCard({ title, value, icon: Icon, color, iconColor }: { title: strin
     )
 }
 
-function getYouTubeThumbnail(url: string) {
-    if (!url) return 'https://picsum.photos/seed/placeholder-thumb/400/225';
-    const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
-    const videoId = videoIdMatch ? videoIdMatch[1] : null;
-    if (videoId) {
-        return `https://img.youtube.com/vi/${videoId}/mqdefault.jpg`;
-    }
-    return 'https://picsum.photos/seed/placeholder-thumb/400/225'; // Fallback
-}
-
-export function getYouTubeEmbedUrl(url: string): string {
-    if (!url) return '';
-    const videoIdMatch = url.match(/(?:v=|\/embed\/|\/)([\w-]{11})/);
-    const videoId = videoIdMatch ? videoIdMatch[1] : null;
-    if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-    }
-    return '';
-}
-
-function ResourceCard({ 
-    resource, 
+function CourseCard({ 
+    course, 
     onEnroll, 
-    onPlay, 
     isEnrolled,
     showEnrollButton = false 
 } : { 
-    resource: Resource, 
-    onEnroll?: (resource: Resource) => void, 
-    onPlay?: (resource: Resource) => void,
+    course: Course, 
+    onEnroll?: (course: Course) => void, 
     isEnrolled: boolean,
     showEnrollButton?: boolean
 }) {
@@ -86,39 +64,41 @@ function ResourceCard({
     };
     
     return (
-        <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[resource.category] || 'border-gray-500'}`}>
-            <div className="relative h-48 cursor-pointer" onClick={() => isEnrolled && onPlay && onPlay(resource)}>
+        <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[course.category] || 'border-gray-500'}`}>
+            <Link href={`/learning/course/${course.id}`} className="relative h-48 cursor-pointer">
                 <Image 
-                    src={getYouTubeThumbnail(resource.youtubeUrl)}
-                    alt={resource.title} 
+                    src={course.thumbnailUrl}
+                    alt={course.title} 
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     style={{objectFit: "cover"}}
                     className="transition-transform duration-300 group-hover:scale-105"
-                    data-ai-hint="youtube thumbnail"
+                    data-ai-hint={course.imageHint || "course thumbnail"}
                 />
                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-4">
-                    <h3 className="text-white font-bold text-lg leading-tight">{resource.title}</h3>
+                    <h3 className="text-white font-bold text-lg leading-tight">{course.title}</h3>
                 </div>
-                {isEnrolled && onPlay && (
+                {isEnrolled && (
                   <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <Play className="w-16 h-16 text-white/80" />
                   </div>
                 )}
-            </div>
+            </Link>
             <CardContent className="pt-4 flex-grow">
-                <p className="text-sm text-muted-foreground line-clamp-3">{resource.description}</p>
+                <p className="text-sm text-muted-foreground line-clamp-3">{course.description}</p>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
-                 <Badge variant="outline">{resource.category}</Badge>
+                 <Badge variant="outline">{course.category}</Badge>
                  {showEnrollButton && onEnroll && (
-                    <Button size="sm" onClick={() => onEnroll(resource)} disabled={isEnrolled}>
+                    <Button size="sm" onClick={() => onEnroll(course)} disabled={isEnrolled}>
                         {isEnrolled ? 'Enrolled' : 'Enroll'}
                     </Button>
                  )}
-                 {onPlay && isEnrolled && (
-                     <Button size="sm" onClick={() => onPlay(resource)}>
-                        Start Learning
+                 {isEnrolled && (
+                     <Button size="sm" asChild>
+                        <Link href={`/learning/course/${course.id}`}>
+                           Start Learning
+                        </Link>
                     </Button>
                  )}
             </CardFooter>
@@ -126,24 +106,24 @@ function ResourceCard({
     )
 }
 
-function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: UserProgress | null, onResourceSelected: (resource: Resource) => void }) {
+function CourseCatalogTab({ userProgress }: { userProgress: UserProgress | null }) {
     const { user } = useAuth();
-    const [resources, setResources] = useState<Resource[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeFilter, setActiveFilter] = useState("All");
 
     useEffect(() => {
         setLoading(true);
-        const unsubscribe = listenToResources((newResources) => {
-            setResources(newResources);
+        const unsubscribe = listenToCourses((newCourses) => {
+            setCourses(newCourses);
             setLoading(false);
         });
         return () => unsubscribe();
     }, []);
 
-    const handleEnroll = async (resource: Resource) => {
+    const handleEnroll = async (course: Course) => {
         if (user) {
-            await enrollInCourse(user.uid, resource);
+            await enrollInCourse(user.uid, course);
         }
     }
     
@@ -169,7 +149,7 @@ function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: 
             <Card className="max-w-md mx-auto">
                 <CardContent className="p-8 text-center">
                     <BookOpen className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                    <h3 className="font-semibold text-lg">Resource Library is Empty</h3>
+                    <h3 className="font-semibold text-lg">Course Library is Empty</h3>
                     <p className="text-muted-foreground mt-2">
                         No learning materials have been added yet. Check back shortly!
                     </p>
@@ -179,8 +159,8 @@ function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: 
     );
 
     const filters = ["All", "Career", "STEM", "Healthcare", "Public Health"];
-    const filteredResources = resources.filter(r => activeFilter === "All" || r.category === activeFilter);
-    const enrolledResourceIds = userProgress?.courses ? Object.keys(userProgress.courses) : [];
+    const filteredCourses = courses.filter(r => activeFilter === "All" || r.category === activeFilter);
+    const enrolledCourseIds = userProgress?.courses ? Object.keys(userProgress.courses) : [];
 
     return (
         <div className="space-y-6 mt-6">
@@ -201,13 +181,12 @@ function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: 
                     className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"
                     variants={containerVariants}
                 >
-                    {filteredResources.length > 0 ? filteredResources.map((resource) => (
-                    <motion.div key={resource.id} variants={itemVariants}>
-                        <ResourceCard 
-                            resource={resource} 
+                    {filteredCourses.length > 0 ? filteredCourses.map((course) => (
+                    <motion.div key={course.id} variants={itemVariants}>
+                        <CourseCard 
+                            course={course} 
                             onEnroll={handleEnroll}
-                            onPlay={onResourceSelected}
-                            isEnrolled={enrolledResourceIds.includes(resource.id)}
+                            isEnrolled={enrolledCourseIds.includes(course.id)}
                             showEnrollButton={true}
                         />
                     </motion.div>
@@ -220,7 +199,7 @@ function CourseCatalogTab({ userProgress, onResourceSelected }: { userProgress: 
     );
 }
 
-function MyLearningTab({ userProgress, onResourceSelected }: { userProgress: UserProgress | null, onResourceSelected: (resource: Resource) => void }) {
+function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
     if (!userProgress || !userProgress.courses || Object.keys(userProgress.courses).length === 0) {
         return (
             <Card className="mt-6">
@@ -245,10 +224,9 @@ function MyLearningTab({ userProgress, onResourceSelected }: { userProgress: Use
     return (
         <motion.div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6" variants={containerVariants}>
             {enrolledCourses.map(courseData => (
-                <motion.div key={courseData.resource.id} variants={itemVariants}>
-                    <ResourceCard 
-                        resource={courseData.resource} 
-                        onPlay={onResourceSelected}
+                <motion.div key={courseData.course.id} variants={itemVariants}>
+                    <CourseCard 
+                        course={courseData.course} 
                         isEnrolled={true}
                     />
                 </motion.div>
@@ -261,7 +239,6 @@ function MyLearningTab({ userProgress, onResourceSelected }: { userProgress: Use
 export default function LearningPage() {
     const { user, reloadProfile } = useAuth();
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
-    const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -269,32 +246,6 @@ export default function LearningPage() {
             return () => unsubscribe();
         }
     }, [user]);
-    
-    const handlePlay = (resource: Resource) => {
-        setSelectedResource(resource);
-        if (user) {
-            updateUserProgress(user.uid, {
-                lastResourceId: resource.id
-            });
-        }
-    }
-
-    const handleClosePlayer = () => {
-        if (user && selectedResource && userProgress?.courses?.[selectedResource.id]?.progress !== 100) {
-            updateUserProgress(user.uid, {
-                [`courses.${selectedResource.id}.progress`]: 100,
-            });
-            // Add achievement for completing the course
-            addAchievement(user.uid, {
-                id: `cert-${selectedResource.id}`,
-                title: `Certificate of Completion: ${selectedResource.title}`,
-                date: new Date().toISOString().split('T')[0],
-                issuer: 'Upskill Community',
-            });
-            reloadProfile();
-        }
-        setSelectedResource(null);
-    };
 
     const pageVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -329,13 +280,13 @@ export default function LearningPage() {
             <motion.div variants={itemVariants}>
                 <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight font-headline">Learning & Resources</h1>
+                        <h1 className="text-3xl font-bold tracking-tight font-headline">Learning & Courses</h1>
                         <p className="text-muted-foreground">Advance your career with expert-curated courses and resources</p>
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="relative w-full sm:w-64">
                             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"/>
-                            <Input placeholder="Search courses and resources..." className="pl-9"/>
+                            <Input placeholder="Search courses..." className="pl-9"/>
                         </div>
                         <Button variant="outline">
                             <Filter className="mr-2 h-4 w-4" />
@@ -364,10 +315,10 @@ export default function LearningPage() {
                         <TabsTrigger value="achievements">Achievements</TabsTrigger>
                     </TabsList>
                     <TabsContent value="my-learning">
-                        <MyLearningTab userProgress={userProgress} onResourceSelected={handlePlay} />
+                        <MyLearningTab userProgress={userProgress} />
                     </TabsContent>
                     <TabsContent value="course-catalog">
-                        <CourseCatalogTab userProgress={userProgress} onResourceSelected={handlePlay} />
+                        <CourseCatalogTab userProgress={userProgress} />
                     </TabsContent>
                     <TabsContent value="achievements">
                         <Card>
@@ -378,32 +329,6 @@ export default function LearningPage() {
                     </TabsContent>
                 </Tabs>
             </motion.div>
-
-             <Dialog open={!!selectedResource} onOpenChange={(open) => !open && handleClosePlayer()}>
-                <DialogContent className="max-w-3xl p-0">
-                {selectedResource && (
-                    <>
-                    <DialogHeader>
-                        <DialogTitle className="sr-only">{selectedResource.title}</DialogTitle>
-                    </DialogHeader>
-                    <div className="aspect-video">
-                        {getYouTubeEmbedUrl(selectedResource.youtubeUrl) && (
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                src={getYouTubeEmbedUrl(selectedResource.youtubeUrl)}
-                                title={selectedResource.title}
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                className="rounded-t-lg"
-                            ></iframe>
-                        )}
-                        </div>
-                    </>
-                )}
-                </DialogContent>
-            </Dialog>
         </motion.div>
     )
 }

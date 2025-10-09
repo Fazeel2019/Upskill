@@ -14,9 +14,9 @@ import Image from "next/image"
 import React, { useEffect, useState, useMemo } from "react"
 import { listenToUserProgress, UserProgress } from "@/services/progress"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { getYouTubeEmbedUrl } from "@/app/(app)/learning/page"
+import { getYouTubeEmbedUrl } from "@/app/(app)/learning/course/[courseId]/page"
 import { listenToEvents, type Event } from "@/services/events"
-import { listenToResources, type Resource } from "@/services/resources"
+import { listenToCourses, type Course } from "@/services/courses"
 import { recommendContent, type Recommendation } from "@/ai/flows/recommend-content"
 import { listenToFriends } from "@/services/profile"
 
@@ -56,22 +56,16 @@ function ContinueLearningCard() {
     }, [user]);
 
     const lastProgress = useMemo(() => {
-        if (!userProgress || !userProgress.lastResourceId || !userProgress.courses) return null;
-        return userProgress.courses[userProgress.lastResourceId];
+        if (!userProgress || !userProgress.lastCourseId || !userProgress.courses) return null;
+        return userProgress.courses[userProgress.lastCourseId];
     }, [userProgress]);
 
     const progressValue = lastProgress?.progress || 0;
-    const title = lastProgress?.resource.title || "Start a Course";
+    const title = lastProgress?.course.title || "Start a Course";
     const description = lastProgress ? "Resume your last course" : "Explore our catalog";
     const buttonText = lastProgress ? "Continue" : "Browse Courses";
-    const href = lastProgress ? "#" : "/learning";
+    const href = lastProgress ? `/learning/course/${lastProgress.course.id}` : "/learning";
     
-    const handleClick = () => {
-        if (lastProgress) {
-            setIsPlayerOpen(true);
-        }
-    }
-
     const QuickActionCard = (
       <Card className="group rounded-xl hover:shadow-md transition-shadow">
           <CardContent className="p-4">
@@ -92,8 +86,8 @@ function ContinueLearningCard() {
                   <Progress value={progressValue} className="h-2" />
               </div>
             
-              <Button asChild={!lastProgress} onClick={handleClick} variant="outline" className="w-full mt-4">
-                  {lastProgress ? <span>{buttonText}</span> : <Link href={href}>{buttonText}</Link>}
+              <Button asChild variant="outline" className="w-full mt-4">
+                  <Link href={href}>{buttonText}</Link>
               </Button>
           </CardContent>
       </Card>
@@ -102,29 +96,6 @@ function ContinueLearningCard() {
     return (
         <>
             {QuickActionCard}
-             {lastProgress && (
-                <Dialog open={isPlayerOpen} onOpenChange={setIsPlayerOpen}>
-                    <DialogContent className="max-w-3xl p-0">
-                        <DialogHeader>
-                            <DialogTitle className="sr-only">{lastProgress.resource.title}</DialogTitle>
-                        </DialogHeader>
-                        <div className="aspect-video">
-                            {getYouTubeEmbedUrl(lastProgress.resource.youtubeUrl) && (
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    src={getYouTubeEmbedUrl(lastProgress.resource.youtubeUrl)}
-                                    title={lastProgress.resource.title}
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    className="rounded-t-lg"
-                                ></iframe>
-                            )}
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     )
 }
@@ -135,7 +106,7 @@ export default function DashboardPage() {
     const [lastEvent, setLastEvent] = useState<Event | null>(null);
     const [activityItems, setActivityItems] = useState<any[]>([]);
     const [recommendationItems, setRecommendationItems] = useState<Recommendation[]>([]);
-    const [resources, setResources] = useState<Resource[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
     const [connectionCount, setConnectionCount] = useState(0);
 
     useEffect(() => {
@@ -144,7 +115,7 @@ export default function DashboardPage() {
             const unsubEvents = listenToEvents(events => {
                 if (events.length > 0) setLastEvent(events[0]);
             });
-             const unsubResources = listenToResources(setResources);
+             const unsubCourses = listenToCourses(setCourses);
              const unsubFriends = listenToFriends(user.uid, (friends) => {
                 setConnectionCount(friends.length);
              });
@@ -152,7 +123,7 @@ export default function DashboardPage() {
             return () => {
                 unsubProgress();
                 unsubEvents();
-                unsubResources();
+                unsubCourses();
                 unsubFriends();
             };
         }
@@ -175,12 +146,12 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const newActivityItems = [];
-        if (userProgress?.lastResourceId && userProgress.courses?.[userProgress.lastResourceId]) {
-            const lastCourse = userProgress.courses[userProgress.lastResourceId];
+        if (userProgress?.lastCourseId && userProgress.courses?.[userProgress.lastCourseId]) {
+            const lastCourse = userProgress.courses[userProgress.lastCourseId];
              newActivityItems.push({
                 icon: BookOpen,
                 color: "text-blue-500",
-                text: `You started the course "${lastCourse.resource.title}".`,
+                text: `You started the course "${lastCourse.course.title}".`,
                 time: "Recently"
             })
         }
@@ -197,11 +168,11 @@ export default function DashboardPage() {
 
     useEffect(() => {
         const getRecommendations = async () => {
-            if (profile && resources.length > 0 && recommendationItems.length === 0) {
+            if (profile && courses.length > 0 && recommendationItems.length === 0) {
                 try {
                     const recs = await recommendContent({ 
                         userTitle: profile.title || "Professional", 
-                        availableResources: resources 
+                        availableResources: courses.map(c => ({ id: c.id, title: c.title, category: c.category, description: c.description }))
                     });
                     if (recs && recs.recommendations) {
                         setRecommendationItems(recs.recommendations);
@@ -212,7 +183,7 @@ export default function DashboardPage() {
             }
         };
         getRecommendations();
-    }, [profile, resources, recommendationItems.length])
+    }, [profile, courses, recommendationItems.length])
 
     return (
         <motion.div 
