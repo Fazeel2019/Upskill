@@ -19,20 +19,32 @@ import Link from "next/link";
 import { addNotification } from "@/services/notifications";
 
 
-export function getYouTubeEmbedUrl(url: string) {
-    let videoId = '';
+export function getEmbedUrl(url: string) {
+    let embedUrl = null;
     try {
         const urlObj = new URL(url);
+        // Handle YouTube URLs
         if (urlObj.hostname === 'youtu.be') {
-            videoId = urlObj.pathname.slice(1);
+            const videoId = urlObj.pathname.slice(1);
+            if(videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
         } else if (urlObj.hostname.includes('youtube.com')) {
-            videoId = urlObj.searchParams.get('v') || '';
+            const videoId = urlObj.searchParams.get('v');
+            if(videoId) embedUrl = `https://www.youtube.com/embed/${videoId}`;
+        } 
+        // Handle Vimeo URLs
+        else if (urlObj.hostname.includes('vimeo.com')) {
+            const videoId = urlObj.pathname.split('/').pop();
+            if (videoId && /^\d+$/.test(videoId)) {
+                embedUrl = `https://player.vimeo.com/video/${videoId}`;
+            }
         }
     } catch(e) {
-        // invalid url, maybe just an ID
-        if (url.length === 11) videoId = url;
+        // Fallback for simple IDs
+        if (url.length === 11) { // Likely a YouTube ID
+             embedUrl = `https://www.youtube.com/embed/${url}`;
+        }
     }
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : null;
+    return embedUrl;
 }
 
 function CourseSkeleton() {
@@ -155,7 +167,7 @@ export default function CoursePage() {
     
     if (loading || !course) return <CourseSkeleton />;
 
-    const embedUrl = activeLecture ? getYouTubeEmbedUrl(activeLecture.videoUrl) : getYouTubeEmbedUrl(course.sections[0].lectures[0].videoUrl);
+    const embedUrl = activeLecture ? getEmbedUrl(activeLecture.videoUrl) : getEmbedUrl(course.sections[0].lectures[0].videoUrl);
 
     return (
         <div className="space-y-8">
@@ -171,7 +183,7 @@ export default function CoursePage() {
                                 src={embedUrl}
                                 title={activeLecture?.title || "Course Video"}
                                 frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allow="autoplay; fullscreen; picture-in-picture"
                                 allowFullScreen
                                 className="w-full h-full"
                             ></iframe>
