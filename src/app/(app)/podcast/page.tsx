@@ -106,7 +106,7 @@ export default function PodcastsPage() {
       variants={pageVariants}
     >
       <motion.section
-        className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-center overflow-hidden rounded-xl"
+        className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-center overflow-hidden"
         variants={itemVariants}
       >
         <Image
