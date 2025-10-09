@@ -113,7 +113,7 @@ export default function PodcastsPage() {
           src="/upskilp.jpg"
           alt="Upskill Podcasts Banner"
           fill
-          className="object-cover"
+          className="object-contain"
           data-ai-hint="abstract background"
         />
         <div className="absolute inset-0 bg-black/60"></div>
