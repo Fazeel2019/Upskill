@@ -121,7 +121,7 @@ export default function Home() {
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row justify-center md:justify-start items-center gap-4">
                     <Button asChild size="lg" className="w-full sm:w-auto rounded-full bg-white text-blue-600 font-semibold hover:bg-blue-100 transition-transform transform hover:scale-105 shadow-lg">
-                      <Link href="/login">Start Free Trial Today</Link>
+                      <Link href="/login">Join Free Community</Link>
                     </Button>
                   </div>
                    <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-center md:text-left">
@@ -444,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
