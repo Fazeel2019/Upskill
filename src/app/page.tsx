@@ -102,7 +102,7 @@ export default function Home() {
       <PublicHeader />
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative min-h-screen flex items-center text-foreground pt-24 sm:pt-20">
+        <section className="relative min-h-screen flex items-center text-foreground pt-24 sm:pt-0">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-blue-500 to-red-600" />
 
            <div className="container relative mx-auto px-4">
@@ -324,21 +324,21 @@ export default function Home() {
                           <div className="bg-background/50 border rounded-lg p-6">
                             <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Premium Features Included</h4>
                             <ul className="space-y-4 mt-4">
-                                <li className="flex items-center justify-between">
+                                <li className="flex flex-wrap items-center justify-between gap-2">
                                     <div>
                                         <p className="font-semibold">AI-Powered Career Insights</p>
                                         <p className="text-sm text-muted-foreground">Personalized recommendations & skill analysis</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex items-center justify-between">
+                                <li className="flex flex-wrap items-center justify-between gap-2">
                                     <div>
                                         <p className="font-semibold">Expert Mentorship Access</p>
                                         <p className="text-sm text-muted-foreground">Connect with industry leaders and mentors</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex items-center justify-between">
+                                <li className="flex flex-wrap items-center justify-between gap-2">
                                     <div>
                                         <p className="font-semibold">Exclusive Networking Events</p>
                                         <p className="text-sm text-muted-foreground">Monthly leadership summits & workshops</p>
@@ -444,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
