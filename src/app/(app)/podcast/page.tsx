@@ -109,6 +109,7 @@ export default function PodcastsPage() {
         className="relative pt-32 pb-20 md:pt-40 md:pb-28 text-center overflow-hidden"
         variants={itemVariants}
       >
+        <div className="absolute inset-0 bg-gray-700"></div>
         <Image
           src="/upskilp.jpg"
           alt="Upskill Podcasts Banner"
@@ -116,7 +117,6 @@ export default function PodcastsPage() {
           className="object-contain"
           data-ai-hint="abstract background"
         />
-        <div className="absolute inset-0 bg-black/60"></div>
         <div className="container relative mx-auto px-4">
           <h1 className="font-headline text-5xl md:text-6xl font-bold tracking-tight text-white">
             Upskill Podcasts
