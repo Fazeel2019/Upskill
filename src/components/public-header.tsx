@@ -62,7 +62,7 @@ export default function PublicHeader() {
             <Link href="/login">Log In</Link>
           </Button>
           <Button asChild className="bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-700 shadow-md">
-            <Link href="/login">Start Free Trial</Link>
+            <Link href="/login">Join free community</Link>
           </Button>
         </div>
         <Sheet>
@@ -90,7 +90,7 @@ export default function PublicHeader() {
               </nav>
               <div className="grid gap-4 mt-8">
                 <Button asChild className="bg-blue-600 text-white">
-                  <Link href="/login">Start Free Trial</Link>
+                  <Link href="/login">Join free community</Link>
                 </Button>
                 <Button variant="outline" asChild>
                   <Link href="/login">Log In</Link>
