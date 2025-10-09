@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound, useRouter, useParams } from "next/navigation";
 import { getCourse } from "@/services/courses";
 import type { Course, Section, Lecture } from "@/lib/data";
 import { useAuth } from "@/hooks/use-auth";
@@ -53,8 +53,9 @@ function CourseSkeleton() {
 }
 
 
-export default function CoursePage({ params }: { params: { courseId: string } }) {
-    const { courseId } = params;
+export default function CoursePage() {
+    const params = useParams();
+    const courseId = params.courseId as string;
     const { user, reloadProfile } = useAuth();
     const { toast } = useToast();
     const router = useRouter();
@@ -130,7 +131,7 @@ export default function CoursePage({ params }: { params: { courseId: string } })
 
         await updateUserProgress(user.uid, course.id, newProgress, Array.from(newCompleted), activeLecture.id);
         
-        if (newProgress === 100) {
+        if (newProgress === 100 && !completedLectures.has(activeLecture.id)) {
             toast({
                 title: "Course Completed!",
                 description: `Congratulations! You've completed "${course.title}". Your achievement has been added to your profile.`,
@@ -254,4 +255,3 @@ export default function CoursePage({ params }: { params: { courseId: string } })
         </div>
     );
 }
-
