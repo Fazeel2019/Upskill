@@ -12,7 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, CheckCircle, Lock, PlayCircle, BookOpen, Clock, Award } from "lucide-react";
+import { ArrowLeft, CheckCircle, Lock, PlayCircle, BookOpen, Clock, Award, Loader2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
@@ -40,7 +40,7 @@ function CourseSkeleton() {
 export default function CoursePage() {
     const params = useParams();
     const courseId = params.courseId as string;
-    const { user, reloadProfile } = useAuth();
+    const { user, profile, loading: authLoading, reloadProfile } = useAuth();
     const { toast } = useToast();
     const router = useRouter();
 
@@ -146,7 +146,16 @@ export default function CoursePage() {
         }
     }
     
-    if (loading || !course) return <CourseSkeleton />;
+    if (authLoading || loading) return <CourseSkeleton />;
+
+    if (!course) {
+        notFound();
+        return null;
+    }
+    
+    if (profile?.membership !== 'winner-circle') {
+        return null; // Redirect is handled by the layout
+    }
     
     const videoEmbedCode = activeLecture ? activeLecture.videoEmbedCode : (course.sections?.[0]?.lectures?.[0]?.videoEmbedCode || '');
 

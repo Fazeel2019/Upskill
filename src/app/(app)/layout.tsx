@@ -32,9 +32,10 @@ import {
   HelpCircle,
   Bell,
   ChevronLeft,
+  Crown,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -56,6 +57,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, profile, loading } = useAuth();
   const [friendRequestCount, setFriendRequestCount] = useState(0);
   const [notificationCount, setNotificationCount] = useState(0);
+  const router = useRouter();
 
   useEffect(() => {
     if (user) {
@@ -72,11 +74,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       };
     }
   }, [user]);
+  
+  useEffect(() => {
+    if (!loading && profile && profile.membership !== 'winner-circle' && (pathname.startsWith('/learning') || pathname.startsWith('/course'))) {
+      router.push('/winner-circle');
+    }
+  }, [loading, profile, pathname, router]);
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/learning", label: "Learning", icon: GraduationCap },
-    { href: "https://upskilledu.net/2-demo/", label: "Create Course", icon: Rocket, external: true, tag: "New" },
+    { href: "/winner-circle", label: "Winner Circle", icon: Crown, premium: true },
     { href: "/podcast", label: "Podcasts", icon: MicVocal },
     { href: "/community", label: "Community", icon: Users, badge: friendRequestCount },
     { href: "/events", label: "Events", icon: Calendar },
@@ -137,6 +145,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   asChild
                   isActive={!item.external && pathname.startsWith(item.href)}
                   tooltip={item.label}
+                  className={cn(item.premium && "text-yellow-500 hover:text-yellow-600")}
                 >
                   <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>
                     <item.icon />
@@ -164,21 +173,24 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>
-          <Card className="m-2 bg-green-500/10 border-green-500/20 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:bg-transparent group-data-[collapsible=icon]:border-none">
+          <Card className={cn("m-2 border-green-500/20", profile?.membership === 'winner-circle' ? "bg-yellow-500/10 border-yellow-500/20" : "bg-green-500/10")}>
             <CardContent className="p-3 group-data-[collapsible=icon]:p-2 group-data-[collapsible=icon]:flex group-data-[collapsible=icon]:justify-center">
                 <div className="flex items-center gap-2">
-                    <div className="p-1 bg-green-500 rounded-md">
-                        <Shield className="w-4 h-4 text-white" />
+                    <div className={cn("p-1 rounded-md", profile?.membership === 'winner-circle' ? "bg-yellow-500" : "bg-green-500")}>
+                        {profile?.membership === 'winner-circle' ? <Crown className="w-4 h-4 text-white" /> : <Shield className="w-4 h-4 text-white" />}
                     </div>
                     <div className="group-data-[collapsible=icon]:hidden">
-                        <p className="text-sm font-semibold">Premium Member</p>
-                        <p className="text-xs text-muted-foreground">All features unlocked</p>
+                        <p className="text-sm font-semibold">{profile?.membership === 'winner-circle' ? 'Winner Circle' : 'Community Member'}</p>
+                        <p className="text-xs text-muted-foreground">{profile?.membership === 'winner-circle' ? 'All features unlocked' : 'Limited access'}</p>
                     </div>
                 </div>
-                <div className="mt-2 group-data-[collapsible=icon]:hidden">
-                    <p className="text-xs text-muted-foreground mb-1">Career Progress: 75%</p>
-                    <Progress value={75} className="h-1" />
-                </div>
+                 {profile?.membership !== 'winner-circle' && (
+                    <div className="mt-2 group-data-[collapsible=icon]:hidden">
+                       <Button size="sm" className="w-full" asChild>
+                           <Link href="/winner-circle">Upgrade</Link>
+                       </Button>
+                    </div>
+                 )}
             </CardContent>
           </Card>
         </SidebarFooter>

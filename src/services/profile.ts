@@ -43,6 +43,7 @@ export interface UserProfile {
   linkedin?: string;
   website?: string;
   role?: 'admin';
+  membership?: 'winner-circle';
   experience?: Experience[];
   education?: Education[];
   achievements?: Achievement[];
@@ -69,6 +70,11 @@ export const updateUserProfile = async (uid: string, data: Partial<UserProfile>)
   if (data.role === undefined || data.role === null) {
     updateData.role = deleteField() as any;
   }
+  
+  if (data.membership === undefined || data.membership === null) {
+    updateData.membership = deleteField() as any;
+  }
+
 
   await setDoc(userRef, updateData, { merge: true });
 };

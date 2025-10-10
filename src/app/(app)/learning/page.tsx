@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/componen
 import { Input } from "@/components/ui/input"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Book, CheckCircle, Award as CertificateIcon, Clock, Filter, Search, Star, Play, BookOpen, Loader2 } from "lucide-react"
+import { Book, CheckCircle, Award as CertificateIcon, Clock, Filter, Search, Star, Play, BookOpen, Loader2, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
@@ -239,7 +239,7 @@ function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
 
 
 export default function LearningPage() {
-    const { user, reloadProfile } = useAuth();
+    const { user, profile, loading } = useAuth();
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
 
     useEffect(() => {
@@ -271,6 +271,14 @@ export default function LearningPage() {
         { ...stats[2], value: String(completedCount) }, // Certificates count is same as completed courses
         ...stats.slice(3)
     ], [enrolledCount, completedCount]);
+    
+    if (loading) {
+        return <div className="flex items-center justify-center h-full"><Loader2 className="animate-spin w-8 h-8" /></div>
+    }
+
+    if (profile?.membership !== 'winner-circle') {
+        return null; // The redirect is handled in the layout
+    }
 
     return (
         <motion.div 

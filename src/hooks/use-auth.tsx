@@ -81,9 +81,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isAppRoute = !["/", "/login", "/signup", "/about", "/blog"].includes(pathname);
+    const isAppRoute = !["/", "/login", "/signup", "/about", "/blog", "/blog/[blogId]", "/checkout", "/winner-circle"].some(p => pathname.startsWith(p.replace(/\[.*?\]/, '')));
+    const isPublicAppRoute = ["/checkout", "/winner-circle"].includes(pathname);
 
-    if (!user && isAppRoute) {
+
+    if (!user && (isAppRoute || isPublicAppRoute)) {
       router.push("/login");
     }
   }, [user, loading, router, pathname]);

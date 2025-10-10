@@ -4,18 +4,16 @@
 import React from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
+import { updateUserProfile } from '@/services/profile';
+import { useRouter } from 'next/navigation';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -23,15 +21,16 @@ const CheckoutForm = () => {
     const stripe = useStripe();
     const elements = useElements();
     const { toast } = useToast();
-    const { user } = useAuth();
+    const { user, reloadProfile } = useAuth();
     const [isLoading, setIsLoading] = React.useState(false);
+    const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setIsLoading(true);
 
-        if (!stripe || !elements) {
-            toast({ title: 'Stripe is not loaded.', variant: 'destructive' });
+        if (!stripe || !elements || !user) {
+            toast({ title: 'An error occurred.', variant: 'destructive' });
             setIsLoading(false);
             return;
         }
@@ -49,27 +48,25 @@ const CheckoutForm = () => {
             description: 'This is a demo. No payment will be processed.',
         });
 
-        // In a real application, you would create a PaymentMethod and then
-        // send the ID to your server to create a PaymentIntent.
-        // const { error, paymentMethod } = await stripe.createPaymentMethod({
-        //     type: 'card',
-        //     card: cardElement,
-        //     billing_details: {
-        //         name: user?.displayName || 'Guest',
-        //         email: user?.email || '',
-        //     },
-        // });
-
-        // if (error) {
-        //     toast({ title: error.message, variant: 'destructive' });
-        // } else {
-        //     console.log('[PaymentMethod]', paymentMethod);
-        //     // Send paymentMethod.id to your server
-        //     toast({ title: 'Payment Successful!', description: 'Welcome to the Winner Circle!'});
-        // }
-
-        setTimeout(() => {
-             setIsLoading(false);
+        // Simulate payment processing and database update
+        setTimeout(async () => {
+            try {
+                await updateUserProfile(user.uid, { membership: 'winner-circle' });
+                reloadProfile(); // Refresh the user's profile to get the new membership status
+                toast({
+                    title: 'Payment Successful!',
+                    description: 'Welcome to the Winner Circle! You now have full access.',
+                });
+                router.push('/winner-circle');
+            } catch (error) {
+                 toast({
+                    title: 'Upgrade Failed',
+                    description: 'Could not update your membership status. Please contact support.',
+                    variant: 'destructive',
+                });
+            } finally {
+                setIsLoading(false);
+            }
         }, 2000);
     };
 
@@ -108,6 +105,19 @@ const CheckoutForm = () => {
 };
 
 const CheckoutPage = () => {
+    const { user, loading } = useAuth();
+    const router = useRouter();
+
+    React.useEffect(() => {
+        if (!loading && !user) {
+            router.push('/login');
+        }
+    }, [user, loading, router]);
+    
+    if (loading || !user) {
+        return <div className="flex items-center justify-center h-screen"><Loader2 className="animate-spin h-8 w-8" /></div>
+    }
+
     return (
         <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
