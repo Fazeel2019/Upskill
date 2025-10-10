@@ -74,7 +74,7 @@ const CheckoutForm = () => {
             if (paymentIntent?.status === 'succeeded') {
                 // 3. Update user profile in Firestore
                 await updateUserProfile(user.uid, { membership: 'winner-circle' });
-                reloadProfile(); 
+                await reloadProfile(); 
 
                 toast({
                     title: 'Payment Successful!',
