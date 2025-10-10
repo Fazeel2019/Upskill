@@ -2,7 +2,7 @@
 'use client';
 
 import React from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, StripeError } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -30,44 +30,76 @@ const CheckoutForm = () => {
         setIsLoading(true);
 
         if (!stripe || !elements || !user) {
-            toast({ title: 'An error occurred.', variant: 'destructive' });
+            toast({ title: 'An error occurred.', variant: 'destructive', description: "Stripe or user details are not available." });
             setIsLoading(false);
             return;
         }
 
         const cardElement = elements.getElement(CardElement);
-
         if (!cardElement) {
             toast({ title: 'Card details not found.', variant: 'destructive' });
             setIsLoading(false);
             return;
         }
 
-        toast({
-            title: 'Processing Payment...',
-            description: 'This is a demo. No payment will be processed.',
-        });
+        try {
+            // 1. Create PaymentIntent on the server
+            const response = await fetch('/api/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ amount: 1499 }), // amount in cents
+            });
 
-        // Simulate payment processing and database update
-        setTimeout(async () => {
-            try {
+            const { clientSecret, error: backendError } = await response.json();
+
+            if (backendError) {
+                throw new Error(backendError);
+            }
+
+            // 2. Confirm the payment on the client
+            const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        name: user.displayName || 'Anonymous User',
+                        email: user.email || undefined,
+                    },
+                },
+            });
+
+            if (stripeError) {
+                throw stripeError;
+            }
+
+            if (paymentIntent?.status === 'succeeded') {
+                // 3. Update user profile in Firestore
                 await updateUserProfile(user.uid, { membership: 'winner-circle' });
-                reloadProfile(); // Refresh the user's profile to get the new membership status
+                reloadProfile(); 
+
                 toast({
                     title: 'Payment Successful!',
                     description: 'Welcome to the Winner Circle! You now have full access.',
                 });
                 router.push('/winner-circle');
-            } catch (error) {
-                 toast({
-                    title: 'Upgrade Failed',
-                    description: 'Could not update your membership status. Please contact support.',
-                    variant: 'destructive',
-                });
-            } finally {
-                setIsLoading(false);
+            } else {
+                 throw new Error(paymentIntent?.status || "Payment failed with an unknown status.");
             }
-        }, 2000);
+
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof (error as StripeError).message === 'string') {
+                errorMessage = (error as StripeError).message;
+            }
+             toast({
+                title: 'Payment Failed',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const CARD_ELEMENT_OPTIONS = {
