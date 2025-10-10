@@ -324,22 +324,22 @@ export default function Home() {
                           <div className="bg-background/50 border rounded-lg p-6">
                             <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Premium Features Included</h4>
                             <ul className="space-y-4 mt-4">
-                                <li className="flex flex-wrap items-center gap-2">
-                                    <div className="flex-1 min-w-[150px]">
+                                <li className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
                                         <p className="font-semibold">AI-Powered Career Insights</p>
                                         <p className="text-sm text-muted-foreground">Personalized recommendations & skill analysis</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex flex-wrap items-center gap-2">
-                                    <div className="flex-1 min-w-[150px]">
+                                <li className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
                                         <p className="font-semibold">Expert Mentorship Access</p>
                                         <p className="text-sm text-muted-foreground">Connect with industry leaders and mentors</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
-                                <li className="flex flex-wrap items-center gap-2">
-                                    <div className="flex-1 min-w-[150px]">
+                                <li className="flex flex-col items-start sm:flex-row sm:items-center sm:justify-between gap-2">
+                                    <div className="flex-1 min-w-0">
                                         <p className="font-semibold">Exclusive Networking Events</p>
                                         <p className="text-sm text-muted-foreground">Monthly leadership summits & workshops</p>
                                     </div>
@@ -349,7 +349,7 @@ export default function Home() {
                           </div>
 
                            <Button asChild size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
-                             <Link href="/login">Start Your Transformation Today <ArrowRight className="ml-2"/></Link>
+                             <Link href="/checkout">Start Your Transformation Today <ArrowRight className="ml-2"/></Link>
                            </Button>
                            <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
                        </div>
@@ -411,7 +411,7 @@ export default function Home() {
                       <Link href="/login">Join Free Community <ArrowRight className="ml-2 w-4 h-4"/></Link>
                   </Button>
                    <Button asChild size="lg" variant="outline" className="rounded-full font-semibold">
-                      <Link href="/login">Join Winner Circle</Link>
+                      <Link href="/checkout">Join Winner Circle</Link>
                    </Button>
                 </div>
                  <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4 text-foreground">
@@ -444,6 +444,7 @@ export default function Home() {
     
 
     
+
 
 
 
