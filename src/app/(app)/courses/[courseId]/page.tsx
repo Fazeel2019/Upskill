@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { notFound, useRouter, useParams } from "next/navigation";
 import { getCourse } from "@/services/courses";
 import type { Course, Section, Lecture } from "@/lib/data";
@@ -291,3 +291,4 @@ export default function PaidCoursePage() {
         </div>
     );
 }
+
