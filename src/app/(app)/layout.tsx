@@ -83,6 +83,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
+    { href: "/courses", label: "Courses", icon: BookOpen },
     { href: "/learning", label: "Learning", icon: GraduationCap },
     { href: "/winner-circle", label: "Winner Circle", icon: Crown, premium: true },
     { href: "/podcast", label: "Podcasts", icon: MicVocal },
