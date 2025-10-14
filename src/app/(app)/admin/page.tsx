@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Loader2 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ManageEvents from "./manage-events";
-import ManageCourses from "./manage-resources";
+import ManageCourses from "./manage-courses";
 import ManageUsers from "./manage-users";
 import ManagePodcasts from "./manage-podcasts";
 import ManageBlogs from "./manage-blogs";
