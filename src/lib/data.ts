@@ -28,11 +28,23 @@ export type Section = {
   lectures: Lecture[];
 };
 
+export type Resource = {
+  id: string;
+  title: string;
+  description: string;
+  category: "Career" | "STEM" | "Healthcare" | "Public Health";
+  sections: Section[];
+  thumbnailUrl: string;
+  imageHint: string;
+  createdAt: Timestamp;
+};
+
 export type Course = {
   id: string;
   title: string;
   description: string;
   category: "Career" | "STEM" | "Healthcare" | "Public Health";
+  price: number;
   sections: Section[];
   thumbnailUrl: string;
   imageHint: string;

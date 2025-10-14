@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useAuth } from "@/hooks/use-auth";
@@ -10,6 +11,7 @@ import ManageLearning from "./manage-learning";
 import ManageUsers from "./manage-users";
 import ManagePodcasts from "./manage-podcasts";
 import ManageBlogs from "./manage-blogs";
+import ManageCourses from "./manage-courses";
 
 function AdminAccessDenied() {
     return (
@@ -42,6 +44,7 @@ export default function AdminPage() {
                 <TabsList>
                     <TabsTrigger value="events">Manage Events</TabsTrigger>
                     <TabsTrigger value="learning">Manage Learning</TabsTrigger>
+                    <TabsTrigger value="courses">Manage Courses</TabsTrigger>
                     <TabsTrigger value="users">Manage Users</TabsTrigger>
                     <TabsTrigger value="podcasts">Manage Podcasts</TabsTrigger>
                     <TabsTrigger value="blogs">Manage Blogs</TabsTrigger>
@@ -51,6 +54,9 @@ export default function AdminPage() {
                 </TabsContent>
                 <TabsContent value="learning">
                     <ManageLearning />
+                </TabsContent>
+                <TabsContent value="courses">
+                    <ManageCourses />
                 </TabsContent>
                 <TabsContent value="users">
                     <ManageUsers />
