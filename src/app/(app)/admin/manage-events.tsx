@@ -31,8 +31,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { Loader2, Edit, Trash2 } from "lucide-react";
+import { Loader2, Edit, Trash2, Star } from "lucide-react";
 import { format } from "date-fns";
+import { Switch } from "@/components/ui/switch";
 
 const eventFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -43,6 +44,7 @@ const eventFormSchema = z.object({
   category: z.enum(["STEM", "Healthcare", "Public Health"]),
   imageUrl: z.string().url("Must be a valid URL"),
   imageHint: z.string().min(2, "Image hint is required"),
+  isExclusive: z.boolean().default(false),
 });
 
 type EventFormValues = z.infer<typeof eventFormSchema>;
@@ -90,7 +92,8 @@ function EditEventDialog({ event, onEventUpdated }: { event: EventType, onEventU
         resolver: zodResolver(eventFormSchema),
         defaultValues: {
             ...event,
-            date: format(new Date(event.date as string), 'yyyy-MM-dd')
+            date: format(new Date(event.date as string), 'yyyy-MM-dd'),
+            isExclusive: event.isExclusive || false,
         }
     });
 
@@ -135,6 +138,12 @@ function EditEventDialog({ event, onEventUpdated }: { event: EventType, onEventU
                     </div>
                     <div><Label>Image URL</Label><Input {...form.register("imageUrl")} /></div>
                     <div><Label>Image AI Hint</Label><Input {...form.register("imageHint")} /></div>
+                    <div className="flex items-center space-x-2">
+                        <Controller name="isExclusive" control={form.control} render={({ field }) => (
+                            <Switch id="isExclusive-edit" checked={field.value} onCheckedChange={field.onChange} />
+                        )} />
+                        <Label htmlFor="isExclusive-edit" className="flex items-center gap-1"><Star className="w-4 h-4 text-yellow-500"/> Mark as Exclusive</Label>
+                    </div>
                     <DialogFooter>
                         <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
                         <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Saving..." : "Save Changes"}</Button>
@@ -161,6 +170,7 @@ export default function ManageEvents() {
       category: "STEM",
       imageUrl: "https://picsum.photos/seed/event-placeholder/400/250",
       imageHint: "abstract event",
+      isExclusive: false,
     },
   });
 
@@ -258,6 +268,12 @@ export default function ManageEvents() {
                 <Input id="imageHint" {...form.register("imageHint")} />
                 {form.formState.errors.imageHint && <p className="text-red-500 text-xs mt-1">{form.formState.errors.imageHint.message}</p>}
               </div>
+               <div className="flex items-center space-x-2 pt-2">
+                <Controller name="isExclusive" control={form.control} render={({ field }) => (
+                  <Switch id="isExclusive" checked={field.value} onCheckedChange={field.onChange} />
+                )} />
+                <Label htmlFor="isExclusive" className="flex items-center gap-1"><Star className="w-4 h-4 text-yellow-500"/> Mark as Exclusive</Label>
+              </div>
               <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Adding Event..." : "Add Event"}
               </Button>
@@ -277,7 +293,10 @@ export default function ManageEvents() {
                     {events.map(event => (
                         <li key={event.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
                             <div>
-                                <p className="font-semibold">{event.title}</p>
+                                <p className="font-semibold flex items-center gap-2">
+                                  {event.title}
+                                  {event.isExclusive && <Star className="h-4 w-4 text-yellow-500" />}
+                                </p>
                                 <p className="text-sm text-muted-foreground">{format(new Date(event.date as string), 'PPP')} at {event.time}</p>
                             </div>
                             <div className="flex items-center">

@@ -13,6 +13,7 @@ export const addEvent = async (eventData: NewEvent) => {
             ...eventData,
             createdAt: serverTimestamp(),
             registeredUids: [],
+            isExclusive: eventData.isExclusive || false,
         });
     } catch (error) {
         console.error("Error adding event: ", error);

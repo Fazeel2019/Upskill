@@ -82,10 +82,8 @@ export default function ExclusiveEventsPage() {
 
     useEffect(() => {
         setLoading(true);
-        // For demonstration, we'll filter events client-side.
-        // In a real-world scenario, you might have a specific flag in your database for exclusive events.
         const unsubscribe = listenToEvents((allEvents) => {
-            const exclusiveEvents = allEvents.filter(e => e.type === 'Summit' || e.type === 'Workshop');
+            const exclusiveEvents = allEvents.filter(e => e.isExclusive);
             setEvents(exclusiveEvents);
             setLoading(false);
         });

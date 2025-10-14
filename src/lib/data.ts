@@ -13,6 +13,7 @@ export type Event = {
   imageUrl: string;
   imageHint: string;
   registeredUids?: string[];
+  isExclusive?: boolean;
 };
 
 export type Lecture = {

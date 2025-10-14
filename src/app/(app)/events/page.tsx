@@ -86,8 +86,9 @@ export default function EventsPage() {
 
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = listenToEvents((newEvents) => {
-        setEvents(newEvents);
+    const unsubscribe = listenToEvents((allEvents) => {
+        const publicEvents = allEvents.filter(e => !e.isExclusive);
+        setEvents(publicEvents);
         setLoading(false);
     });
 
