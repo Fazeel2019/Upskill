@@ -47,7 +47,10 @@ const CheckoutForm = () => {
             const response = await fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: 1499 }), // amount in cents
+                body: JSON.stringify({ 
+                    amount: 1499, // amount in cents
+                    userId: user.uid,
+                }),
             });
 
             const { clientSecret, error: backendError } = await response.json();
