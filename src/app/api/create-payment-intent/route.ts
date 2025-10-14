@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: Request) {
   try {
-    const { amount, courseTitle, courseId, userId } = await request.json();
+    const { amount, courseTitle, courseId, userId, isDonation } = await request.json();
 
     // General validation for amount
     if (!amount || typeof amount !== 'number' || amount <= 0) {
@@ -16,10 +16,15 @@ export async function POST(request: Request) {
     }
 
     let metadata: Stripe.MetadataParam = {};
-    let description: string = "Upskill Community Subscription";
+    let description: string;
 
-    // If it's a course purchase, require course details
-    if (courseId) {
+    if (isDonation) {
+        description = 'Donation to Upskill Global Impact';
+        metadata = {
+            donation: 'true',
+            amount: (amount / 100).toFixed(2)
+        };
+    } else if (courseId) {
         if (!courseTitle || !userId) {
             return NextResponse.json({ error: 'Invalid course purchase data provided.' }, { status: 400 });
         }

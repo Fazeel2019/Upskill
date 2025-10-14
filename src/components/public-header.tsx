@@ -18,6 +18,7 @@ export default function PublicHeader() {
     { href: "#features", label: "Features" },
     { href: "#pricing", label: "Pricing" },
     { href: "/blog", label: "Blog" },
+    { href: "/global-impact", label: "Global Impact" },
   ];
 
   useEffect(() => {
