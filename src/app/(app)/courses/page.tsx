@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
@@ -22,7 +23,7 @@ function CourseCard({ course }: { course: Course }) {
 
     return (
         <Card className={`flex flex-col overflow-hidden group border-l-4 ${categoryColors[course.category] || 'border-gray-500'}`}>
-            <Link href={`/learning/course/${course.id}`} className="relative h-56 cursor-pointer">
+            <Link href={`/courses/${course.id}`} className="relative h-56 cursor-pointer">
                 <Image 
                     src={course.thumbnailUrl}
                     alt={course.title} 
@@ -40,7 +41,7 @@ function CourseCard({ course }: { course: Course }) {
             <CardHeader>
                 <Badge variant="outline" className="w-fit">{course.category}</Badge>
                 <h3 className="font-headline text-xl font-semibold leading-tight pt-2">
-                    <Link href={`/learning/course/${course.id}`} className="hover:text-primary transition-colors">
+                    <Link href={`/courses/${course.id}`} className="hover:text-primary transition-colors">
                         {course.title}
                     </Link>
                 </h3>
@@ -50,7 +51,7 @@ function CourseCard({ course }: { course: Course }) {
             </CardContent>
             <CardFooter>
                  <Button asChild className="w-full">
-                    <Link href={`/learning/course/${course.id}`}>
+                    <Link href={`/courses/${course.id}`}>
                         View Course <ArrowRight className="ml-2 w-4 h-4"/>
                     </Link>
                 </Button>
