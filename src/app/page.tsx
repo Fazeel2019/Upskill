@@ -145,7 +145,7 @@ export default function Home() {
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized className="rounded-2xl"/>
                     </div>
-                    <AnimatedTag className="top-0 left-[-20px] hidden md:block" animation={floatingAnimation(0, 6)}>
+                    <AnimatedTag className="top-0 left-[-20px] hidden lg:block" animation={floatingAnimation(0, 6)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-100 rounded-lg"><BrainCircuit className="w-5 h-5 text-blue-500" /></div>
                         <div>
@@ -154,7 +154,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-0 left-[-30px] hidden md:block" animation={floatingAnimation(1, 5)}>
+                    <AnimatedTag className="bottom-0 left-[-30px] hidden lg:block" animation={floatingAnimation(1, 5)}>
                       <div className="flex items-center gap-3">
                         <div className="p-2 bg-red-100 rounded-lg"><Calendar className="w-5 h-5 text-red-500" /></div>
                         <div>
@@ -163,7 +163,7 @@ export default function Home() {
                         </div>
                       </div>
                     </AnimatedTag>
-                    <AnimatedTag className="bottom-8 right-[-20px] w-64 hidden md:block" animation={floatingAnimation(0.5, 7)}>
+                    <AnimatedTag className="bottom-8 right-[-20px] w-64 hidden lg:block" animation={floatingAnimation(0.5, 7)}>
                       <div>
                         <div className="flex justify-between items-center mb-2">
                             <p className="font-bold">Leadership Index</p>
@@ -326,21 +326,21 @@ export default function Home() {
                             <h4 className="font-semibold flex items-center gap-2"><Star className="text-yellow-400"/>Premium Features Included</h4>
                              <ul className="space-y-4 mt-4">
                                 <li className="flex flex-col items-start sm:flex-row sm:items-center gap-2">
-                                    <div className="flex-1 min-w-0">
+                                    <div className="flex-1">
                                         <p className="font-semibold">AI-Powered Career Insights</p>
                                         <p className="text-sm text-muted-foreground">Personalized recommendations & skill analysis</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
                                 <li className="flex flex-col items-start sm:flex-row sm:items-center gap-2">
-                                    <div className="flex-1 min-w-0">
+                                    <div className="flex-1">
                                         <p className="font-semibold">Expert Mentorship Access</p>
                                         <p className="text-sm text-muted-foreground">Connect with industry leaders and mentors</p>
                                     </div>
                                     <Badge className="bg-blue-100 text-blue-700 border-blue-200">Premium</Badge>
                                 </li>
                                 <li className="flex flex-col items-start sm:flex-row sm:items-center gap-2">
-                                    <div className="flex-1 min-w-0">
+                                    <div className="flex-1">
                                         <p className="font-semibold">Exclusive Networking Events</p>
                                         <p className="text-sm text-muted-foreground">Monthly leadership summits & workshops</p>
                                     </div>
@@ -424,7 +424,7 @@ export default function Home() {
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Users className="w-8 h-8 text-blue-500" /><p className="text-2xl font-bold">10,000+</p><p className="text-sm font-semibold text-muted-foreground">Active Members</p></div>
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><TrendingUp className="w-8 h-8 text-green-500" /><p className="text-2xl font-bold">94%</p><p className="text-sm font-semibold text-muted-foreground">Success Rate</p></div>
                     <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Star className="w-8 h-8 text-yellow-500" /><p className="text-2xl font-bold">4.9/5</p><p className="text-sm font-semibold text-muted-foreground">User Rating</p></div>
-                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Award className="w-8 h-8 text-purple-500" /><p className="text-2xl font-bold">500+</p><p className="text-sm font-semibold text-muted-foreground">Expert Mentors</p></div>
+                    <div className="flex flex-col items-center justify-center gap-2 rounded-lg border bg-background/5 p-4 backdrop-blur-sm"><Award className="w-8 h-8 text-purple-500" /><p className="text-sm font-semibold text-muted-foreground">500+</p><p className="text-sm font-semibold text-muted-foreground">Expert Mentors</p></div>
                 </div>
                  <div className="mt-8 text-xs text-muted-foreground">
                     30-day money-back guarantee • No setup fees • Cancel anytime
