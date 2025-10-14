@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
@@ -8,10 +7,10 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: Request) {
   try {
-    const { amount } = await request.json();
+    const { amount, courseTitle, courseId, userId } = await request.json();
 
-    if (!amount || typeof amount !== 'number') {
-        return NextResponse.json({ error: 'Invalid amount provided.' }, { status: 400 });
+    if (!amount || typeof amount !== 'number' || !courseTitle || !courseId || !userId) {
+        return NextResponse.json({ error: 'Invalid request data provided.' }, { status: 400 });
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -20,6 +19,11 @@ export async function POST(request: Request) {
       automatic_payment_methods: {
         enabled: true,
       },
+      metadata: {
+        courseId,
+        courseTitle,
+        userId,
+      }
     });
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });

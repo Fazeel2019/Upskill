@@ -6,17 +6,137 @@ import { notFound, useRouter, useParams } from "next/navigation";
 import { getCourse } from "@/services/courses";
 import type { Course, Section, Lecture } from "@/lib/data";
 import { useAuth } from "@/hooks/use-auth";
-import { listenToUserProgress, enrollInCourse } from "@/services/progress";
+import { enrollInCourse } from "@/services/progress";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowLeft, CheckCircle, Lock, PlayCircle, BookOpen, Clock, Award, Loader2, ShoppingCart } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, CheckCircle, Lock, PlayCircle, BookOpen, Clock, Award, Loader2, ShoppingCart, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { loadStripe, StripeError } from '@stripe/stripe-js';
+import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+
+function CheckoutForm({ course, onSuccessfulPayment }: { course: Course, onSuccessfulPayment: () => void }) {
+    const stripe = useStripe();
+    const elements = useElements();
+    const { toast } = useToast();
+    const { user } = useAuth();
+    const [isLoading, setIsLoading] = React.useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setIsLoading(true);
+
+        if (!stripe || !elements || !user || !course) {
+            toast({ title: 'An error occurred.', variant: 'destructive', description: "Stripe or user details are not available." });
+            setIsLoading(false);
+            return;
+        }
+
+        const cardElement = elements.getElement(CardElement);
+        if (!cardElement) {
+            toast({ title: 'Card details not found.', variant: 'destructive' });
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/create-payment-intent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    amount: Math.round(course.price * 100), // amount in cents
+                    courseId: course.id,
+                    courseTitle: course.title,
+                    userId: user.uid,
+                 }),
+            });
+
+            const { clientSecret, error: backendError } = await response.json();
+
+            if (backendError) throw new Error(backendError);
+
+            const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                    billing_details: {
+                        name: user.displayName || 'Anonymous User',
+                        email: user.email || undefined,
+                    },
+                },
+            });
+
+            if (stripeError) throw stripeError;
+
+            if (paymentIntent?.status === 'succeeded') {
+                await enrollInCourse(user.uid, course);
+                onSuccessfulPayment();
+            } else {
+                 throw new Error(paymentIntent?.status || "Payment failed with an unknown status.");
+            }
+        } catch (error) {
+            let errorMessage = "An unexpected error occurred.";
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof (error as StripeError).message === 'string') {
+                errorMessage = (error as StripeError).message;
+            }
+             toast({
+                title: 'Payment Failed',
+                description: errorMessage,
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    const CARD_ELEMENT_OPTIONS = {
+        style: {
+          base: {
+            color: 'hsl(var(--foreground))',
+            fontFamily: 'inherit',
+            fontSmoothing: 'antialiased',
+            fontSize: '16px',
+            '::placeholder': {
+              color: 'hsl(var(--muted-foreground))',
+            },
+          },
+          invalid: {
+            color: 'hsl(var(--destructive))',
+            iconColor: 'hsl(var(--destructive))',
+          },
+        },
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="p-4 bg-muted rounded-lg flex justify-between items-center">
+                <div>
+                    <p className="font-semibold">{course.title}</p>
+                    <p className="text-sm text-muted-foreground">One-time purchase</p>
+                </div>
+                <p className="font-bold text-xl">${course.price}</p>
+            </div>
+            <div>
+                <p className="text-sm font-medium mb-2">Payment Information</p>
+                <div className="p-3 border rounded-md bg-background">
+                    <CardElement id="card-element" options={CARD_ELEMENT_OPTIONS} />
+                </div>
+            </div>
+            <Button type="submit" disabled={!stripe || isLoading} className="w-full text-lg h-12">
+                {isLoading ? <Loader2 className="animate-spin" /> : `Pay $${course.price}`}
+            </Button>
+        </form>
+    );
+}
 
 function CoursePageSkeleton() {
     return (
@@ -46,8 +166,8 @@ export default function PaidCoursePage() {
     const router = useRouter();
 
     const [course, setCourse] = useState<Course | null>(null);
-    const [userProgress, setUserProgress] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,16 +183,14 @@ export default function PaidCoursePage() {
         fetchData();
     }, [courseId]);
     
-    // This will be used later to show course content if enrolled
-    const isEnrolled = false; 
-
-    const handlePurchase = () => {
+    const handleSuccessfulPayment = () => {
         toast({
-            title: "Redirecting to checkout...",
-            description: "You will be redirected to complete your purchase."
+            title: "Payment Successful!",
+            description: "You have been enrolled in the course.",
         });
-        // We will integrate Stripe checkout here in the next step.
-    }
+        setIsCheckoutOpen(false);
+        router.push(`/learning/course/${courseId}`);
+    };
     
     if (authLoading || loading) return <CoursePageSkeleton />;
 
@@ -146,7 +264,7 @@ export default function PaidCoursePage() {
                                 <p className="text-4xl font-bold">${course.price}</p>
                                 <p className="text-sm text-muted-foreground">One-time purchase</p>
                             </div>
-                            <Button size="lg" className="w-full" onClick={handlePurchase}>
+                            <Button size="lg" className="w-full" onClick={() => setIsCheckoutOpen(true)}>
                                 <ShoppingCart className="mr-2 h-5 w-5" />
                                 Buy Now
                             </Button>
@@ -158,6 +276,18 @@ export default function PaidCoursePage() {
                      </Card>
                 </div>
             </div>
+            
+            <Dialog open={isCheckoutOpen} onOpenChange={setIsCheckoutOpen}>
+                <DialogContent className="sm:max-w-lg">
+                     <DialogHeader>
+                        <DialogTitle>Complete Your Purchase</DialogTitle>
+                        <DialogDescription>Enter your payment details to enroll in the course.</DialogDescription>
+                    </DialogHeader>
+                    <Elements stripe={stripePromise}>
+                       <CheckoutForm course={course} onSuccessfulPayment={handleSuccessfulPayment} />
+                    </Elements>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
