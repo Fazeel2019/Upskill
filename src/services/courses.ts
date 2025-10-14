@@ -7,7 +7,7 @@ type NewCourse = Omit<Course, 'id' | 'createdAt'>;
 
 export const addCourse = async (courseData: NewCourse) => {
     try {
-        const coursesCollection = collection(db, "courses");
+        const coursesCollection = collection(db, "courses1");
         await addDoc(coursesCollection, {
             ...courseData,
             createdAt: serverTimestamp(),
@@ -20,7 +20,7 @@ export const addCourse = async (courseData: NewCourse) => {
 
 export const updateCourse = async (courseId: string, courseData: Partial<Course>) => {
     try {
-        const courseDoc = doc(db, "courses", courseId);
+        const courseDoc = doc(db, "courses1", courseId);
         await updateDoc(courseDoc, courseData);
     } catch (error) {
         console.error("Error updating course: ", error);
@@ -30,7 +30,7 @@ export const updateCourse = async (courseId: string, courseData: Partial<Course>
 
 export const deleteCourse = async (courseId: string) => {
     try {
-        const courseDoc = doc(db, "courses", courseId);
+        const courseDoc = doc(db, "courses1", courseId);
         await deleteDoc(courseDoc);
     } catch (error) {
         console.error("Error deleting course: ", error);
@@ -40,7 +40,7 @@ export const deleteCourse = async (courseId: string) => {
 
 export const getCourse = async (courseId: string): Promise<Course | null> => {
     try {
-        const courseDoc = doc(db, "courses", courseId);
+        const courseDoc = doc(db, "courses1", courseId);
         const docSnap = await getDoc(courseDoc);
         if (docSnap.exists()) {
             return { id: docSnap.id, ...docSnap.data() } as Course;
@@ -53,7 +53,7 @@ export const getCourse = async (courseId: string): Promise<Course | null> => {
 }
 
 export const listenToCourses = (callback: (courses: Course[]) => void) => {
-  const coursesCollection = collection(db, "courses");
+  const coursesCollection = collection(db, "courses1");
   const q = query(coursesCollection, orderBy("createdAt", "desc"));
 
   const unsubscribe = onSnapshot(q, (querySnapshot) => {
