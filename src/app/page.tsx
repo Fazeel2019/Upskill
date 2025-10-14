@@ -114,7 +114,7 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
               >
-                <div className="text-center md:text-left order-2 md:order-1">
+                <div className="text-center md:text-left">
                   <h1 className="font-headline text-4xl md:text-6xl font-bold tracking-tight leading-tight text-white">
                     Premier Community Platform for <span className="text-blue-300">STEM & Healthcare</span> Professionals
                   </h1>
@@ -141,7 +141,7 @@ export default function Home() {
                     </div>
                   </div>
                 </div>
-                 <div className="relative h-96 md:h-[500px] w-full order-1 md:order-2">
+                 <div className="relative h-96 md:h-[500px] w-full">
                     <div className="relative z-0 h-full w-full rounded-2xl overflow-hidden shadow-2xl">
                       <Image src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzNmOG80eXR6NXRmanFxZXIwaG10NzR1aGc1MnR5MHJ1czB1cnFidSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gr0FZsazDgg3NzkHc8/giphy.gif" alt="Diverse group of healthcare and STEM professionals with UI elements" fill style={{objectFit:"cover"}} sizes="(max-width: 768px) 100vw, 50vw" data-ai-hint="diverse professionals community" unoptimized className="rounded-2xl"/>
                     </div>
@@ -440,3 +440,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
