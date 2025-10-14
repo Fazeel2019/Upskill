@@ -47,16 +47,16 @@ const sectionSchema = z.object({
     lectures: z.array(lectureSchema),
 });
 
-const courseFormSchema = z.object({
+const resourceFormSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
   description: z.string().min(10, "Description must be at least 10 characters"),
   category: z.enum(["Career", "STEM", "Healthcare", "Public Health"]),
   thumbnailUrl: z.string().url("Must be a valid thumbnail URL"),
   imageHint: z.string().optional(),
-  sections: z.array(sectionSchema).min(1, "Course must have at least one section"),
+  sections: z.array(sectionSchema).min(1, "Resource must have at least one section"),
 });
 
-type CourseFormValues = z.infer<typeof courseFormSchema>;
+type ResourceFormValues = z.infer<typeof resourceFormSchema>;
 
 
 const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, children}: {form: any, sectionFields: any, appendSection: any, removeSection: any, onSubmit: any, children: React.ReactNode}) => {
@@ -73,7 +73,7 @@ const FormBody = ({form, sectionFields, appendSection, removeSection, onSubmit, 
         </div>
         
         <div className="space-y-4">
-            <h3 className="font-semibold text-lg">Course Content</h3>
+            <h3 className="font-semibold text-lg">Resource Content</h3>
             {sectionFields.map((section: any, sectionIndex: number) => (
                 <SectionField key={section.id} form={form} sectionIndex={sectionIndex} removeSection={removeSection} />
             ))}
@@ -121,18 +121,18 @@ const SectionField = ({ form, sectionIndex, removeSection }: any) => {
     );
 };
 
-function AddCourseDialog({ onCourseCreated }: { onCourseCreated: () => void }) {
+function AddResourceDialog({ onResourceCreated }: { onResourceCreated: () => void }) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
-    const form = useForm<CourseFormValues>({
-        resolver: zodResolver(courseFormSchema),
+    const form = useForm<ResourceFormValues>({
+        resolver: zodResolver(resourceFormSchema),
         defaultValues: {
             title: "",
             description: "",
             category: "Career",
             thumbnailUrl: "https://picsum.photos/seed/course-thumb/400/225",
-            imageHint: "abstract course",
+            imageHint: "abstract resource",
             sections: [{ id: crypto.randomUUID(), title: "Introduction", lectures: [] }],
         },
     });
@@ -142,46 +142,46 @@ function AddCourseDialog({ onCourseCreated }: { onCourseCreated: () => void }) {
         name: "sections",
     });
 
-    const onSubmit = async (data: CourseFormValues) => {
+    const onSubmit = async (data: ResourceFormValues) => {
         try {
-            await addCourse(data);
-            toast({ title: "Course Created", description: "The new course has been added successfully." });
+            await addCourse(data as any);
+            toast({ title: "Resource Created", description: "The new learning resource has been added successfully." });
             form.reset();
-            onCourseCreated();
+            onResourceCreated();
             setOpen(false);
         } catch (error) {
-            toast({ title: "Error", description: "Failed to create course.", variant: "destructive" });
+            toast({ title: "Error", description: "Failed to create resource.", variant: "destructive" });
         }
     };
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button><PlusCircle className="mr-2 h-4 w-4" /> Add New Course</Button>
+                <Button><PlusCircle className="mr-2 h-4 w-4" /> Add New Resource</Button>
             </DialogTrigger>
             <DialogContent className="max-w-4xl">
                 <DialogHeader>
-                    <DialogTitle>Add New Course</DialogTitle>
-                    <DialogDescription>Fill out the details to create a new course.</DialogDescription>
+                    <DialogTitle>Add New Learning Resource</DialogTitle>
+                    <DialogDescription>Fill out the details to create a new resource for the Learning page.</DialogDescription>
                 </DialogHeader>
                 <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit}>
                     <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
-                    <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Creating..." : "Create Course"}</Button>
+                    <Button type="submit" disabled={form.formState.isSubmitting}>{form.formState.isSubmitting ? "Creating..." : "Create Resource"}</Button>
                 </FormBody>
             </DialogContent>
         </Dialog>
     );
 }
 
-function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCourseUpdated: () => void }) {
+function EditResourceDialog({ resource, onResourceUpdated }: { resource: Course, onResourceUpdated: () => void }) {
     const { toast } = useToast();
     const [open, setOpen] = useState(false);
 
-    const form = useForm<CourseFormValues>({
-        resolver: zodResolver(courseFormSchema),
+    const form = useForm<ResourceFormValues>({
+        resolver: zodResolver(resourceFormSchema),
         defaultValues: {
-          ...course,
-          sections: course.sections || [],
+          ...resource,
+          sections: resource.sections || [],
         },
     });
 
@@ -190,14 +190,14 @@ function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCours
         name: "sections",
     });
 
-    const onSubmit = async (data: CourseFormValues) => {
+    const onSubmit = async (data: ResourceFormValues) => {
         try {
-            await updateCourse(course.id, data);
-            toast({ title: "Course Updated", description: "The course has been updated successfully." });
-            onCourseUpdated();
+            await updateCourse(resource.id, data as any);
+            toast({ title: "Resource Updated", description: "The resource has been updated successfully." });
+            onResourceUpdated();
             setOpen(false);
         } catch (error) {
-            toast({ title: "Error", description: "Failed to update course.", variant: "destructive" });
+            toast({ title: "Error", description: "Failed to update resource.", variant: "destructive" });
         }
     };
 
@@ -208,8 +208,8 @@ function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCours
             </DialogTrigger>
             <DialogContent className="max-w-4xl">
                 <DialogHeader>
-                    <DialogTitle>Edit Course</DialogTitle>
-                    <DialogDescription>Make changes to the course structure and details below.</DialogDescription>
+                    <DialogTitle>Edit Learning Resource</DialogTitle>
+                    <DialogDescription>Make changes to the resource structure and details below.</DialogDescription>
                 </DialogHeader>
                 <FormBody form={form} sectionFields={sectionFields} appendSection={appendSection} removeSection={removeSection} onSubmit={onSubmit}>
                     <DialogClose asChild><Button type="button" variant="secondary">Cancel</Button></DialogClose>
@@ -220,15 +220,15 @@ function EditCourseDialog({ course, onCourseUpdated }: { course: Course, onCours
     );
 }
 
-function DeleteCourseAlert({ courseId }: { courseId: string }) {
+function DeleteResourceAlert({ resourceId }: { resourceId: string }) {
     const { toast } = useToast();
 
     const handleDelete = async () => {
         try {
-            await deleteCourse(courseId);
-            toast({ title: "Course Deleted", description: "The course has been removed." });
+            await deleteCourse(resourceId);
+            toast({ title: "Resource Deleted", description: "The resource has been removed." });
         } catch (error) {
-            toast({ title: "Error", description: "Failed to delete course.", variant: "destructive" });
+            toast({ title: "Error", description: "Failed to delete resource.", variant: "destructive" });
         }
     };
 
@@ -243,7 +243,7 @@ function DeleteCourseAlert({ courseId }: { courseId: string }) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete the course and all its content.
+                        This action cannot be undone. This will permanently delete this learning resource.
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -255,21 +255,21 @@ function DeleteCourseAlert({ courseId }: { courseId: string }) {
     )
 }
 
-export default function ManageCourses() {
-  const [courses, setCourses] = useState<Course[]>([]);
+export default function ManageLearning() {
+  const [resources, setResources] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   
-  const fetchCourses = () => {
+  const fetchResources = () => {
     setLoading(true);
     const unsubscribe = listenToCourses((newCourses) => {
-        setCourses(newCourses);
+        setResources(newCourses);
         setLoading(false);
     });
     return unsubscribe;
   }
   
   useEffect(() => {
-    const unsubscribe = fetchCourses();
+    const unsubscribe = fetchResources();
     return () => unsubscribe();
   }, []);
 
@@ -277,30 +277,30 @@ export default function ManageCourses() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Existing Courses</CardTitle>
-        <AddCourseDialog onCourseCreated={fetchCourses} />
+        <CardTitle>Existing Learning Resources</CardTitle>
+        <AddResourceDialog onResourceCreated={fetchResources} />
       </CardHeader>
       <CardContent>
         {loading ? <div className="flex justify-center"><Loader2 className="animate-spin" /></div> :
-         courses.length > 0 ? (
+         resources.length > 0 ? (
             <ul className="space-y-4">
-                {courses.map(course => (
-                    <li key={course.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
+                {resources.map(resource => (
+                    <li key={resource.id} className="flex justify-between items-center p-3 bg-muted rounded-md">
                         <div>
-                            <p className="font-semibold">{course.title}</p>
-                            {course.createdAt && (
-                              <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(course.createdAt.toDate())} ago</p>
+                            <p className="font-semibold">{resource.title}</p>
+                            {resource.createdAt && (
+                              <p className="text-sm text-muted-foreground">Added {formatDistanceToNow(resource.createdAt.toDate())} ago</p>
                             )}
                         </div>
                         <div className="flex items-center">
-                            <EditCourseDialog course={course} onCourseUpdated={fetchCourses} />
-                            <DeleteCourseAlert courseId={course.id} />
+                            <EditResourceDialog resource={resource} onResourceUpdated={fetchResources} />
+                            <DeleteResourceAlert resourceId={resource.id} />
                         </div>
                     </li>
                 ))}
             </ul>
         ) : (
-            <p className="text-muted-foreground text-center py-8">No courses found. Click "Add New Course" to get started.</p>
+            <p className="text-muted-foreground text-center py-8">No learning resources found. Click "Add New Resource" to get started.</p>
         )}
       </CardContent>
     </Card>
