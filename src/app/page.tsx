@@ -355,9 +355,16 @@ export default function Home() {
                                  <CheckCircle className="mr-2"/> You're a Member
                                </Button>
                           ) : (
-                               <Button asChild size="lg" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg h-14 rounded-lg shadow-lg shadow-blue-500/20">
-                                 <Link href="/checkout">Start Your Transformation Today <ArrowRight className="ml-2"/></Link>
-                               </Button>
+                            <Button
+                            asChild
+                            size="lg"
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-base sm:text-lg h-12 sm:h-14 rounded-lg shadow-lg shadow-blue-500/20 whitespace-normal text-center px-3 sm:px-4"
+                          >
+                            <Link href="/checkout" className="block w-full text-center">
+                              Start Your Transformation Today <ArrowRight className="ml-1 inline-block" />
+                            </Link>
+                          </Button>
+                          
                           )}
                            <p className="text-xs text-muted-foreground text-center flex items-center justify-center gap-2"><Lock className="w-3 h-3"/>Secure payment • No setup fees • Join in 60 seconds</p>
                        </div>
