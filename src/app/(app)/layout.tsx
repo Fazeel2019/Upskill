@@ -77,7 +77,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user]);
   
   useEffect(() => {
-    const winnerCircleRoutes = ['/learning', '/course', '/exclusive-events'];
+    const winnerCircleRoutes = ['/learning', '/exclusive-events'];
     if (!loading && profile && profile.membership !== 'winner-circle' && winnerCircleRoutes.some(p => pathname.startsWith(p))) {
       router.push('/winner-circle');
     }
