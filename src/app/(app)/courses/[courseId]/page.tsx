@@ -35,7 +35,7 @@ function CheckoutForm({ course, onSuccessfulPayment }: { course: Course, onSucce
         setIsLoading(true);
 
         if (!stripe || !elements || !user || !course) {
-            toast({ title: 'An error occurred.', variant: 'destructive', description: "Stripe or user details are not available." });
+            toast({ title: 'An error occurred.', variant: 'destructive', description: "Stripe, user, or course details are not available." });
             setIsLoading(false);
             return;
         }
