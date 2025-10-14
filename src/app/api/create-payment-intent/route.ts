@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
@@ -9,7 +10,7 @@ export async function POST(request: Request) {
   try {
     const { amount, courseTitle, courseId, userId } = await request.json();
 
-    if (!amount || typeof amount !== 'number' || !courseTitle || !courseId || !userId) {
+    if (!amount || typeof amount !== 'number' || amount <= 0 || !courseTitle || !courseId || !userId) {
         return NextResponse.json({ error: 'Invalid request data provided.' }, { status: 400 });
     }
 
