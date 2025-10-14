@@ -33,6 +33,7 @@ import {
   Bell,
   ChevronLeft,
   Crown,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -76,7 +77,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user]);
   
   useEffect(() => {
-    if (!loading && profile && profile.membership !== 'winner-circle' && (pathname.startsWith('/learning') || pathname.startsWith('/course'))) {
+    const winnerCircleRoutes = ['/learning', '/course', '/exclusive-events'];
+    if (!loading && profile && profile.membership !== 'winner-circle' && winnerCircleRoutes.some(p => pathname.startsWith(p))) {
       router.push('/winner-circle');
     }
   }, [loading, profile, pathname, router]);
@@ -84,8 +86,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/courses", label: "Courses", icon: BookOpen },
-    { href: "/learning", label: "Learning", icon: GraduationCap },
+    { href: "/learning", label: "Learning", icon: GraduationCap, premium: true },
     { href: "/winner-circle", label: "Winner Circle", icon: Crown, premium: true },
+    { href: "/exclusive-events", label: "Exclusive Events", icon: Star, premium: true },
     { href: "/podcast", label: "Podcasts", icon: MicVocal },
     { href: "/community", label: "Community", icon: Users, badge: friendRequestCount },
     { href: "/events", label: "Events", icon: Calendar },
@@ -151,7 +154,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   <a href={item.href} target={item.external ? "_blank" : undefined} rel={item.external ? "noopener noreferrer" : undefined}>
                     <item.icon />
                     <span className="flex-grow">{item.label}</span>
-                    {item.tag && <Badge variant="destructive">{item.tag}</Badge>}
                     {item.badge && item.badge > 0 ? <Badge variant="secondary" className="group-data-[active=true]:bg-white/20 group-data-[active=true]:text-white">{item.badge}</Badge> : null}
                   </a>
                 </SidebarMenuButton>
