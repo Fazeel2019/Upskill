@@ -10,8 +10,9 @@ import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
 import { listenToEvents } from "@/services/events";
 import { type Event as EventType } from "@/lib/data";
-import { Loader2, ArrowRight, Clock, Star, CheckCircle } from "lucide-react";
+import { Loader2, ArrowRight, Clock, Star, CheckCircle, Crown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 
 function EventCard({ event, userId }: { event: EventType, userId?: string }) {
     const categoryColors = {
@@ -78,7 +79,8 @@ function EventCard({ event, userId }: { event: EventType, userId?: string }) {
 export default function ExclusiveEventsPage() {
     const [events, setEvents] = useState<EventType[]>([]);
     const [loading, setLoading] = useState(true);
-    const { user } = useAuth();
+    const { user, profile, loading: authLoading } = useAuth();
+    const router = useRouter();
 
     useEffect(() => {
         setLoading(true);
@@ -113,6 +115,18 @@ export default function ExclusiveEventsPage() {
         </div>
     )
 
+    if (authLoading) {
+        return <div className="flex items-center justify-center h-full"><Loader2 className="animate-spin w-8 h-8" /></div>
+    }
+
+    const membershipStatus = (profile?.membership || '').trim();
+    const hasActiveMembership = membershipStatus === 'winner-circle' && profile?.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
+
+    if (!hasActiveMembership) {
+        router.push('/winner-circle');
+        return null;
+    }
+
     return (
         <motion.div 
             className="space-y-8"
@@ -122,7 +136,7 @@ export default function ExclusiveEventsPage() {
         >
             <motion.div variants={pageVariants}>
                 <div className="flex items-center gap-2 text-yellow-500 mb-2">
-                    <Star />
+                    <Crown />
                     <p className="font-semibold">Winner Circle Exclusive</p>
                 </div>
                 <h1 className="text-3xl font-bold tracking-tight font-headline">Exclusive Events</h1>
