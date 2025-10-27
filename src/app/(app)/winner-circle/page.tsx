@@ -65,8 +65,8 @@ export default function WinnerCirclePage() {
                             </ul>
                         </div>
                          <div className="bg-white/10 p-6 rounded-lg border border-white/20 flex flex-col justify-center items-center">
-                            <p className="text-5xl font-bold">$14.99</p>
-                            <p className="text-blue-200">per month</p>
+                            <p className="text-5xl font-bold">$1.99</p>
+                            <p className="text-blue-200">one-time introductory offer</p>
                              <Button asChild size="lg" className="w-full mt-6 bg-yellow-400 text-gray-900 font-bold hover:bg-yellow-500">
                                 <Link href="/checkout">Upgrade Now</Link>
                             </Button>

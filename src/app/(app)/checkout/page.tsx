@@ -48,7 +48,7 @@ const CheckoutForm = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    amount: 1499, // amount in cents
+                    amount: 199, // amount in cents
                     userId: user.uid,
                 }),
             });
@@ -133,7 +133,7 @@ const CheckoutForm = () => {
             </div>
 
             <Button type="submit" disabled={!stripe || isLoading} className="w-full text-lg h-12">
-                {isLoading ? <Loader2 className="animate-spin" /> : `Pay $14.99`}
+                {isLoading ? <Loader2 className="animate-spin" /> : `Pay $1.99`}
             </Button>
         </form>
     );
@@ -165,9 +165,9 @@ const CheckoutPage = () => {
                         <div className="mb-6 p-4 bg-muted rounded-lg flex justify-between items-center">
                             <div>
                                 <p className="font-semibold">Winner Circle Membership</p>
-                                <p className="text-sm text-muted-foreground">Billed monthly</p>
+                                <p className="text-sm text-muted-foreground">Billed once (introductory offer)</p>
                             </div>
-                            <p className="font-bold text-xl">$14.99</p>
+                            <p className="font-bold text-xl">$1.99</p>
                         </div>
                         <Elements stripe={stripePromise}>
                             <CheckoutForm />
