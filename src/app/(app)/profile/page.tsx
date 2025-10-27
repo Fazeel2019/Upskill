@@ -38,6 +38,7 @@ import React, { useEffect, useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { addAchievement, addEducation, updateUserProfile, type Experience, type Education, type Achievement, addExperience } from "@/services/profile";
 import { listenToPosts, Post } from "@/services/posts";
+import Link from "next/link";
 
 
 const profileFormSchema = z.object({

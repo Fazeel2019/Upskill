@@ -119,14 +119,6 @@ export default function ExclusiveEventsPage() {
         return <div className="flex items-center justify-center h-full"><Loader2 className="animate-spin w-8 h-8" /></div>
     }
 
-    const membershipStatus = (profile?.membership || '').trim();
-    const hasActiveMembership = membershipStatus === 'winner-circle' && profile?.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
-
-    if (!hasActiveMembership) {
-        router.push('/winner-circle');
-        return null;
-    }
-
     return (
         <motion.div 
             className="space-y-8"

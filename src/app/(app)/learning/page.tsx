@@ -1,5 +1,4 @@
 
-
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
@@ -19,6 +18,7 @@ import Link from "next/link"
 import { useAuth } from "@/hooks/use-auth"
 import { updateUserProgress, listenToUserProgress, enrollInCourse, UserProgress } from "@/services/progress"
 import { addAchievement } from "@/services/profile"
+import { useRouter } from "next/navigation"
 
 const stats = [
     { title: "Courses Enrolled", value: "0", icon: Book, color: "bg-blue-100 dark:bg-blue-900/50", iconColor: "text-blue-500" },
@@ -241,6 +241,7 @@ function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
 export default function LearningPage() {
     const { user, profile, loading } = useAuth();
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
+    const router = useRouter();
 
     useEffect(() => {
         if (user) {
@@ -274,10 +275,6 @@ export default function LearningPage() {
     
     if (loading) {
         return <div className="flex items-center justify-center h-full"><Loader2 className="animate-spin w-8 h-8" /></div>
-    }
-
-    if (profile?.membership !== 'winner-circle') {
-        return null; // The redirect is handled in the layout
     }
 
     return (
