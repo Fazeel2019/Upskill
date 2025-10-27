@@ -94,6 +94,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (user && profile && isWinnerCircleRoute) {
         const membershipStatus = (profile.membership || '').trim();
         const hasActiveMembership = membershipStatus === 'winner-circle' && profile.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
+        
         if (!hasActiveMembership) {
             router.push('/winner-circle');
         }

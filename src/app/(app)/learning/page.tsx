@@ -239,9 +239,8 @@ function MyLearningTab({ userProgress }: { userProgress: UserProgress | null}) {
 
 
 export default function LearningPage() {
-    const { user, profile, loading } = useAuth();
+    const { user, loading } = useAuth();
     const [userProgress, setUserProgress] = useState<UserProgress | null>(null);
-    const router = useRouter();
 
     useEffect(() => {
         if (user) {

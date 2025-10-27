@@ -79,8 +79,7 @@ function EventCard({ event, userId }: { event: EventType, userId?: string }) {
 export default function ExclusiveEventsPage() {
     const [events, setEvents] = useState<EventType[]>([]);
     const [loading, setLoading] = useState(true);
-    const { user, profile, loading: authLoading } = useAuth();
-    const router = useRouter();
+    const { user, authLoading } = useAuth();
 
     useEffect(() => {
         setLoading(true);

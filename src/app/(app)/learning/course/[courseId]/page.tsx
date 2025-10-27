@@ -40,9 +40,8 @@ function CourseSkeleton() {
 export default function CoursePage() {
     const params = useParams();
     const courseId = params.courseId as string;
-    const { user, profile, loading: authLoading, reloadProfile } = useAuth();
+    const { user, authLoading, reloadProfile } = useAuth();
     const { toast } = useToast();
-    const router = useRouter();
 
     const [course, setCourse] = useState<Course | null>(null);
     const [userProgress, setUserProgress] = useState<any>(null);
@@ -151,10 +150,6 @@ export default function CoursePage() {
     if (!course) {
         notFound();
         return null;
-    }
-    
-    if (profile?.membership !== 'winner-circle') {
-        return null; // Redirect is handled by the layout
     }
     
     const videoEmbedCode = activeLecture ? activeLecture.videoEmbedCode : (course.sections?.[0]?.lectures?.[0]?.videoEmbedCode || '');
