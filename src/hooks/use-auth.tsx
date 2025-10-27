@@ -81,18 +81,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isAppRoute = !["/", "/login", "/signup", "/about", "/blog", "/global-impact", "/courses"].some(p => {
-        // Handle dynamic routes like /blog/[blogId] or /courses/[courseId]
-        if (p.includes('[')) {
-            const baseRoute = p.substring(0, p.indexOf('['));
-            return pathname.startsWith(baseRoute);
-        }
-        return pathname === p;
-    });
-    
+    const publicRoutes = ["/", "/login", "/signup", "/about", "/blog", "/global-impact", "/courses"];
+    const isPublicRoute = publicRoutes.some(p => pathname === p || (p !== '/' && pathname.startsWith(p) && pathname.charAt(p.length) === '/'));
+    const isAppRoute = !isPublicRoute;
     const isWinnerCircleRoute = ['/learning', '/exclusive-events'].some(p => pathname.startsWith(p));
     
-    if (!user && (isAppRoute || isWinnerCircleRoute)) {
+    if (!user && isAppRoute) {
       router.push("/login");
       return;
     }
