@@ -5,37 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Award, CheckCircle, Crown } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@/hooks/use-auth";
 import { motion } from "framer-motion";
 
 export default function WinnerCirclePage() {
-    const { profile } = useAuth();
-    
-    if (profile?.membership === 'winner-circle') {
-        return (
-             <motion.div 
-                className="flex flex-col items-center justify-center text-center p-8"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-            >
-                <Crown className="w-24 h-24 text-yellow-400" />
-                <h1 className="text-4xl font-bold font-headline mt-4">Welcome to the Winner Circle!</h1>
-                <p className="text-muted-foreground mt-2 text-lg max-w-2xl">
-                    You have successfully unlocked all premium features. Explore exclusive courses, connect with top mentors, and accelerate your career.
-                </p>
-                <div className="mt-8 flex gap-4">
-                     <Button asChild>
-                        <Link href="/learning">Explore Courses</Link>
-                    </Button>
-                    <Button variant="outline" asChild>
-                        <Link href="/dashboard">Go to Dashboard</Link>
-                    </Button>
-                </div>
-            </motion.div>
-        )
-    }
-
     return (
         <div className="p-4 md:p-8">
             <Card className="max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 text-white">
