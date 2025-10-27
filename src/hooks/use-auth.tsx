@@ -83,13 +83,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     const isAppRoute = !["/", "/login", "/signup", "/about", "/blog", "/global-impact", "/courses"].some(p => {
         // Handle dynamic routes like /blog/[blogId] or /courses/[courseId]
-        if (p.endsWith(']')) {
+        if (p.includes('[')) {
             const baseRoute = p.substring(0, p.indexOf('['));
             return pathname.startsWith(baseRoute);
         }
         return pathname === p;
     });
-
+    
     const isWinnerCircleRoute = ['/learning', '/exclusive-events'].some(p => pathname.startsWith(p));
     
     if (!user && (isAppRoute || isWinnerCircleRoute)) {

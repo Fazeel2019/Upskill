@@ -76,13 +76,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [user]);
   
-  useEffect(() => {
-    const winnerCircleRoutes = ['/learning', '/exclusive-events'];
-    if (!loading && profile && profile.membership !== 'winner-circle' && winnerCircleRoutes.some(p => pathname.startsWith(p))) {
-      router.push('/winner-circle');
-    }
-  }, [loading, profile, pathname, router]);
-
   const navItems = [
     { href: "/dashboard", label: "Dashboard", icon: Home },
     { href: "/courses", label: "Courses", icon: BookOpen },
