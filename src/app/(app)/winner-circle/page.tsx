@@ -1,52 +1,119 @@
 
 "use client";
 
+import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Award, CheckCircle, Crown } from "lucide-react";
+import { Award, CheckCircle, Crown, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useAuth } from "@/hooks/use-auth";
+import { format } from 'date-fns';
+
+function UpgradeView() {
+    const { profile } = useAuth();
+
+    const price = React.useMemo(() => {
+        if (!profile) return 1.99;
+        const hasHadMembership = !!profile.membershipExpiresAt;
+        return hasHadMembership ? 14.99 : 1.99;
+    }, [profile]);
+    
+    const priceDescription = price === 1.99 
+        ? "one-time introductory offer" 
+        : "renews membership for 30 days";
+
+    return (
+        <Card className="max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 text-white">
+            <CardContent className="p-8 md:p-12 text-center">
+                <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, type: "spring" }}
+                >
+                    <Award className="w-20 h-20 mx-auto text-yellow-300" />
+                </motion.div>
+                <h1 className="text-4xl md:text-5xl font-bold font-headline mt-4">
+                    Join the Winner Circle
+                </h1>
+                <p className="mt-4 text-lg text-blue-100 max-w-2xl mx-auto">
+                    Unlock your full potential by upgrading to our premium membership. Get exclusive access to everything you need to accelerate your career.
+                </p>
+
+                <div className="grid md:grid-cols-2 gap-8 mt-12 text-left">
+                    <div className="bg-white/10 p-6 rounded-lg border border-white/20">
+                        <h3 className="font-semibold text-xl mb-4">Winner Circle Benefits:</h3>
+                        <ul className="space-y-3">
+                            <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Unlimited access to all courses and learning paths</span></li>
+                            <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>AI-powered career insights & personalized recommendations</span></li>
+                            <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Exclusive group coaching sessions with C-suite executives</span></li>
+                            <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Priority access to networking events and leadership summits</span></li>
+                        </ul>
+                    </div>
+                     <div className="bg-white/10 p-6 rounded-lg border border-white/20 flex flex-col justify-center items-center">
+                        <p className="text-5xl font-bold">${price.toFixed(2)}</p>
+                        <p className="text-blue-200">{priceDescription}</p>
+                         <Button asChild size="lg" className="w-full mt-6 bg-yellow-400 text-gray-900 font-bold hover:bg-yellow-500">
+                            <Link href="/checkout">Upgrade Now</Link>
+                        </Button>
+                        <p className="text-xs text-blue-200 mt-2">30-day money-back guarantee</p>
+                    </div>
+                </div>
+            </CardContent>
+        </Card>
+    );
+}
+
+function AlreadyMemberView() {
+    const { profile } = useAuth();
+    const expiryDate = profile?.membershipExpiresAt?.toDate();
+
+    return (
+        <Card className="max-w-2xl mx-auto overflow-hidden bg-gradient-to-br from-green-500 to-emerald-600 text-white">
+            <CardContent className="p-8 md:p-12 text-center">
+                 <motion.div
+                    initial={{ scale: 0.5, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5, type: "spring" }}
+                >
+                    <Crown className="w-20 h-20 mx-auto text-yellow-300" />
+                </motion.div>
+                <h1 className="text-4xl md:text-5xl font-bold font-headline mt-4">
+                    Welcome to the Winner Circle!
+                </h1>
+                <p className="mt-4 text-lg text-green-100 max-w-2xl mx-auto">
+                    You have successfully unlocked all premium features. Explore exclusive courses, connect with top mentors, and accelerate your career.
+                </p>
+                {expiryDate && (
+                    <p className="mt-4 text-md text-white/80">
+                        Your membership is active until: <strong>{format(expiryDate, 'PPP')}</strong>
+                    </p>
+                )}
+                 <div className="mt-8 flex gap-4 justify-center">
+                    <Button asChild size="lg" className="bg-white text-green-600 hover:bg-green-100">
+                       <Link href="/learning">Explore Courses</Link>
+                    </Button>
+                    <Button asChild size="lg" variant="outline" className="text-white border-white/50 hover:bg-white/10 hover:text-white">
+                        <Link href="/exclusive-events">Exclusive Events</Link>
+                    </Button>
+                 </div>
+            </CardContent>
+        </Card>
+    )
+}
 
 export default function WinnerCirclePage() {
+    const { profile, loading } = useAuth();
+
+    if (loading) {
+        return <div className="flex justify-center items-center h-full"><Loader2 className="animate-spin w-8 h-8" /></div>
+    }
+
+    const hasActiveMembership = profile?.membership === 'winner-circle' && profile.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
+
     return (
         <div className="p-4 md:p-8">
-            <Card className="max-w-4xl mx-auto overflow-hidden bg-gradient-to-br from-blue-600 via-purple-600 to-red-500 text-white">
-                <CardContent className="p-8 md:p-12 text-center">
-                    <motion.div
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.5, type: "spring" }}
-                    >
-                        <Award className="w-20 h-20 mx-auto text-yellow-300" />
-                    </motion.div>
-                    <h1 className="text-4xl md:text-5xl font-bold font-headline mt-4">
-                        Join the Winner Circle
-                    </h1>
-                    <p className="mt-4 text-lg text-blue-100 max-w-2xl mx-auto">
-                        Unlock your full potential by upgrading to our premium membership. Get exclusive access to everything you need to accelerate your career.
-                    </p>
-
-                    <div className="grid md:grid-cols-2 gap-8 mt-12 text-left">
-                        <div className="bg-white/10 p-6 rounded-lg border border-white/20">
-                            <h3 className="font-semibold text-xl mb-4">Winner Circle Benefits:</h3>
-                            <ul className="space-y-3">
-                                <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Unlimited access to all courses and learning paths</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>AI-powered career insights & personalized recommendations</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Exclusive group coaching sessions with C-suite executives</span></li>
-                                <li className="flex items-start gap-3"><CheckCircle className="w-5 h-5 text-green-400 shrink-0 mt-1"/><span>Priority access to networking events and leadership summits</span></li>
-                            </ul>
-                        </div>
-                         <div className="bg-white/10 p-6 rounded-lg border border-white/20 flex flex-col justify-center items-center">
-                            <p className="text-5xl font-bold">$1.99</p>
-                            <p className="text-blue-200">one-time introductory offer</p>
-                             <Button asChild size="lg" className="w-full mt-6 bg-yellow-400 text-gray-900 font-bold hover:bg-yellow-500">
-                                <Link href="/checkout">Upgrade Now</Link>
-                            </Button>
-                            <p className="text-xs text-blue-200 mt-2">30-day money-back guarantee</p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+            {hasActiveMembership ? <AlreadyMemberView /> : <UpgradeView />}
         </div>
     );
 }
