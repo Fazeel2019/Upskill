@@ -14,10 +14,11 @@ import Link from 'next/link';
 import { useAuth } from '@/hooks/use-auth';
 import { updateUserProfile } from '@/services/profile';
 import { useRouter } from 'next/navigation';
+import { Timestamp } from 'firebase/firestore';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
-const CheckoutForm = () => {
+const CheckoutForm = ({ price }: { price: number }) => {
     const stripe = useStripe();
     const elements = useElements();
     const { toast } = useToast();
@@ -48,7 +49,7 @@ const CheckoutForm = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
-                    amount: 199, // amount in cents
+                    amount: Math.round(price * 100), // amount in cents
                     userId: user.uid,
                 }),
             });
@@ -76,12 +77,18 @@ const CheckoutForm = () => {
 
             if (paymentIntent?.status === 'succeeded') {
                 // 3. Update user profile in Firestore
-                await updateUserProfile(user.uid, { membership: 'winner-circle' });
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + 30);
+                
+                await updateUserProfile(user.uid, { 
+                    membership: 'winner-circle',
+                    membershipExpiresAt: Timestamp.fromDate(expiryDate),
+                });
                 await reloadProfile(); 
 
                 toast({
                     title: 'Payment Successful!',
-                    description: 'Welcome to the Winner Circle! You now have full access.',
+                    description: 'Welcome to the Winner Circle! You now have full access for 30 days.',
                 });
                 router.push('/winner-circle');
             } else {
@@ -133,14 +140,14 @@ const CheckoutForm = () => {
             </div>
 
             <Button type="submit" disabled={!stripe || isLoading} className="w-full text-lg h-12">
-                {isLoading ? <Loader2 className="animate-spin" /> : `Pay $1.99`}
+                {isLoading ? <Loader2 className="animate-spin" /> : `Pay $${price.toFixed(2)}`}
             </Button>
         </form>
     );
 };
 
 const CheckoutPage = () => {
-    const { user, loading } = useAuth();
+    const { user, profile, loading } = useAuth();
     const router = useRouter();
 
     React.useEffect(() => {
@@ -149,9 +156,19 @@ const CheckoutPage = () => {
         }
     }, [user, loading, router]);
     
-    if (loading || !user) {
+    const price = React.useMemo(() => {
+        if (!profile) return 1.99;
+        const hasActiveMembership = profile.membership === 'winner-circle' && profile.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
+        return hasActiveMembership ? 14.99 : 1.99;
+    }, [profile]);
+    
+    if (loading || !user || !profile) {
         return <div className="flex items-center justify-center h-screen"><Loader2 className="animate-spin h-8 w-8" /></div>
     }
+    
+    const description = price === 1.99 
+        ? "Billed once (introductory offer for 30 days)" 
+        : "Billed once (renews membership for 30 days)";
 
     return (
         <div className="min-h-screen bg-muted/40 flex items-center justify-center p-4">
@@ -165,12 +182,12 @@ const CheckoutPage = () => {
                         <div className="mb-6 p-4 bg-muted rounded-lg flex justify-between items-center">
                             <div>
                                 <p className="font-semibold">Winner Circle Membership</p>
-                                <p className="text-sm text-muted-foreground">Billed once (introductory offer)</p>
+                                <p className="text-sm text-muted-foreground">{description}</p>
                             </div>
-                            <p className="font-bold text-xl">$1.99</p>
+                            <p className="font-bold text-xl">${price.toFixed(2)}</p>
                         </div>
                         <Elements stripe={stripePromise}>
-                            <CheckoutForm />
+                            <CheckoutForm price={price}/>
                         </Elements>
                          <p className="text-xs text-muted-foreground text-center mt-4">
                             By clicking Pay, you agree to our <Link href="#" className="underline">Terms</Link> and <Link href="#" className="underline">Privacy Policy</Link>.

@@ -82,21 +82,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     if (loading) return;
 
     const isAppRoute = !["/", "/login", "/signup", "/about", "/blog", "/global-impact", "/courses"].some(p => {
-        if (p.includes('[')) {
+        // Handle dynamic routes like /blog/[blogId] or /courses/[courseId]
+        if (p.endsWith(']')) {
             const baseRoute = p.substring(0, p.indexOf('['));
             return pathname.startsWith(baseRoute);
         }
         return pathname === p;
     });
 
-    const publicAppRoutes = ["/checkout", "/winner-circle"];
-    const isPublicAppRoute = publicAppRoutes.includes(pathname);
-
-
-    if (!user && (isAppRoute || isPublicAppRoute)) {
+    const isWinnerCircleRoute = ['/learning', '/exclusive-events'].some(p => pathname.startsWith(p));
+    
+    if (!user && (isAppRoute || isWinnerCircleRoute)) {
       router.push("/login");
+      return;
     }
-  }, [user, loading, router, pathname]);
+
+    if (user && profile && isWinnerCircleRoute) {
+        const hasActiveMembership = profile.membership === 'winner-circle' && profile.membershipExpiresAt && profile.membershipExpiresAt.toDate() > new Date();
+        if (!hasActiveMembership) {
+            router.push('/winner-circle');
+        }
+    }
+
+  }, [user, profile, loading, router, pathname]);
 
   useEffect(() => {
     if (user && profile && user.displayName !== profile.displayName) {

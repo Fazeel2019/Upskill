@@ -1,7 +1,7 @@
 
 // src/services/profile.ts
 import { db } from "@/lib/firebase";
-import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt, endAt, deleteField } from "firebase/firestore";
+import { arrayUnion, doc, getDoc, setDoc, writeBatch, collection, query, where, getDocs, onSnapshot, orderBy, limit, startAt, endAt, deleteField, Timestamp } from "firebase/firestore";
 
 export interface Experience {
   id: string;
@@ -44,6 +44,7 @@ export interface UserProfile {
   website?: string;
   role?: 'admin';
   membership?: 'winner-circle';
+  membershipExpiresAt?: Timestamp;
   experience?: Experience[];
   education?: Education[];
   achievements?: Achievement[];
